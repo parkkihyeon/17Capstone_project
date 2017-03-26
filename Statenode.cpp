@@ -10,7 +10,16 @@ State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 	num_of_prev = 0 ;
 	num_of_next = 0 ;
 } ;
-
+State_node::State_node() {
+	for (int i = 1; i< HEIGHT_SIZE; i++)
+		for (int j = 1; j< WIDTH_SIZE; j++)
+			arr[i][j] = NULL;
+	next = new vector<State_node*>();
+	prev = new vector<State_node*>();
+	state_ordernum = 0;
+	num_of_prev = 0;
+	num_of_next = 0;
+};
 // state의 상태를 출력한다.
 void State_node::Print_State(){
 	for(int i=1 ; i< HEIGHT_SIZE; i++){

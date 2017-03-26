@@ -14,14 +14,24 @@ class Adjcency_grpah
 {
 private :
 	State_node *root ;
+	State_node *leaf ;
 	vector<State_node*> *node_list ;
 
+	friend class boost::serialization::access;
+	template <typename AR>
+	void serialize(AR &ar, const unsigned int ver) {
+		ar & *root;
+		ar & *node_list;
+	}
 public:
 	Adjcency_grpah();
+	Adjcency_grpah(Adjcency_grpah &graph);
+	Adjcency_grpah(Adjcency_grpah *graph);
 
 	void Insert(vector<State_node*> state);
 
 	State_node* getRoot();
+	State_node* getLeaf();
 
 	// 현재 위치한 노드에서의 자식노드와 추가할 state와 같은게 있는지.
 	int Is_Have_childnode(State_node* sub_root, State_node* state);

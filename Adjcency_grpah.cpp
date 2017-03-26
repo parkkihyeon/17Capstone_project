@@ -18,6 +18,45 @@ Adjcency_grpah::Adjcency_grpah(){
 	root = new State_node(Init_jannggi) ;
 	node_list = new vector<State_node*>() ; // 탐색을 많이 해야 하므로 vector STL을 사용.
 	node_list->push_back(root) ;
+  leaf = NULL;
+}
+//Serialize를 위한 깊은 복사 생성자
+Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
+	char Init_jannggi[HEIGHT_SIZE][WIDTH_SIZE] = {
+		{ 'O','O','O','O','O','O','O','O','O','O' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' } };
+
+	root = graph.getRoot();
+	node_list = new vector<State_node*>();
+	node_list->push_back(root);
+}
+//Serialize를 위한 깊은 복사 생성자
+Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
+	char Init_jannggi[HEIGHT_SIZE][WIDTH_SIZE] = {
+		{ 'O','O','O','O','O','O','O','O','O','O' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' },
+		{ 'O','X','X','X','X','X','X','X','X','X' } };
+
+	root = graph->getRoot();
+	node_list = new vector<State_node*>();
+	node_list->push_back(root);
 }
 
 void Adjcency_grpah::Insert(vector<State_node*> state){
@@ -46,14 +85,20 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 				now_state->Addlist_Child(add_state) ;
 				add_state->Connect_Parent(now_state) ;
 				add_state->state_ordernum = now_state->next->size() ;
+				// cout << add_state->state_ordernum << endl ;
 				now_state = add_state ;
 			}
 		}
 	}
+	leaf = now_state ;
 }
 
 State_node* Adjcency_grpah::getRoot(){
 	return root ;
+}
+
+State_node* Adjcency_grpah::getLeaf(){
+	return leaf ;
 }
 
 // 현재 위치한 노드에서의 자식노드와 추가할 state와 같은게 있는지.
