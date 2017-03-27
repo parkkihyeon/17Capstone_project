@@ -9,6 +9,8 @@ node::node(State board) {
 		   arr[i][j] = board[i][j];
 	   }
    }
+   num_of_cho = 0;
+   num_of_han = 0;
 }
 
 // state의 상태를 출력한다.
@@ -23,6 +25,17 @@ void node::Print_State(){
 
 State node::returnState(){
 	return arr ;
+}
+
+void node::getNumOfUnit() {
+	for (int i = 1; i < HEIGHT_SIZE; i++) {
+		for (int j = 1; j < WIDTH_SIZE; j++) {
+			if (65 <= arr[i][j] && arr[i][j] <= 90)
+				num_of_han++;
+			else if (97 <= arr[i][j] && arr[i][j] <= 122)
+				num_of_cho++;
+		}
+	}
 }
 
 
@@ -40,6 +53,7 @@ void node::changeState(int pos[], char unit) {
   }
   arr[oldPos1][oldPos2] = '-';
   arr[newPos1][newPos2] = unit;
+  getNumOfUnit();
 }
 
 void node::UnitOrder(int cho_order, int han_order) {

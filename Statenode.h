@@ -27,9 +27,9 @@ private:
 		ar & arr;
 	}
 public:
-	int num_of_prev ;
-	int num_of_next ;
-	int state_ordernum ;
+	int num_of_prev ; // 상위 노드의 갯수 
+	int num_of_next ;  // 하위 노드의 갯수
+	int state_ordernum ; 
 	vector<State_node*> *next ; 
 	vector<State_node*> *prev ; 
 

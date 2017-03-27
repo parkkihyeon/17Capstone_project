@@ -18,6 +18,9 @@ public:
    char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
    node(State board);
 
+   int num_of_han;
+   int num_of_cho;
+
    // state의 상태를 출력한다.
    void Print_State();
 
@@ -29,6 +32,9 @@ public:
 
    // state의 상태를 변경한다.
    void changeState(int pos[], char unit);
+
+   // state의 초, 한의 말의 갯수를 구한다.
+   void getNumOfUnit();
 };
 
 #endif

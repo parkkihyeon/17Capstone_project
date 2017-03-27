@@ -49,6 +49,7 @@ int main()
 		g->Insert(state);
 		std::cout << i << " ¹øÂ°" << std::endl;
 	}
+	//cout << count << endl;
 
 	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;

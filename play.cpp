@@ -95,6 +95,7 @@ void Play::createState(string line) {
 	node *Node = new node(StateInfo);
 	Node->host = atoi(strResult[0].c_str());
 	Node->changeState(pos, unit[0]);
+	//cout << "Cho: " << Node->num_of_cho << ", " << "Han: " << Node->num_of_han << endl;
 	insertStage(Node);
 
 	//play객체의 Board 최신화

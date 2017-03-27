@@ -17,13 +17,15 @@ private :
 	State_node *root ;
 	State_node *leaf ;
 	vector<State_node*> *node_list ;
-  stack<State_node *> state_stack ;
+	stack<State_node *> state_stack ;
 
 	friend class boost::serialization::access;
 	template <typename AR>
 	void serialize(AR &ar, const unsigned int ver) {
 		ar & *root;
 		ar & *node_list;
+		//ar & state_stack;
+		ar & *leaf;
 	}
 public:
 	Adjcency_grpah();
@@ -31,7 +33,7 @@ public:
 	Adjcency_grpah(Adjcency_grpah *graph);
 
 	void Insert(vector<State_node*> state);
-	void Backtracking_stack() ;
+	//void Backtracking_stack() ;
 
 	State_node* getRoot();
 	State_node* getLeaf();

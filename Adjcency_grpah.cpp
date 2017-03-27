@@ -18,7 +18,7 @@ Adjcency_grpah::Adjcency_grpah(){
 	root = new State_node(Init_jannggi) ;
 	node_list = new vector<State_node*>() ; // 탐색을 많이 해야 하므로 vector STL을 사용.
 	node_list->push_back(root) ;
-  leaf = NULL;
+	leaf = NULL;
 }
 //Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
@@ -36,8 +36,9 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 		{ 'O','X','X','X','X','X','X','X','X','X' } };
 
 	root = graph.getRoot();
-	node_list = new vector<State_node*>();
+	node_list = graph.node_list;
 	node_list->push_back(root);
+	leaf = graph.leaf;
 }
 //Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
@@ -55,8 +56,10 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 		{ 'O','X','X','X','X','X','X','X','X','X' } };
 
 	root = graph->getRoot();
-	node_list = new vector<State_node*>();
+	node_list = graph->node_list;
 	node_list->push_back(root);
+	leaf = graph->leaf;
+	state_stack = graph->state_stack;
 }
 
 void Adjcency_grpah::Insert(vector<State_node*> state){
@@ -81,6 +84,7 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 				now_state = check_node ;
 			}
 			else {
+				//count++;
 				node_list->push_back(add_state) ;
 		//		add_state->Print_State() ;
 				now_state->Addlist_Child(add_state) ;
@@ -92,23 +96,23 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 		}
 		state_stack.push(now_state) ;
 	}
-	state_stack.pop() ;
+	//state_stack.pop() ;
 	leaf = now_state ;
 }
 
-void Adjcency_grpah::Backtracking_stack(){
-	State_node* temp = leaf ;
-
-	cout << "\n< Start ! > " << endl ;
-	while(!state_stack.empty()){
-		temp->Print_State() ;
-		temp = temp->prev->at(Direction_parentnode(temp)) ;
-	}
-
-	// 스택 비우기
-	while(!state_stack.empty()) state_stack.pop() ;
-	cout << "< End ! >" << endl << endl << endl ;
-}
+//void Adjcency_grpah::Backtracking_stack(){
+//	State_node* temp = leaf ;
+//
+//	cout << "\n< Start ! > " << endl ;
+//	while(!state_stack.empty()){
+//		temp->Print_State() ;
+//		temp = temp->prev->at(Direction_parentnode(temp)) ;
+//	}
+//
+//	// 스택 비우기
+//	while(!state_stack.empty()) state_stack.pop() ;
+//	cout << "< End ! >" << endl << endl << endl ;
+//}
 
 
 State_node* Adjcency_grpah::getRoot(){
