@@ -48,7 +48,6 @@ public:
 			return true;
 		}
 	}
-
 	void initailize();
 };
 #endif

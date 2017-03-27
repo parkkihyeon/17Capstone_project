@@ -141,10 +141,20 @@ Play* Play::createPlay(ifstream &file) {
 		int reportNumber = INITIAL_ORDER, 
 			cho = INITIAL_ORDER, han = INITIAL_ORDER, victory = INITIAL_ORDER;
 		bool flag = false;
-		//text라인을 한줄씩 읽기 위해서 생성
-		file >> cho >> han >> victory;
-		//접장기의 경우를 피하기 위해
+
+		//file >> cho >> han >> victory;
 		reportNumber = atoi(textLine.c_str());
+
+		getline(file, textLine);
+		//접장기의 경우를 피하기 위해
+		if (textLine.compare("") != 0) {
+			file >> han >> victory;
+			cho = atoi(textLine.c_str());
+		}
+		else {
+			Play *gameReport = new Play(reportNumber, cho, han, victory);
+			return gameReport;
+		}
 
 		Play *gameReport = new Play(reportNumber, cho, han, victory);
 		gameReport->initailize();

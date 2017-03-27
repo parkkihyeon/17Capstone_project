@@ -70,7 +70,7 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 		// 자기 자식과 같은게 있으면 그대로 이동.
 		if(childnode >= 0){
 			now_state = now_state->NthCheck_Childnode(childnode) ;
-			cout << childnode << endl;
+			//cout << childnode << endl;
 		}
 		else {
 			// 자기 자식과 같은게 없지만 어떤 노드에 존재하면 그 노드를 next로 지정한다.

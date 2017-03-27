@@ -47,6 +47,7 @@ int main()
 		state.clear();
 		Play_to_Statenode(play, state, i);
 		g->Insert(state);
+		std::cout << i << " ¹øÂ°" << std::endl;
 	}
 
 	SaveTestData(g, "G");
@@ -79,10 +80,9 @@ void Insert_Gibo(vector<Play*> &play)
 			/*play.push_back(each_game->createPlay(inStream));*/
 			play.push_back(temp);
 		}
-		else {
-			string textLine;
-			//getline(inStream, textLine);
-		}
+		//else {
+		//	inStream.seekg(-10, ios::cur);
+		//}
 		//play.push_back(each_game->createPlay(inStream));
 	}
 }
