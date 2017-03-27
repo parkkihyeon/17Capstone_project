@@ -46,3 +46,7 @@ void State_node::Connect_Parent(State_node *parent_state){
 State_node* State_node::NthCheck_Childnode(int n){
 	return next->at(n) ;
 };
+
+State_node* State_node::NthCheck_Parentnode(int n){
+	return prev->at(n) ;
+};

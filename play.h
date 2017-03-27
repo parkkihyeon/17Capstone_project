@@ -9,6 +9,7 @@
 
 #define MIN 200
 #define TOKEN_SIZE 6
+#define INITIAL_ORDER -2
 
 using namespace std;
 
@@ -36,6 +37,17 @@ public:
 	void createState(string line);
 
 	Play* createPlay(ifstream &file);
+
+	bool getRightNode() {
+		if (cho_order == INITIAL_ORDER || 
+			han_order == INITIAL_ORDER || 
+			victory == INITIAL_ORDER) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 	void initailize();
 };

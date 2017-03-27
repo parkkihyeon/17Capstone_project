@@ -35,10 +35,12 @@ int main()
 	//Adjcency_grpah *test = new Adjcency_grpah(LoadTestData("G"));
 	//g->getRoot()->next->at(0)->Print_State();
 	//test->getRoot()->next->at(1)->Print_State();
-	Adjcency_grpah *g = new Adjcency_grpah(LoadTestData("G"));
+	//Adjcency_grpah *g = new Adjcency_grpah(LoadTestData("G"));
+	Adjcency_grpah *g = new Adjcency_grpah();
+
+
 	vector<State_node*> state;
 	vector<Play*> play;
-	g->getRoot()->next->at(1)->Print_State();
 	Insert_Gibo(play);
 
 	for (int i = 0; i<play.size(); i++) {
@@ -46,7 +48,9 @@ int main()
 		Play_to_Statenode(play, state, i);
 		g->Insert(state);
 	}
+
 	SaveTestData(g, "G");
+	cout << "Graph Generated" << endl;
 		
 
 	return 0 ;
@@ -70,6 +74,15 @@ void Insert_Gibo(vector<Play*> &play)
 	}
 	while (!inStream.eof()) {
 		Play *each_game = NULL;
-		play.push_back(each_game->createPlay(inStream));
+		Play *temp = each_game->createPlay(inStream);
+		if (temp->getRightNode()) {
+			/*play.push_back(each_game->createPlay(inStream));*/
+			play.push_back(temp);
+		}
+		else {
+			string textLine;
+			//getline(inStream, textLine);
+		}
+		//play.push_back(each_game->createPlay(inStream));
 	}
 }

@@ -83,7 +83,7 @@ void Play::createState(string line) {
 
 	// 한수쉼의 경우
 	if (pos[0] == 0 && pos[1] == 0) {
-		cout << "한 수 쉼 " << atoi(strResult[0].c_str()) << endl;
+		//cout << "한 수 쉼 " << atoi(strResult[0].c_str()) << endl;
 		node *Node = new node(StateInfo);
 		Node->host = atoi(strResult[0].c_str());
 		insertStage(Node);
@@ -137,10 +137,13 @@ Play* Play::createPlay(ifstream &file) {
 	string textLine;
 	getline(file, textLine);
 	if (textLine.find('.txt') != string::npos) {
-		int reportNumber, cho, han, victory;
+		cout << textLine << endl;
+		int reportNumber = INITIAL_ORDER, 
+			cho = INITIAL_ORDER, han = INITIAL_ORDER, victory = INITIAL_ORDER;
 		bool flag = false;
 		//text라인을 한줄씩 읽기 위해서 생성
 		file >> cho >> han >> victory;
+		//접장기의 경우를 피하기 위해
 		reportNumber = atoi(textLine.c_str());
 
 		Play *gameReport = new Play(reportNumber, cho, han, victory);

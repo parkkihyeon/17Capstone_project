@@ -47,6 +47,7 @@ public:
 
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);
+	State_node* NthCheck_Parentnode(int n);
 };
 
 #endif
