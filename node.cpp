@@ -63,32 +63,24 @@ void node::UnitOrder(int cho_order, int han_order) {
     case 0: //마상마상
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 1: //마상상마
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 2: //상마마상
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;
     case 3: //상마상마
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;
@@ -99,32 +91,24 @@ void node::UnitOrder(int cho_order, int han_order) {
     case 0: //�������� && ���󸶻�
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 1: //�������� && ��������
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 2: //�������� && �󸶸���
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;
     case 3: //�������� && �󸶻���
       arr[10][2] = 'h'; arr[10][3] = 'x';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;
@@ -135,32 +119,24 @@ void node::UnitOrder(int cho_order, int han_order) {
     case 0: //�󸶸��� && ���󸶻�
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 1: //�󸶸��� && ��������
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 2: //�󸶸��� && �󸶸���
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;
     case 3: //�󸶸��� && �󸶻���
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'h'; arr[10][8] = 'x';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;
@@ -171,24 +147,18 @@ void node::UnitOrder(int cho_order, int han_order) {
     case 0: //�󸶻��� && ���󸶻�
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 1: //�󸶻��� && ��������
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'X'; arr[1][8] = 'H';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'H'; arr[1][8] = 'X';
       break;
     case 2: //�󸶻��� && �󸶸���
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'X'; arr[1][3] = 'H';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 
 	  arr[1][2] = 'H'; arr[1][3] = 'X';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
@@ -196,8 +166,6 @@ void node::UnitOrder(int cho_order, int han_order) {
     case 3: //�󸶻��� && �󸶻���
       arr[10][2] = 'x'; arr[10][3] = 'h';
       arr[10][7] = 'x'; arr[10][8] = 'h';
-      //arr[1][2] = 'H'; arr[1][3] = 'X';
-      //arr[1][7] = 'H'; arr[1][8] = 'X';
 	  arr[1][2] = 'X'; arr[1][3] = 'H';
 	  arr[1][7] = 'X'; arr[1][8] = 'H';
       break;

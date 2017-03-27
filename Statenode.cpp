@@ -50,3 +50,7 @@ State_node* State_node::NthCheck_Childnode(int n){
 State_node* State_node::NthCheck_Parentnode(int n){
 	return prev->at(n) ;
 };
+void State_node::Set_numUnit(int cho, int han){
+	unit_of_han = han ;
+	unit_of_cho = cho ;
+}

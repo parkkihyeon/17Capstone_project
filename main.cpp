@@ -6,6 +6,7 @@ void SaveTestData(Adjcency_grpah *i, char *fileName) {
 	Adjcency_grpah g(i);
 	std::ofstream ofs(fileName);
 	boost::archive::binary_oarchive oa(ofs);
+	//boost::archive::
 	oa << g;
 }
 
@@ -36,38 +37,45 @@ int main()
 	//g->getRoot()->next->at(0)->Print_State();
 	//test->getRoot()->next->at(1)->Print_State();
 	//Adjcency_grpah *g = new Adjcency_grpah(LoadTestData("G"));
-	Adjcency_grpah *g = new Adjcency_grpah();
 
+	Adjcency_grpah *g = new Adjcency_grpah() ;
+	vector<State_node*> state ;
+	vector<Play*> play ;
+	Insert_Gibo(play) ;
 
-	vector<State_node*> state;
-	vector<Play*> play;
-	Insert_Gibo(play);
-
-	for (int i = 0; i<play.size(); i++) {
-		state.clear();
-		Play_to_Statenode(play, state, i);
-		g->Insert(state);
-		std::cout << i << " 번째" << std::endl;
+	try {
+		for (int i = 0; i < play.size(); i++) {
+			state.clear();
+			Play_to_Statenode(play, state, i);
+			//cout << "Cho: " << state.at(i)->Get_cho() << " Han: " << state.at(i)->Get_han() << endl;
+			cout << i << "번째년" << endl;
+			g->Insert(state);
+			//g->Backtracking_stack() ;
+		}
 	}
-	//cout << count << endl;
+	catch (exception &e) {
+		std::cerr << e.what();
+	}
 
 	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
-		
 
-	return 0 ;
+
+	return 0;
 }
 
-void Play_to_Statenode(vector<Play*> play,  vector<State_node*> &state, int now_state)
+void Play_to_Statenode(vector<Play*> play, vector<State_node*> &state, int now_state)
 {
-	for (int j=0 ; j<play.at(now_state)->game.size() ; j++){
-		State_node* t = new State_node(play.at(now_state)->game.at(j)->returnState()) ;
-		state.push_back(t) ;
+	for (int j = 0; j < play.at(now_state)->game.size(); j++) {
+		node * node_t = play.at(now_state)->game.at(j);
+		State_node* t = new State_node(node_t->returnState());
+		t->Set_numUnit(node_t->num_of_cho, node_t->num_of_han);
+		state.push_back(t);
 	}
 
 }
 
-void Insert_Gibo(vector<Play*> &play) 
+void Insert_Gibo(vector<Play*> &play)
 {
 	ifstream inStream("testFile.txt");
 	if (inStream.fail()) {
@@ -78,12 +86,7 @@ void Insert_Gibo(vector<Play*> &play)
 		Play *each_game = NULL;
 		Play *temp = each_game->createPlay(inStream);
 		if (temp->getRightNode()) {
-			/*play.push_back(each_game->createPlay(inStream));*/
 			play.push_back(temp);
 		}
-		//else {
-		//	inStream.seekg(-10, ios::cur);
-		//}
-		//play.push_back(each_game->createPlay(inStream));
 	}
 }

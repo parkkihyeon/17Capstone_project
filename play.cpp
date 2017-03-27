@@ -87,7 +87,6 @@ void Play::createState(string line) {
 		node *Node = new node(StateInfo);
 		Node->host = atoi(strResult[0].c_str());
 		insertStage(Node);
-	//	printBoard();
 		return;
 	}
 	// split된 값들을 이용하여 node 생성
@@ -95,7 +94,6 @@ void Play::createState(string line) {
 	node *Node = new node(StateInfo);
 	Node->host = atoi(strResult[0].c_str());
 	Node->changeState(pos, unit[0]);
-	//cout << "Cho: " << Node->num_of_cho << ", " << "Han: " << Node->num_of_han << endl;
 	insertStage(Node);
 
 	//play객체의 Board 최신화
@@ -104,8 +102,6 @@ void Play::createState(string line) {
 			StateInfo[i][j] = Node->arr[i][j];
 		}
 	}
-//	printBoard();
-	// node의 판 print
 }
 void Play::printBoard() {
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
@@ -119,9 +115,9 @@ void Play::printBoard() {
 			else if (j == 0 && i != 10) {
 				cout << i << " ";
 			}
-			else if (j == WIDTH_SIZE -1 && i == HEIGHT_SIZE / 2) {
+			else if (j == WIDTH_SIZE - 1 && i == HEIGHT_SIZE / 2) {
 				cout << StateInfo[i][j] << " "
-					<< game.at(game.size()-1)->host;
+					<< game.at(game.size() - 1)->host;
 			}
 			else {
 				cout << StateInfo[i][j] << " ";
@@ -139,18 +135,32 @@ Play* Play::createPlay(ifstream &file) {
 	getline(file, textLine);
 	if (textLine.find('.txt') != string::npos) {
 		cout << textLine << endl;
-		int reportNumber = INITIAL_ORDER, 
+		int reportNumber = INITIAL_ORDER,
 			cho = INITIAL_ORDER, han = INITIAL_ORDER, victory = INITIAL_ORDER;
 		bool flag = false;
 
-		//file >> cho >> han >> victory;
 		reportNumber = atoi(textLine.c_str());
 
 		getline(file, textLine);
 		//접장기의 경우를 피하기 위해
 		if (textLine.compare("") != 0) {
-			file >> han >> victory;
 			cho = atoi(textLine.c_str());
+			getline(file, textLine);
+			if (textLine.compare("") != 0) {
+				han = atoi(textLine.c_str());
+				getline(file, textLine);
+				if (textLine.compare("") != 0) {
+					victory = atoi(textLine.c_str());
+				}
+				else {
+					Play *gameReport = new Play(reportNumber, cho, han, victory);
+					return gameReport;
+				}
+			}
+			else {
+				Play *gameReport = new Play(reportNumber, cho, han, victory);
+				return gameReport;
+			}
 		}
 		else {
 			Play *gameReport = new Play(reportNumber, cho, han, victory);
@@ -161,16 +171,10 @@ Play* Play::createPlay(ifstream &file) {
 		gameReport->initailize();
 		int state_index = 1;
 		while (getline(file, textLine)) {
-			if (textLine.compare("") == 0 && !flag) {
-				flag = true;
-				continue;
-			}
-			else if (textLine.compare("") == 0 && flag) {
-				flag = false;
+			if (textLine.compare("") == 0) {
 				return gameReport;
 			}
 			else {
-				//cout << state_index++ << endl;
 				gameReport->createState(textLine);
 			}
 		}

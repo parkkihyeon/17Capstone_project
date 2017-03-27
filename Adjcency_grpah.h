@@ -5,9 +5,11 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <map>
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
+#define NUMUNIT 17
 
 using namespace std ;
 
@@ -16,12 +18,13 @@ class Adjcency_grpah
 private :
 	State_node *root ;
 	State_node *leaf ;
-	vector<State_node*> *node_list ;
+	vector<State_node*>* hashstate_list[NUMUNIT][NUMUNIT] ;
+//	vector<State_node*> node_list ;
 	stack<State_node *> state_stack ;
 
 	friend class boost::serialization::access;
-	template <typename AR>
-	void serialize(AR &ar, const unsigned int ver) {
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int ver) {
 		ar & *root;
 		ar & *node_list;
 		//ar & state_stack;
@@ -32,8 +35,10 @@ public:
 	Adjcency_grpah(Adjcency_grpah &graph);
 	Adjcency_grpah(Adjcency_grpah *graph);
 
+	void Init_hashtable();
 	void Insert(vector<State_node*> state);
-	//void Backtracking_stack() ;
+	void Backtracking_stack() ;
+	void PushList_Hashtable(State_node* state) ;
 
 	State_node* getRoot();
 	State_node* getLeaf();
