@@ -1,56 +1,41 @@
 #include "Graph.h"
 
-
+typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
 //시리얼라이즈를 한 그래프를 파일로 만들어낸다.
 void SaveTestData(Adjcency_grpah *i, char *fileName) {
 	Adjcency_grpah g(i);
 	std::ofstream ofs(fileName);
-	boost::archive::binary_oarchive oa(ofs);
-	//boost::archive::
-	oa << g;
+	boost::archive::text_oarchive oa(ofs);
+	try {
+		oa & BOOST_SERIALIZATION_NVP(g);
+	}
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 //만들어진 파일을 다시 로드
 Adjcency_grpah LoadTestData(char *fileName) {
 	Adjcency_grpah g;
 	std::ifstream ifs(fileName);
-	boost::archive::binary_iarchive ia(ifs);
-	ia >> g;
+	boost::archive::text_iarchive ia(ifs);
+	ia & BOOST_SERIALIZATION_NVP(g);
 
 	return g;
 }
 
 int main()
 {
-	//Adjcency_grpah *g = new Adjcency_grpah(LoadTestData("G")) ;
-	//vector<State_node*> state ;
-	//vector<Play*> play ;
-	//Insert_Gibo(play) ;
-
-	//for(int i=0 ; i<play.size() ; i++){ 
-	//	state.clear() ;
-	//	Play_to_Statenode(play,state,i) ;
-	//	g->Insert(state) ;
-	//}
-	////SaveTestData(g, "G");
-	//Adjcency_grpah *test = new Adjcency_grpah(LoadTestData("G"));
-	//g->getRoot()->next->at(0)->Print_State();
-	//test->getRoot()->next->at(1)->Print_State();
-	//Adjcency_grpah *g = new Adjcency_grpah(LoadTestData("G"));
-
-	Adjcency_grpah *g = new Adjcency_grpah() ;
-	vector<State_node*> state ;
-	vector<Play*> play ;
-	Insert_Gibo(play) ;
+	Adjcency_grpah *g = new Adjcency_grpah();
+	vector<State_node*> state;
+	vector<Play*> play;
+	Insert_Gibo(play);
 
 	try {
 		for (int i = 0; i < play.size(); i++) {
 			state.clear();
 			Play_to_Statenode(play, state, i);
-			//cout << "Cho: " << state.at(i)->Get_cho() << " Han: " << state.at(i)->Get_han() << endl;
-			cout << i << "번째년" << endl;
 			g->Insert(state);
-			//g->Backtracking_stack() ;
 		}
 	}
 	catch (exception &e) {
@@ -59,6 +44,8 @@ int main()
 
 	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
+
+	//Adjcency_grpah *test = new Adjcency_grpah(LoadTestData("G"));
 
 
 	return 0;

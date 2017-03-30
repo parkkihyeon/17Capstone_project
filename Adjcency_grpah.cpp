@@ -16,48 +16,22 @@ Adjcency_grpah::Adjcency_grpah(){
 
 	leaf = NULL ;
 }
+//수정 필요--------------------------------------------------------------------------------
 //Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
-	char Init_jannggi[HEIGHT_SIZE][WIDTH_SIZE] = {
-		{ 'O','O','O','O','O','O','O','O','O','O' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' } };
-
-	root = graph.getRoot();
-	node_list = graph.node_list;
-	node_list->push_back(root);
+	root = graph.root;
+	memcpy(hashstate_list, graph.hashstate_list, sizeof(graph.hashstate_list));
+	memcpy(&state_stack, &graph.state_stack, sizeof(graph.state_stack));
 	leaf = graph.leaf;
 }
 //Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
-	char Init_jannggi[HEIGHT_SIZE][WIDTH_SIZE] = {
-		{ 'O','O','O','O','O','O','O','O','O','O' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' },
-		{ 'O','X','X','X','X','X','X','X','X','X' } };
-
-	root = graph->getRoot();
-	node_list = graph->node_list;
-	node_list->push_back(root);
+	root = graph->root;
+	memcpy(hashstate_list, graph->hashstate_list, sizeof(graph->hashstate_list));
+	memcpy(&state_stack, &graph->state_stack, sizeof(graph->state_stack));
 	leaf = graph->leaf;
-	state_stack = graph->state_stack;
 }
-
+//----------------------------------------------------------------------------------------
 void Adjcency_grpah::Init_hashtable() {
 	for(int i=0 ; i < NUMUNIT ; i++){
 		for (int j = 0; j < NUMUNIT; j++) {
@@ -69,8 +43,8 @@ void Adjcency_grpah::Init_hashtable() {
 
 void Adjcency_grpah::PushList_Hashtable(State_node* state){
 	pair<int,int> point ;
-	int cho = state->unit_of_cho ;
-	int han = state->unit_of_han ;
+	int cho = state->Getcho();
+	int han = state->Gethan();
 	//cout << "cho : " << cho << ", han : " << han << endl;
 	hashstate_list[cho][han]->push_back(state) ;
 
@@ -98,11 +72,10 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 				now_state = check_node ;
 			}
 			else {
-			//	node_list.push_back(add_state) ;
 				PushList_Hashtable(add_state) ;
 				now_state->Addlist_Child(add_state) ;
 				add_state->Connect_Parent(now_state) ;
-				add_state->state_ordernum = now_state->next->size();
+				add_state->Set_Stateorder(now_state->Getnext()->size()) ;
 				now_state = add_state ;
 			}
 		}
@@ -115,14 +88,14 @@ void Adjcency_grpah::Backtracking_stack(){
 	State_node* temp = leaf ;
 
 	temp->Print_State() ;
-	cout << temp->unit_of_cho << " " << temp->unit_of_han << endl ;
+	cout << temp->Getcho() << " " << temp->Gethan() << endl ;
 	state_stack.pop() ;
 
 	cout << "\n< Start ! > " << endl ;
 	while(!state_stack.empty()){
 		temp->Print_State() ;
-		cout << temp->unit_of_cho << " " << temp->unit_of_han << endl ;
-		temp = temp->prev->at(Direction_parentnode(temp));
+		cout << temp->Getcho() << " " << temp->Gethan() << endl ;
+		temp = temp->Getprev()->at(Direction_parentnode(temp));
 	}
 
 	// 스택 비우기
@@ -141,7 +114,7 @@ State_node* Adjcency_grpah::getLeaf(){
 
 // 현재 위치한 노드에서의 자식노드와 추가할 state와 같은게 있는지.
 int Adjcency_grpah::Is_Have_childnode(State_node* sub_root, State_node* state) {
-	for (int i = 0; i<sub_root->num_of_next; i++)
+	for (int i = 0; i<sub_root->Getnumnext(); i++)
 		if (!Diff_State(sub_root->NthCheck_Childnode(i), state))
 			return i;
 	return -1;
@@ -150,7 +123,7 @@ int Adjcency_grpah::Is_Have_childnode(State_node* sub_root, State_node* state) {
 int Adjcency_grpah::Direction_parentnode(State_node* sub_node) {
 	State_node* temp = state_stack.top();
 	state_stack.pop();
-	for (int i = 0; i<sub_node->num_of_prev; i++) {
+	for (int i = 0; i<sub_node->Getnumprev(); i++) {
 		if (!Diff_State(sub_node->NthCheck_Parentnode(i), temp))
 			return i;
 	}
@@ -160,8 +133,8 @@ int Adjcency_grpah::Direction_parentnode(State_node* sub_node) {
 // 현재 노드 state가 그래프로 존재하고 있는지
 State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state){
 
-	int cho = state->unit_of_cho ;
-	int han = state->unit_of_han ;
+	int cho = state->Getcho();
+	int han = state->Gethan();
 
 	vector<State_node*>* now_state = hashstate_list[cho][han] ;
 	for(int i = 0 ; i < now_state->size() ; i++)

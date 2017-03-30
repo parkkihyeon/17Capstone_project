@@ -19,16 +19,15 @@ private :
 	State_node *root ;
 	State_node *leaf ;
 	vector<State_node*>* hashstate_list[NUMUNIT][NUMUNIT] ;
-//	vector<State_node*> node_list ;
 	stack<State_node *> state_stack ;
 
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
-		ar & *root;
-		ar & *node_list;
-		//ar & state_stack;
-		ar & *leaf;
+		ar & BOOST_SERIALIZATION_NVP(root);
+		ar & BOOST_SERIALIZATION_NVP(leaf);
+		ar & BOOST_SERIALIZATION_NVP(state_stack);
+		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
 	}
 public:
 	Adjcency_grpah();

@@ -83,7 +83,6 @@ void Play::createState(string line) {
 
 	// ÇÑ¼ö½°ÀÇ °æ¿ì
 	if (pos[0] == 0 && pos[1] == 0) {
-		//cout << "ÇÑ ¼ö ½° " << atoi(strResult[0].c_str()) << endl;
 		node *Node = new node(StateInfo);
 		Node->host = atoi(strResult[0].c_str());
 		insertStage(Node);
