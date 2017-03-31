@@ -1,9 +1,14 @@
 #include "Statenode.h"
 
 State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
+	for (int i = 0; i < WIDTH_SIZE; i++)
+		arr[0][i] = NULL;
+	for (int i = 0; i < HEIGHT_SIZE; i++)
+		arr[i][0] = NULL;
 	for (int i = 1; i < HEIGHT_SIZE; i++)
 		for (int j = 1; j < WIDTH_SIZE; j++)
 			arr[i][j] = data[i][j];
+
 	next = new vector<State_node*>();
 	prev = new vector<State_node*>();
 	state_ordernum = 0;

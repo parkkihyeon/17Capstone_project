@@ -17,6 +17,7 @@ public:
    int host;
    char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
    node(State board);
+   node();
 
    int num_of_han;
    int num_of_cho;

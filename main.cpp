@@ -1,17 +1,11 @@
 #include "Graph.h"
 
-typedef boost::error_info<struct tag_errmsg, std::string> errmsg_info;
 //시리얼라이즈를 한 그래프를 파일로 만들어낸다.
 void SaveTestData(Adjcency_grpah *i, char *fileName) {
 	Adjcency_grpah g(i);
 	std::ofstream ofs(fileName);
 	boost::archive::text_oarchive oa(ofs);
-	try {
-		oa & BOOST_SERIALIZATION_NVP(g);
-	}
-	catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
+	oa & BOOST_SERIALIZATION_NVP(g);
 }
 
 //만들어진 파일을 다시 로드

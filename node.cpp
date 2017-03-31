@@ -12,6 +12,18 @@ node::node(State board) {
    num_of_cho = 0;
    num_of_han = 0;
 }
+node::node() {
+	host = -1;
+	memset(arr, NULL, sizeof(char) * WIDTH_SIZE * HEIGHT_SIZE);
+
+	for (int i = 0; i < HEIGHT_SIZE; i++) {
+		for (int j = 0; j < WIDTH_SIZE; j++) {
+			arr[i][j] = NULL;
+		}
+	}
+	num_of_cho = 0;
+	num_of_han = 0;
+}
 
 // state의 상태를 출력한다.
 void node::Print_State(){

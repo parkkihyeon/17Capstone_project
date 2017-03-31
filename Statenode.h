@@ -43,8 +43,8 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
 		ar & BOOST_SERIALIZATION_NVP(arr);
-		ar & BOOST_SERIALIZATION_NVP(next);
-		ar & BOOST_SERIALIZATION_NVP(prev);
+		//ar & BOOST_SERIALIZATION_NVP(next);
+		//ar & BOOST_SERIALIZATION_NVP(prev);
 	}
 public:
 	char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
