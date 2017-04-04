@@ -11,6 +11,8 @@ node::node(State board) {
    }
    num_of_cho = 0;
    num_of_han = 0;
+   sum_of_horsepos.first = 0;
+   sum_of_horsepos.second = 0;
 }
 node::node() {
 	host = -1;
@@ -23,6 +25,8 @@ node::node() {
 	}
 	num_of_cho = 0;
 	num_of_han = 0;
+	sum_of_horsepos.first = 0;
+	sum_of_horsepos.second = 0;
 }
 
 // state의 상태를 출력한다.
@@ -46,8 +50,16 @@ void node::getNumOfUnit() {
 				num_of_han++;
 			else if (97 <= arr[i][j] && arr[i][j] <= 122)
 				num_of_cho++;
+
+			if (arr[i][j] == 'h' || arr[i][j] == 'H') {
+				sum_of_horsepos.first += i;
+				sum_of_horsepos.second += j;
+			}
+
 		}
 	}
+
+
 }
 
 

@@ -35,7 +35,7 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 void Adjcency_grpah::Init_hashtable() {
 	for(int i=0 ; i < NUMUNIT ; i++){
 		for (int j = 0; j < NUMUNIT; j++) {
-			hashstate_list[i][j] = new vector<State_node*>();
+			hashstate_list[i][j] = new multimap<pair<int, int>, State_node*>();
 		}
 	}
 }
@@ -45,9 +45,11 @@ void Adjcency_grpah::PushList_Hashtable(State_node* state){
 	pair<int,int> point ;
 	int cho = state->Getcho();
 	int han = state->Gethan();
+	int horse_y = state->GetHorse_pos().first;
+	int horse_x = state->GetHorse_pos().second;
 	//cout << "cho : " << cho << ", han : " << han << endl;
-	hashstate_list[cho][han]->push_back(state) ;
-
+	//hashstate_list[cho][han]->push_back(state) ;
+	hashstate_list[cho][han]->insert(multimap<pair<int, int>, State_node*>::value_type(pair<int, int>(horse_y, horse_x), state));
 }
 
 
@@ -93,6 +95,7 @@ void Adjcency_grpah::Backtracking_stack(){
 
 	cout << "\n< Start ! > " << endl ;
 	while(!state_stack.empty()){
+		cout << "borad No." << state_stack.size() << endl; //Ãß°¡
 		temp->Print_State() ;
 		cout << temp->Getcho() << " " << temp->Gethan() << endl ;
 		temp = temp->Getprev()->at(Direction_parentnode(temp));
@@ -135,12 +138,29 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state){
 
 	int cho = state->Getcho();
 	int han = state->Gethan();
+	int horse_y = state->GetHorse_pos().first;
+	int horse_x = state->GetHorse_pos().second;
 
-	vector<State_node*>* now_state = hashstate_list[cho][han] ;
-	for(int i = 0 ; i < now_state->size() ; i++)
+	multimap<pair<int, int>, State_node*> *m = hashstate_list[cho][han];
+	multimap<pair<int, int>, State_node*>::iterator itCur;
+	pair<multimap<pair<int, int>, State_node*>::iterator, multimap<pair<int, int>, State_node*>::iterator> it_pair;
+	it_pair = m->equal_range(pair<int, int>(horse_y, horse_x));
+
+	for (itCur = it_pair.first ; itCur != it_pair.second ; itCur++) {
+		if (!Diff_State(itCur->second, state))
+			return itCur->second;
+	}
+
+	/*multimap<pair<int, int>, State_node*>::iterator iter;
+	for(iter = m->begin() ; iter != m->end() ; iter++){
+		if (!Diff_State(iter->second, state))
+			return iter->second;
+	}*/
+
+	/*for(int i = 0 ; i < now_state->size() ; i++)
 		if(!Diff_State(now_state->at(i), state))
 			return now_state->at(i) ;
-	
+	*/
 
 	/*for(int i=0; i<node_list.size() ; i++)
 		if(!Diff_State(node_list.at(i), state))

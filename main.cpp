@@ -30,6 +30,8 @@ int main()
 			state.clear();
 			Play_to_Statenode(play, state, i);
 			g->Insert(state);
+		//	g->Backtracking_stack();
+			cout << i << "¹øÂ°\n" << endl;
 		}
 	}
 	catch (exception &e) {
@@ -39,7 +41,8 @@ int main()
 	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
 
-	//Adjcency_grpah *test = new Adjcency_grpah(LoadTestData("G"));
+	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
+	
 
 
 	return 0;
@@ -51,6 +54,7 @@ void Play_to_Statenode(vector<Play*> play, vector<State_node*> &state, int now_s
 		node * node_t = play.at(now_state)->game.at(j);
 		State_node* t = new State_node(node_t->returnState());
 		t->Set_numUnit(node_t->num_of_cho, node_t->num_of_han);
+		t->SetHorse_position(node_t->sum_of_horsepos);
 		state.push_back(t);
 	}
 

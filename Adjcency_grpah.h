@@ -18,7 +18,7 @@ class Adjcency_grpah
 private :
 	State_node *root ;
 	State_node *leaf ;
-	vector<State_node*>* hashstate_list[NUMUNIT][NUMUNIT] ;
+	multimap<pair<int,int>,State_node*>* hashstate_list[NUMUNIT][NUMUNIT] ;
 	stack<State_node *> state_stack ;
 
 	friend class boost::serialization::access;

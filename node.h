@@ -19,6 +19,7 @@ public:
    node(State board);
    node();
 
+   pair<int,int> sum_of_horsepos;
    int num_of_han;
    int num_of_cho;
 

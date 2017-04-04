@@ -10,6 +10,8 @@
 #include <boost/serialization/vector.hpp> // 직렬화 vector를 사용하기 위해
 #include <boost/serialization/deque.hpp> // 직렬화 stack을 사용하기 위해
 #include <boost/serialization/stack.hpp> // 직렬화 stack을 사용하기 위해
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/utility.hpp>
 
 #include <boost/archive/text_iarchive.hpp> // 텍스트 형태로 입력하기 위해
 #include <boost/archive/text_oarchive.hpp> // 텍스트 형태로 출력하기 위해
@@ -33,7 +35,7 @@ private:
 	int unit_of_cho;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
-
+	pair<int, int> sum_of_horsepos;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
@@ -43,8 +45,9 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
 		ar & BOOST_SERIALIZATION_NVP(arr);
-		//ar & BOOST_SERIALIZATION_NVP(next);
-		//ar & BOOST_SERIALIZATION_NVP(prev);
+		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
+		ar & BOOST_SERIALIZATION_NVP(next);
+		ar & BOOST_SERIALIZATION_NVP(prev);
 	}
 public:
 	char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
@@ -60,6 +63,7 @@ public:
 	void Connect_Parent(State_node *parent_state) ;
 	void Set_numUnit(int cho, int han) ;
 	void Set_Stateorder(int data);
+	void SetHorse_position(pair<int, int> s);
 
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);
@@ -72,6 +76,7 @@ public:
 	int Getcho();
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();
+	pair<int, int> GetHorse_pos();
 };
 
 #endif

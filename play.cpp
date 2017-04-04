@@ -50,6 +50,7 @@ void Play::insertStage(node *state) {
 void Play::initailize() {
 	node *Node = new node(StateInfo);
 	Node->UnitOrder(cho_order, han_order);
+	Node->getNumOfUnit();
 	insertStage(Node);
 
 	for (int i = 0; i < HEIGHT_SIZE; i++) {

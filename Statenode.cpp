@@ -27,11 +27,25 @@ State_node::State_node() {
 };
 // state의 상태를 출력한다.
 void State_node::Print_State() {
-	for (int i = 1; i < HEIGHT_SIZE; i++) {
-		for (int j = 1; j < WIDTH_SIZE; j++)
-			cout << arr[i][j] << " ";
+	for (int i = 0; i < HEIGHT_SIZE; i++) {
+		for (int j = 0; j < WIDTH_SIZE; j++) {
+			if (i == 0) {
+				cout << j << "  ";
+			}
+			else if(j == 0) {
+				cout << i << "  ";
+			}
+			else {
+				cout << arr[i][j] << "  ";
+			}
+		}
 		cout << endl;
 	}
+	//for (int i = 1; i < HEIGHT_SIZE; i++) {
+	//	for (int j = 1; j < WIDTH_SIZE; j++)
+	//		cout << arr[i][j] << " ";
+	//	cout << endl;
+	//}
 	cout << endl;
 };
 //node의 자식을 생성.
@@ -58,6 +72,10 @@ void State_node::Set_Stateorder(int data) {
 	state_ordernum = data;
 }
 
+void State_node::SetHorse_position(pair<int, int> s){
+	sum_of_horsepos = s;
+}
+
 int State_node::Getnumprev(){
 	return num_of_prev;
 }
@@ -80,4 +98,8 @@ vector<State_node*>* State_node::Getnext() {
 
 vector<State_node*>* State_node::Getprev() {
 	return prev;
+}
+
+pair<int, int> State_node::GetHorse_pos(){
+	return sum_of_horsepos;
 }
