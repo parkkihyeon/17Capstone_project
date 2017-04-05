@@ -35,21 +35,18 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 void Adjcency_grpah::Init_hashtable() {
 	for(int i=0 ; i < NUMUNIT ; i++){
 		for (int j = 0; j < NUMUNIT; j++) {
-			hashstate_list[i][j] = new multimap<pair<int, int>, State_node*>();
+			hashstate_list[i][j] = new hash_4d();
 		}
 	}
 }
 
 
 void Adjcency_grpah::PushList_Hashtable(State_node* state){
-	pair<int,int> point ;
 	int cho = state->Getcho();
 	int han = state->Gethan();
-	int horse_y = state->GetHorse_pos().first;
-	int horse_x = state->GetHorse_pos().second;
-	//cout << "cho : " << cho << ", han : " << han << endl;
-	//hashstate_list[cho][han]->push_back(state) ;
-	hashstate_list[cho][han]->insert(multimap<pair<int, int>, State_node*>::value_type(pair<int, int>(horse_y, horse_x), state));
+	int cha_y ;	int cha_x ;	int pho_y ;	int pho_x ;
+	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, state);
+	hashstate_list[cho][han]->insert(hash_4d::value_type(pair_key(Cha_pos(cha_y,cha_x), Pho_pos(pho_y, pho_x)), state));
 }
 
 
@@ -107,6 +104,12 @@ void Adjcency_grpah::Backtracking_stack(){
 	cout << "< End ! >" << endl << endl << endl ;
 }
 
+void Adjcency_grpah::Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state) {
+	cha_y = state->GetHorse_pos().first.first;
+	cha_x = state->GetHorse_pos().first.second;
+	pho_y = state->GetHorse_pos().second.first;
+	pho_x = state->GetHorse_pos().second.second;
+}
 
 State_node* Adjcency_grpah::getRoot(){
 	return root ;
@@ -139,34 +142,20 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state){
 
 	int cho = state->Getcho();
 	int han = state->Gethan();
-	int horse_y = state->GetHorse_pos().first;
-	int horse_x = state->GetHorse_pos().second;
+	int cha_y;	int cha_x;	int pho_y;	int pho_x;
+	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, state);
 
-	multimap<pair<int, int>, State_node*> *m = hashstate_list[cho][han];
-	multimap<pair<int, int>, State_node*>::iterator itCur;
-	pair<multimap<pair<int, int>, State_node*>::iterator, multimap<pair<int, int>, State_node*>::iterator> it_pair;
-	it_pair = m->equal_range(pair<int, int>(horse_y, horse_x));
+	hash_4d *m = hashstate_list[cho][han];
+	hash_4d::iterator itCur;
+	pair<hash_4d::iterator, hash_4d::iterator> it_pair;
+	it_pair = m->equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
 	//cout << horse_x << " " << horse_y << endl;
 	for (itCur = it_pair.first ; itCur != it_pair.second ; itCur++) {
 		if (!Diff_State(itCur->second, state))
 			return itCur->second;
 	}
 
-	/*multimap<pair<int, int>, State_node*>::iterator iter;
-	for(iter = m->begin() ; iter != m->end() ; iter++){
-		if (!Diff_State(iter->second, state))
-			return iter->second;
-	}*/
-
-	/*for(int i = 0 ; i < now_state->size() ; i++)
-		if(!Diff_State(now_state->at(i), state))
-			return now_state->at(i) ;
-	*/
-
-	/*for(int i=0; i<node_list.size() ; i++)
-		if(!Diff_State(node_list.at(i), state))
-			return node_list.at(i) ;
-	*/return NULL ; 
+	return NULL ; 
 }
 
 // 두 state가 같은지 다른지 확인하는 함수.

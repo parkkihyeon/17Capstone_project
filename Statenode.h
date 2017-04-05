@@ -25,6 +25,9 @@
 
 using namespace std ;
 
+typedef pair<int, int> Cha_pos;
+typedef pair<int, int> Pho_pos;
+
 class State_node
 {
 private:
@@ -36,7 +39,7 @@ private:
 	int sequence_node ;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
-	pair<int, int> sum_of_horsepos;
+	pair<Cha_pos, Pho_pos> sum_of_horsepos;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
@@ -52,7 +55,7 @@ private:
 	}
 public:
 	char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
-
+	
 	State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) ;
 	State_node();
 
@@ -64,7 +67,7 @@ public:
 	void Connect_Parent(State_node *parent_state) ;
 	void Set_numUnit(int cho, int han) ;
 	void Set_Stateorder(int data);
-	void SetHorse_position(pair<int, int> s);
+	void SetHorse_position(pair<Cha_pos, Pho_pos> s);
 	void Set_sequence_node(int data);
 
 	// n번째 자식을 return
@@ -79,7 +82,7 @@ public:
 	int Getsequence_node();
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();
-	pair<int, int> GetHorse_pos();
+	pair<Cha_pos, Pho_pos> GetHorse_pos();
 };
 
 #endif

@@ -74,7 +74,7 @@ void State_node::Set_Stateorder(int data) {
 	state_ordernum = data;
 }
 
-void State_node::SetHorse_position(pair<int, int> s){
+void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s){
 	sum_of_horsepos = s;
 }
 
@@ -110,6 +110,6 @@ vector<State_node*>* State_node::Getprev() {
 	return prev;
 }
 
-pair<int, int> State_node::GetHorse_pos(){
+pair<Cha_pos, Pho_pos> State_node::GetHorse_pos(){
 	return sum_of_horsepos;
 }

@@ -10,16 +10,21 @@
 using namespace std ;
 
 typedef char (*State)[WIDTH_SIZE] ;
+typedef pair<int, int> Cha_pos;
+typedef pair<int, int> Pho_pos;
 
 class node
 {
 public:
    int host;
+   char killed;
+   char actor;
+   bool checkMate;
    char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
    node(State board);
    node();
 
-   pair<int,int> sum_of_horsepos;
+   pair<Cha_pos, Pho_pos> sum_of_horsepos;
    int num_of_han;
    int num_of_cho;
 
@@ -33,10 +38,15 @@ public:
    void UnitOrder(int cho_order, int han_order);
 
    // state의 상태를 변경한다.
-   void changeState(int pos[], char unit);
+   void changeState(int pos[]);
 
    // state의 초, 한의 말의 갯수를 구한다.
    void getNumOfUnit();
+   
+   void Init_Hashkeydata();
+
+   // state initialize
+   void Init();
 };
 
 #endif

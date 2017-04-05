@@ -93,8 +93,18 @@ void Play::createState(string line) {
 	strcpy(unit, strResult[3].c_str());
 	node *Node = new node(StateInfo);
 	Node->host = atoi(strResult[0].c_str());
-	Node->changeState(pos, unit[0]);
+	Node->actor = *unit;
+	Node->killed = *strResult[4].c_str();
+	if (atoi(strResult[5].c_str()) == 1) {
+		Node->checkMate = true;
+	}
+	else {
+		Node->checkMate = false;
+	}
+	Node->changeState(pos);
 	insertStage(Node);
+	
+	cout << Node->actor << " " << Node->killed << " " << Node->checkMate << endl;
 
 	//play객체의 Board 최신화
 	for (int i = 0; i < HEIGHT_SIZE; i++) {

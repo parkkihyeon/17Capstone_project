@@ -1,32 +1,30 @@
 ﻿#include "node.h"
 
 node::node(State board) {
-   host = -1;
-   memset(arr, NULL, sizeof(char) * WIDTH_SIZE * HEIGHT_SIZE);
-
+	Init();
    for(int i = 0; i < HEIGHT_SIZE; i++) {
 	   for(int j = 0; j < WIDTH_SIZE; j++) {
 		   arr[i][j] = board[i][j];
 	   }
    }
-   num_of_cho = 0;
-   num_of_han = 0;
-   sum_of_horsepos.first = 0;
-   sum_of_horsepos.second = 0;
 }
 node::node() {
-	host = -1;
-	memset(arr, NULL, sizeof(char) * WIDTH_SIZE * HEIGHT_SIZE);
-
+	Init();
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
 		for (int j = 0; j < WIDTH_SIZE; j++) {
 			arr[i][j] = NULL;
 		}
 	}
+}
+void node::Init() {
+	memset(arr, NULL, sizeof(char) * WIDTH_SIZE * HEIGHT_SIZE);
+	host = -1;
+	killed = NULL;
+	actor = NULL;
+	checkMate = false;
 	num_of_cho = 0;
 	num_of_han = 0;
-	sum_of_horsepos.first = 0;
-	sum_of_horsepos.second = 0;
+	Init_Hashkeydata();
 }
 
 // state의 상태를 출력한다.
@@ -51,11 +49,14 @@ void node::getNumOfUnit() {
 			else if (97 <= arr[i][j] && arr[i][j] <= 122)
 				num_of_cho++;
 
-			if (arr[i][j] == 'h' || arr[i][j] == 'H') {
-				sum_of_horsepos.first += i;
-				sum_of_horsepos.second += j;
+			if (arr[i][j] == 'c' || arr[i][j] == 'C') {
+				sum_of_horsepos.first.first += i;
+				sum_of_horsepos.first.second += j;
 			}
-
+			else if (arr[i][j] == 'p' || arr[i][j] == 'P') {
+				sum_of_horsepos.second.first += i;
+				sum_of_horsepos.second.second += j;
+			}
 		}
 	}
 
@@ -63,7 +64,7 @@ void node::getNumOfUnit() {
 }
 
 
-void node::changeState(int pos[], char unit) {
+void node::changeState(int pos[]) {
   int oldPos1 = pos[0] / 10;
   int oldPos2 = pos[0] % 10;
   int newPos1 = pos[1] / 10;
@@ -76,7 +77,7 @@ void node::changeState(int pos[], char unit) {
     newPos1 = 10;
   }
   arr[oldPos1][oldPos2] = '-';
-  arr[newPos1][newPos2] = unit;
+  arr[newPos1][newPos2] = actor;
   getNumOfUnit();
 }
 
@@ -196,4 +197,11 @@ void node::UnitOrder(int cho_order, int han_order) {
 		}
 		break;
 	}
+}
+
+void node::Init_Hashkeydata(){
+	sum_of_horsepos.first.first = 0;
+	sum_of_horsepos.first.second = 0;
+	sum_of_horsepos.second.first = 0;
+	sum_of_horsepos.second.second = 0;
 }

@@ -47,7 +47,7 @@ int main()
 	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
 	
 	clock_t end_t = clock();
-	cout << "시간 : " << (t - end_t) / 1000 << endl;
+	cout << "시간 : " << (end_t - t) / 1000 << endl;
 
 	return 0;
 }
@@ -66,7 +66,7 @@ void Play_to_Statenode(vector<Play*> play, vector<State_node*> &state, int now_s
 
 void Insert_Gibo(vector<Play*> &play)
 {
-	ifstream inStream("testFile.txt");
+	ifstream inStream("testFile_1.txt");
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);
