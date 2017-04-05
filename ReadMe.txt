@@ -21,7 +21,7 @@ But, problem is when we serialize this object(grpah) to text file.
 The Error occured, called 'stack overflow'.
 
 we estimate problem occured when we serialize inner object in graph.
-inner object, called State_node,werializing member pointer 'next' and 'prev'
+inner object, called State_node, serializing member pointer 'next' and 'prev'
 return error that we mentioned before.
 
 we tried to find out what is problem. But, we couldn't find it.
