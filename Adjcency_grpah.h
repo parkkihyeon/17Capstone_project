@@ -20,14 +20,14 @@ private :
 	State_node *leaf ;
 	multimap<pair<int,int>,State_node*>* hashstate_list[NUMUNIT][NUMUNIT] ;
 	stack<State_node *> state_stack ;
-
+	int count = 0;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
-		ar & BOOST_SERIALIZATION_NVP(root);
+		/*ar & BOOST_SERIALIZATION_NVP(root);
 		ar & BOOST_SERIALIZATION_NVP(leaf);
 		ar & BOOST_SERIALIZATION_NVP(state_stack);
-		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
+		ar & BOOST_SERIALIZATION_NVP(hashstate_list);*/
 	}
 public:
 	Adjcency_grpah();

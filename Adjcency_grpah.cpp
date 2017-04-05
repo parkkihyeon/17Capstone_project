@@ -75,6 +75,7 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 			}
 			else {
 				PushList_Hashtable(add_state) ;
+				add_state->Set_sequence_node(count++);
 				now_state->Addlist_Child(add_state) ;
 				add_state->Connect_Parent(now_state) ;
 				add_state->Set_Stateorder(now_state->Getnext()->size()) ;
@@ -145,7 +146,7 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state){
 	multimap<pair<int, int>, State_node*>::iterator itCur;
 	pair<multimap<pair<int, int>, State_node*>::iterator, multimap<pair<int, int>, State_node*>::iterator> it_pair;
 	it_pair = m->equal_range(pair<int, int>(horse_y, horse_x));
-
+	//cout << horse_x << " " << horse_y << endl;
 	for (itCur = it_pair.first ; itCur != it_pair.second ; itCur++) {
 		if (!Diff_State(itCur->second, state))
 			return itCur->second;

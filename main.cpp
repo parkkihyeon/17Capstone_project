@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <time.h>
 
 //시리얼라이즈를 한 그래프를 파일로 만들어낸다.
 void SaveTestData(Adjcency_grpah *i, char *fileName) {
@@ -20,6 +21,8 @@ Adjcency_grpah LoadTestData(char *fileName) {
 
 int main()
 {
+	clock_t t = clock();
+
 	Adjcency_grpah *g = new Adjcency_grpah();
 	vector<State_node*> state;
 	vector<Play*> play;
@@ -38,12 +41,13 @@ int main()
 		std::cerr << e.what();
 	}
 
-	SaveTestData(g, "G");
+	//SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
 
 	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
 	
-
+	clock_t end_t = clock();
+	cout << "시간 : " << (t - end_t) / 1000 << endl;
 
 	return 0;
 }

@@ -14,6 +14,7 @@ State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 	state_ordernum = 0;
 	num_of_prev = 0;
 	num_of_next = 0;
+	sequence_node = 0;
 };
 State_node::State_node() {
 	for (int i = 0; i < HEIGHT_SIZE; i++)
@@ -24,6 +25,7 @@ State_node::State_node() {
 	state_ordernum = 0;
 	num_of_prev = 0;
 	num_of_next = 0;
+	sequence_node = 0;
 };
 // state의 상태를 출력한다.
 void State_node::Print_State() {
@@ -76,6 +78,10 @@ void State_node::SetHorse_position(pair<int, int> s){
 	sum_of_horsepos = s;
 }
 
+void State_node::Set_sequence_node(int data) {
+	sequence_node = data;
+}
+
 int State_node::Getnumprev(){
 	return num_of_prev;
 }
@@ -90,6 +96,10 @@ int State_node::Gethan() {
 }
 int State_node::Getcho() {
 	return unit_of_cho;
+}
+
+int State_node::Getsequence_node() {
+	return sequence_node;
 }
 
 vector<State_node*>* State_node::Getnext() {

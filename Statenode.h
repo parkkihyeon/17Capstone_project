@@ -33,13 +33,14 @@ private:
 	int state_ordernum;
 	int unit_of_han;
 	int unit_of_cho;
+	int sequence_node ;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
 	pair<int, int> sum_of_horsepos;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
-		ar & BOOST_SERIALIZATION_NVP(num_of_prev);
+		/*ar & BOOST_SERIALIZATION_NVP(num_of_prev);
 		ar & BOOST_SERIALIZATION_NVP(num_of_next);
 		ar & BOOST_SERIALIZATION_NVP(state_ordernum);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
@@ -47,7 +48,7 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(arr);
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
-		ar & BOOST_SERIALIZATION_NVP(prev);
+		ar & BOOST_SERIALIZATION_NVP(prev);*/
 	}
 public:
 	char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
@@ -64,6 +65,7 @@ public:
 	void Set_numUnit(int cho, int han) ;
 	void Set_Stateorder(int data);
 	void SetHorse_position(pair<int, int> s);
+	void Set_sequence_node(int data);
 
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);
@@ -74,6 +76,7 @@ public:
 	int Getstate_ordernum();
 	int Gethan();
 	int Getcho();
+	int Getsequence_node();
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();
 	pair<int, int> GetHorse_pos();
