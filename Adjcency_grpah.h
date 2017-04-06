@@ -6,6 +6,7 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include <queue>
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
@@ -21,16 +22,16 @@ class Adjcency_grpah
 private :
 	State_node *root ;
 	State_node *leaf ;
-	hash_4d* hashstate_list[NUMUNIT][NUMUNIT] ;
+	hash_4d hashstate_list[NUMUNIT][NUMUNIT] ;
 	stack<State_node *> state_stack ;
-	int count = 0;
+	int statenode_num ;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
-		/*ar & BOOST_SERIALIZATION_NVP(root);
+		ar & BOOST_SERIALIZATION_NVP(root);
 		ar & BOOST_SERIALIZATION_NVP(leaf);
 		ar & BOOST_SERIALIZATION_NVP(state_stack);
-		ar & BOOST_SERIALIZATION_NVP(hashstate_list);*/
+		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
 	}
 public:
 	Adjcency_grpah();
@@ -42,6 +43,7 @@ public:
 	void Backtracking_stack() ;
 	void PushList_Hashtable(State_node* state) ;
 	void Set_4Dhashdata(int &cha_y , int &cha_x, int &pho_y, int &pho_x, State_node* state) ;
+	//void Travelgraph_bfs();
 
 	State_node* getRoot();
 	State_node* getLeaf();

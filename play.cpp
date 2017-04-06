@@ -103,8 +103,6 @@ void Play::createState(string line) {
 	}
 	Node->changeState(pos);
 	insertStage(Node);
-	
-	cout << Node->actor << " " << Node->killed << " " << Node->checkMate << endl;
 
 	//play객체의 Board 최신화
 	for (int i = 0; i < HEIGHT_SIZE; i++) {

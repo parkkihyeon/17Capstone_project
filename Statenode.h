@@ -31,20 +31,18 @@ typedef pair<int, int> Pho_pos;
 class State_node
 {
 private:
-	int num_of_prev;
-	int num_of_next;
 	int state_ordernum;
 	int unit_of_han;
 	int unit_of_cho;
-	int sequence_node ;
+	int travel_count;
+	int state_number;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
 	pair<Cha_pos, Pho_pos> sum_of_horsepos;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
-		/*ar & BOOST_SERIALIZATION_NVP(num_of_prev);
-		ar & BOOST_SERIALIZATION_NVP(num_of_next);
+		/*
 		ar & BOOST_SERIALIZATION_NVP(state_ordernum);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
@@ -52,6 +50,9 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
 		ar & BOOST_SERIALIZATION_NVP(prev);*/
+		/*for (int i = 0; i < prev->size(); i++) {
+			ar & prev->at(i) ;
+		}*/
 	}
 public:
 	char arr[HEIGHT_SIZE][WIDTH_SIZE] ;
@@ -68,7 +69,9 @@ public:
 	void Set_numUnit(int cho, int han) ;
 	void Set_Stateorder(int data);
 	void SetHorse_position(pair<Cha_pos, Pho_pos> s);
-	void Set_sequence_node(int data);
+	void Init();
+	void TravelCountPlus();
+	void SetState_number(int setnum);
 
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);
@@ -79,7 +82,9 @@ public:
 	int Getstate_ordernum();
 	int Gethan();
 	int Getcho();
-	int Getsequence_node();
+	int GetTravelcount();
+	int GetState_number();
+
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();
 	pair<Cha_pos, Pho_pos> GetHorse_pos();

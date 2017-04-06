@@ -9,8 +9,7 @@ Adjcency_grpah::Adjcency_grpah(){
 
 	root = new State_node(Init_jannggi) ;
 	root->Set_numUnit(0,0) ;
-
-	//node_list.push_back(root) ;
+	statenode_num = 0;
 	Init_hashtable();
 	PushList_Hashtable(root) ;
 
@@ -35,7 +34,7 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 void Adjcency_grpah::Init_hashtable() {
 	for(int i=0 ; i < NUMUNIT ; i++){
 		for (int j = 0; j < NUMUNIT; j++) {
-			hashstate_list[i][j] = new hash_4d();
+		//	hashstate_list[i][j] = new hash_4d();
 		}
 	}
 }
@@ -46,7 +45,7 @@ void Adjcency_grpah::PushList_Hashtable(State_node* state){
 	int han = state->Gethan();
 	int cha_y ;	int cha_x ;	int pho_y ;	int pho_x ;
 	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, state);
-	hashstate_list[cho][han]->insert(hash_4d::value_type(pair_key(Cha_pos(cha_y,cha_x), Pho_pos(pho_y, pho_x)), state));
+	hashstate_list[cho][han].insert(hash_4d::value_type(pair_key(Cha_pos(cha_y,cha_x), Pho_pos(pho_y, pho_x)), state));
 }
 
 
@@ -72,7 +71,7 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 			}
 			else {
 				PushList_Hashtable(add_state) ;
-				add_state->Set_sequence_node(count++);
+				add_state->SetState_number(statenode_num++);
 				now_state->Addlist_Child(add_state) ;
 				add_state->Connect_Parent(now_state) ;
 				add_state->Set_Stateorder(now_state->Getnext()->size()) ;
@@ -80,6 +79,7 @@ void Adjcency_grpah::Insert(vector<State_node*> state){
 			}
 		}
 		state_stack.push(now_state) ;
+		now_state->TravelCountPlus();
 	}
 	leaf = now_state ;
 }
@@ -110,6 +110,36 @@ void Adjcency_grpah::Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho
 	pho_y = state->GetHorse_pos().second.first;
 	pho_x = state->GetHorse_pos().second.second;
 }
+
+
+//void Adjcency_grpah::Travelgraph_bfs() {
+//	queue<State_node*> *q = new queue<State_node*>();
+//	State_node *temp;
+//	int* bfs_check = new int[statenode_num+1];
+//	for (int i = 0; i < statenode_num; i++) {
+//		bfs_check[i] = i;
+//	}
+//	q->push(root->NthCheck_Childnode(0));
+//
+//	cout << " 스테이트 번호 , 방문 횟수 " << endl;
+//	while (!q->empty()) {
+//		temp = q->front();
+//		q->pop();
+//		cout << "state 번호 : "  << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
+//		for (int i = 0; i < temp->Getnumnext(); i++) {
+//			for (int j = 0; j < statenode_num; j++) {
+//				if (bfs_check[j] == temp->GetState_number()) {
+//					bfs_check[j] = -1;
+//					q->push(temp->NthCheck_Childnode(i));
+//					break;
+//				}
+//				if (j == statenode_num - 1 && q->empty())
+//					return;
+//			}
+//		}
+//	}
+//
+//}
 
 State_node* Adjcency_grpah::getRoot(){
 	return root ;
@@ -145,10 +175,10 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state){
 	int cha_y;	int cha_x;	int pho_y;	int pho_x;
 	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, state);
 
-	hash_4d *m = hashstate_list[cho][han];
+	hash_4d m = hashstate_list[cho][han];
 	hash_4d::iterator itCur;
 	pair<hash_4d::iterator, hash_4d::iterator> it_pair;
-	it_pair = m->equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
+	it_pair = m.equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
 	//cout << horse_x << " " << horse_y << endl;
 	for (itCur = it_pair.first ; itCur != it_pair.second ; itCur++) {
 		if (!Diff_State(itCur->second, state))

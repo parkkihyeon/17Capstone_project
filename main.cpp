@@ -41,10 +41,11 @@ int main()
 		std::cerr << e.what();
 	}
 
-	//SaveTestData(g, "G");
+//	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
 
-	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
+//	g->Travelgraph_bfs();
+//	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
 	
 	clock_t end_t = clock();
 	cout << "½Ã°£ : " << (end_t - t) / 1000 << endl;
@@ -66,7 +67,7 @@ void Play_to_Statenode(vector<Play*> play, vector<State_node*> &state, int now_s
 
 void Insert_Gibo(vector<Play*> &play)
 {
-	ifstream inStream("testFile_1.txt");
+	ifstream inStream("testFile.txt");
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);
