@@ -35,7 +35,7 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 void Adjcency_grpah::Init_hashtable() {
 	for(int i=0 ; i < NUMUNIT ; i++){
 		for (int j = 0; j < NUMUNIT; j++) {
-		//	hashstate_list[i][j] = new hash_4d();
+			hashstate_list[i][j] = new hash_4d();
 		}
 	}
 }
@@ -46,7 +46,7 @@ void Adjcency_grpah::PushList_Hashtable(State_node* state){
 	int han = state->Gethan();
 	int cha_y ;	int cha_x ;	int pho_y ;	int pho_x ;
 	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, state);
-	hashstate_list[cho][han].insert(hash_4d::value_type(pair_key(Cha_pos(cha_y,cha_x), Pho_pos(pho_y, pho_x)), state));
+	hashstate_list[cho][han]->insert(hash_4d::value_type(pair_key(Cha_pos(cha_y,cha_x), Pho_pos(pho_y, pho_x)), state));
 }
 
 
@@ -114,6 +114,7 @@ void Adjcency_grpah::Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho
 
 
 void Adjcency_grpah::Travelgraph_bfs() {
+	ofstream stream("output.txt") ;
 	queue<State_node*> *q = new queue<State_node*>();
 	State_node *temp;
 	int* bfs_check = new int[statenode_num+1];
@@ -126,7 +127,7 @@ void Adjcency_grpah::Travelgraph_bfs() {
 	while (!q->empty()) {
 		temp = q->front();
 		q->pop();
-		cout << "state 번호 : "  << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
+		stream << "state 번호 : "  << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
 		for (int i = 0; i < temp->Getnumnext(); i++) {
 			if(bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] != -1 ){
 				bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] = -1 ;
@@ -171,10 +172,10 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state){
 	int cha_y;	int cha_x;	int pho_y;	int pho_x;
 	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, state);
 
-	hash_4d m = hashstate_list[cho][han];
+	hash_4d* m = hashstate_list[cho][han];
 	hash_4d::iterator itCur;
 	pair<hash_4d::iterator, hash_4d::iterator> it_pair;
-	it_pair = m.equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
+	it_pair = m->equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
 	//cout << horse_x << " " << horse_y << endl;
 	for (itCur = it_pair.first ; itCur != it_pair.second ; itCur++) {
 		if (!Diff_State(itCur->second, state))
