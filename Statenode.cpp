@@ -13,7 +13,6 @@ State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 State_node::State_node() {
 	for (int i = 0; i< HEIGHT_SIZE; i++) 
 		memset(arr[i], NULL, sizeof(char)*WIDTH_SIZE);
-	
 	Init();
 };
 
@@ -66,7 +65,7 @@ void State_node::Init() {
 	prev = new vector<State_node*>();
 	state_ordernum = 0;
 	travel_count = 0;
-	state_number = 0;
+	state_number = 1;
 }
 
 void State_node::TravelCountPlus() {

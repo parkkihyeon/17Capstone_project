@@ -43,7 +43,7 @@ public:
 	void Backtracking_stack() ;
 	void PushList_Hashtable(State_node* state) ;
 	void Set_4Dhashdata(int &cha_y , int &cha_x, int &pho_y, int &pho_x, State_node* state) ;
-	//void Travelgraph_bfs();
+	void Travelgraph_bfs();
 
 	State_node* getRoot();
 	State_node* getLeaf();

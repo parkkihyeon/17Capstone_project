@@ -12,6 +12,7 @@ Adjcency_grpah::Adjcency_grpah(){
 	statenode_num = 0;
 	Init_hashtable();
 	PushList_Hashtable(root) ;
+	root->SetState_number(0); 
 
 	leaf = NULL ;
 }
@@ -112,34 +113,29 @@ void Adjcency_grpah::Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho
 }
 
 
-//void Adjcency_grpah::Travelgraph_bfs() {
-//	queue<State_node*> *q = new queue<State_node*>();
-//	State_node *temp;
-//	int* bfs_check = new int[statenode_num+1];
-//	for (int i = 0; i < statenode_num; i++) {
-//		bfs_check[i] = i;
-//	}
-//	q->push(root->NthCheck_Childnode(0));
-//
-//	cout << " 스테이트 번호 , 방문 횟수 " << endl;
-//	while (!q->empty()) {
-//		temp = q->front();
-//		q->pop();
-//		cout << "state 번호 : "  << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
-//		for (int i = 0; i < temp->Getnumnext(); i++) {
-//			for (int j = 0; j < statenode_num; j++) {
-//				if (bfs_check[j] == temp->GetState_number()) {
-//					bfs_check[j] = -1;
-//					q->push(temp->NthCheck_Childnode(i));
-//					break;
-//				}
-//				if (j == statenode_num - 1 && q->empty())
-//					return;
-//			}
-//		}
-//	}
-//
-//}
+void Adjcency_grpah::Travelgraph_bfs() {
+	queue<State_node*> *q = new queue<State_node*>();
+	State_node *temp;
+	int* bfs_check = new int[statenode_num+1];
+	for (int i = 0; i <= statenode_num; i++) {
+		bfs_check[i] = i;
+	}
+	q->push(root);
+	
+	cout << " 스테이트 번호 , 방문 횟수 " << endl;
+	while (!q->empty()) {
+		temp = q->front();
+		q->pop();
+		cout << "state 번호 : "  << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
+		for (int i = 0; i < temp->Getnumnext(); i++) {
+			if(bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] != -1 ){
+				bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] = -1 ;
+				q->push(temp->NthCheck_Childnode(i));
+			}
+		}
+	}
+
+}
 
 State_node* Adjcency_grpah::getRoot(){
 	return root ;

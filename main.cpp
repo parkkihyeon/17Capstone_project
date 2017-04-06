@@ -44,7 +44,7 @@ int main()
 //	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
 
-//	g->Travelgraph_bfs();
+	g->Travelgraph_bfs();
 //	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
 	
 	clock_t end_t = clock();
