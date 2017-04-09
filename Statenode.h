@@ -28,6 +28,23 @@ using namespace std ;
 typedef pair<int, int> Cha_pos;
 typedef pair<int, int> Pho_pos;
 
+class Now_turn 
+{
+private :
+	char actor ;
+	char killed ;
+	bool checkmate ;
+
+public:
+	Now_turn(char act, char kill, bool check) ;
+	Now_turn() ;
+	char GetActor();
+	char GetKilled();
+	bool GetCheckmate();
+	void SetTurn(char act, char kill, bool check);
+};
+
+
 class State_node
 {
 private:
@@ -36,6 +53,7 @@ private:
 	int unit_of_cho;
 	int travel_count;
 	int state_number;
+	Now_turn *this_turn ;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
 	pair<Cha_pos, Pho_pos> sum_of_horsepos;
@@ -76,7 +94,8 @@ public:
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);
 	State_node* NthCheck_Parentnode(int n);
-	
+	Now_turn* GetTurn() ;
+
 	int Getnumprev();
 	int Getnumnext();
 	int Getstate_ordernum();

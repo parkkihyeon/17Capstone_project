@@ -7,6 +7,8 @@
 #include <stack>
 #include <map>
 #include <queue>
+#include <fstream>
+#include <deque>
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
@@ -22,15 +24,15 @@ class Adjcency_grpah
 private :
 	State_node *root ;
 	State_node *leaf ;
-	hash_4d hashstate_list[NUMUNIT][NUMUNIT] ;
-	stack<State_node *> state_stack ;
+	hash_4d* hashstate_list[NUMUNIT][NUMUNIT] ;
+	deque<State_node *> deque_history ;
 	int statenode_num ;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
 		ar & BOOST_SERIALIZATION_NVP(root);
 		ar & BOOST_SERIALIZATION_NVP(leaf);
-		ar & BOOST_SERIALIZATION_NVP(state_stack);
+//		ar & BOOST_SERIALIZATION_NVP(state_stack);
 		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
 	}
 public:
@@ -39,7 +41,7 @@ public:
 	Adjcency_grpah(Adjcency_grpah *graph);
 
 	void Init_hashtable();
-	void Insert(vector<State_node*> state);
+	void Insert(vector<State_node*>* state);
 	void Backtracking_stack() ;
 	void PushList_Hashtable(State_node* state) ;
 	void Set_4Dhashdata(int &cha_y , int &cha_x, int &pho_y, int &pho_x, State_node* state) ;
@@ -59,5 +61,17 @@ public:
 	// 두 state가 같은지 다른지 확인하는 함수.
 	bool Diff_State(State_node *stateA, State_node *stateB);
 };
+
+class Second_Graph{
+private :
+	Adjcency_grpah *original_g ;	
+public:
+	Second_Graph(Adjcency_grpah *g) ;
+	void Value_process(vector<State_node*>* state) ;
+
+	State_node* GetPrev_state(vector<State_node*>* state, int index) ;
+	State_node* GetNext_state(vector<State_node*>* state, int index) ;
+} ;
+
 
 #endif
