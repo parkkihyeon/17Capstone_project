@@ -25,7 +25,7 @@ private :
 	State_node *root ;
 	State_node *leaf ;
 	hash_4d* hashstate_list[NUMUNIT][NUMUNIT] ;
-	deque<State_node *> deque_history ;
+	deque<State_node *> state_stack ;
 	int statenode_num ;
 	friend class boost::serialization::access;
 	template <typename Archive>
@@ -42,11 +42,11 @@ public:
 
 	void Init_hashtable();
 	void Insert(vector<State_node*>* state);
+	void Second_insert(vector<State_node*>* state);
 	void Backtracking_stack() ;
 	void PushList_Hashtable(State_node* state) ;
 	void Set_4Dhashdata(int &cha_y , int &cha_x, int &pho_y, int &pho_x, State_node* state) ;
 	void Travelgraph_bfs();
-
 	State_node* getRoot();
 	State_node* getLeaf();
 
@@ -69,6 +69,7 @@ public:
 	Second_Graph(Adjcency_grpah *g) ;
 	void Value_process(vector<State_node*>* state) ;
 
+	Adjcency_grpah * Getgraph() ;
 	State_node* GetPrev_state(vector<State_node*>* state, int index) ;
 	State_node* GetNext_state(vector<State_node*>* state, int index) ;
 } ;

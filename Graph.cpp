@@ -36,6 +36,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<State_node*>* sta
 			state->clear();
 			Play_to_Statenode(play, state, i);
 			g->Insert(state);
+			//g->Backtracking_stack() ;
 			cout << i << "¹øÂ°\n" << endl;
 		}
 	}
@@ -45,6 +46,20 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<State_node*>* sta
 	cout << "Graph Generated" << endl;
 }
 
+void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<State_node*>* state){
+	try {
+		for (int i = 0; i < play->size(); i++) {
+			state->clear();
+			Play_to_Statenode(play, state, i);
+			g2->Getgraph()->Second_insert(state) ;
+			g2->Value_process(state);
+		}
+	}
+	catch (exception &e) {
+		std::cerr << e.what();
+	}
+	cout << "Graph Generated_2" << endl;
+}
 
 void Insert_Gibo(vector<Play*> *play)
 {

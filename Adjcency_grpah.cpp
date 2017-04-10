@@ -21,15 +21,18 @@ Adjcency_grpah::Adjcency_grpah(){
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 	root = graph.root;
 	memcpy(hashstate_list, graph.hashstate_list, sizeof(graph.hashstate_list));
-	memcpy(&deque_history, &graph.deque_history, sizeof(graph.deque_history));
+	memcpy(&state_stack, &graph.state_stack, sizeof(graph.state_stack));
 	leaf = graph.leaf;
 }
 //Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
-	root = graph->root;
-	memcpy(hashstate_list, graph->hashstate_list, sizeof(graph->hashstate_list));
-	memcpy(&deque_history, &graph->deque_history, sizeof(graph->deque_history));
-	leaf = graph->leaf;
+   root = graph->root;
+   leaf = graph->leaf;
+   Init_hashtable();
+   statenode_num = graph->statenode_num;
+
+   memcpy(hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
+ //  memcpy(&state_stack, &graph->state_stack, sizeof(deque<State_node *>) * graph->state_stack.size());
 }
 //----------------------------------------------------------------------------------------
 void Adjcency_grpah::Init_hashtable() {
@@ -79,29 +82,43 @@ void Adjcency_grpah::Insert(vector<State_node*>* state){
 				now_state = add_state ;
 			}
 		}
-		deque_history.push_back(now_state) ;
+		state_stack.push_back(now_state) ;
 		now_state->TravelCountPlus();
 	}
 	leaf = now_state ;
+}
+
+void Adjcency_grpah::Second_insert(vector<State_node*>* state){
+	State_node *now_state = root ;
+
+	for(int index = 0 ; index < state->size() ; index++){
+		State_node* add_state = state->at(index) ;
+
+		int childnode = Is_Have_childnode(now_state,add_state) ;
+		// 자기 자식과 같은게 있으면 그대로 이동.
+		now_state = now_state->NthCheck_Childnode(childnode) ;
+		state->at(index) = now_state ;		
+	}
 }
 
 void Adjcency_grpah::Backtracking_stack(){
 	State_node* temp = leaf ;
 
 	temp->Print_State() ;
-	cout << temp->Getcho() << " " << temp->Gethan() << endl ;
-	deque_history.pop_front() ;
+	cout << temp->Getcho() << " " << temp->Gethan() << " " << temp->GetTravelcount() << endl ;
+	state_stack.pop_front() ;
 
 	cout << "\n< Start ! > " << endl ;
-	while(!deque_history.empty()){
-		cout << "borad No." << deque_history.size() << endl; //추가
+	while(!state_stack.empty()){
+		cout << "borad No." << state_stack.size() << endl; //추가
 		temp->Print_State() ;
 		cout << temp->Getcho() << " " << temp->Gethan() << endl ;
 		temp = temp->Getprev()->at(Direction_parentnode(temp));
+		state_stack.pop_front() ;
 	}
 
 	// 스택 비우기
-	while(!deque_history.empty()) deque_history.pop_front() ;
+	while(!state_stack.empty()) state_stack.pop_front() ;
 	cout << "< End ! >" << endl << endl << endl ;
 }
 
@@ -155,8 +172,8 @@ int Adjcency_grpah::Is_Have_childnode(State_node* sub_root, State_node* state) {
 }
 
 int Adjcency_grpah::Direction_parentnode(State_node* sub_node) {
-	State_node* temp = deque_history.front();
-	deque_history.pop_front();
+	State_node* temp = state_stack.front();
+	state_stack.pop_front();
 	for (int i = 0; i<sub_node->Getnumprev(); i++) {
 		if (!Diff_State(sub_node->NthCheck_Parentnode(i), temp))
 			return i;
@@ -196,26 +213,31 @@ bool Adjcency_grpah::Diff_State(State_node *stateA, State_node *stateB){
 }
 
 Second_Graph::Second_Graph(Adjcency_grpah *g) {
-	original_g = new Adjcency_grpah() ;
-	memcpy(original_g , g, sizeof(g)) ;
+	original_g = new Adjcency_grpah(g) ;
 }
 
 void Second_Graph::Value_process(vector<State_node*>* state) {
 	State_node * now_state = new State_node();
 	State_node * prev_state = new State_node();
 	State_node * next_state = new State_node();
-	for(int i = 0 ; i < state->size() ; i++){
+	for(int i = 1 ; i < state->size() ; i++){
 		now_state = state->at(i) ;
 		prev_state = GetPrev_state(state, i) ;
 		next_state = GetNext_state(state, i) ;
 		int actor = now_state->GetTurn()->GetActor() ;
 		int killed = now_state->GetTurn()->GetKilled() ;
 		int checkmate =  now_state->GetTurn()->GetCheckmate() ;
+		cout << now_state->GetTravelcount() << endl ;
 		// 여기에다가 짜면 됨. 
 		// 현재 스테이트의 prev 갯수 now_state->Getnumprev() ;
 		//				next 갯수 now_state->Getnumnext() ;
 	}
 }
+
+Adjcency_grpah * Second_Graph::Getgraph(){
+	return original_g ;
+}
+
 
 State_node* Second_Graph::GetPrev_state(vector<State_node*>* state, int index){
 	if(index >=1 )
