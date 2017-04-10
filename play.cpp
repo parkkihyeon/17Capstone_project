@@ -55,7 +55,7 @@ void Play::initailize() {
 
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
 		for (int j = 0; j < WIDTH_SIZE; j++) {
-			StateInfo[i][j] = Node->arr[i][j];
+			StateInfo[i][j] = Node->getArrPos(i, j);
 		}
 	}
 }
@@ -85,21 +85,21 @@ void Play::createState(string line) {
 	// 한수쉼의 경우
 	if (pos[0] == 0 && pos[1] == 0) {
 		node *Node = new node(StateInfo);
-		Node->host = atoi(strResult[0].c_str());
+		Node->setHost(atoi(strResult[0].c_str()));
 		insertStage(Node);
 		return;
 	}
 	// split된 값들을 이용하여 node 생성
 	strcpy(unit, strResult[3].c_str());
 	node *Node = new node(StateInfo);
-	Node->host = atoi(strResult[0].c_str());
-	Node->actor = *unit;
-	Node->killed = *strResult[4].c_str();
+	Node->setHost(atoi(strResult[0].c_str()));
+	Node->setActor(*unit);
+	Node->setKilled(*strResult[4].c_str());
 	if (atoi(strResult[5].c_str()) == 1) {
-		Node->checkMate = true;
+		Node->setCheckMate(true);
 	}
 	else {
-		Node->checkMate = false;
+		Node->setCheckMate(false);
 	}
 	Node->changeState(pos);
 	insertStage(Node);
@@ -107,9 +107,10 @@ void Play::createState(string line) {
 	//play객체의 Board 최신화
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
 		for (int j = 0; j < WIDTH_SIZE; j++) {
-			StateInfo[i][j] = Node->arr[i][j];
+			StateInfo[i][j] = Node->getArrPos(i, j);
 		}
 	}
+	cout << Node->getHost() << " " << pos[0] << " " << pos[1] << " " << Node->getActor() << " " << Node->getKilled() << " " << Node->getCheckMate() << endl;
 }
 void Play::printBoard() {
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
@@ -125,7 +126,7 @@ void Play::printBoard() {
 			}
 			else if (j == WIDTH_SIZE - 1 && i == HEIGHT_SIZE / 2) {
 				cout << StateInfo[i][j] << " "
-					<< game.at(game.size() - 1)->host;
+					<< game.at(game.size() - 1)->getHost();
 			}
 			else {
 				cout << StateInfo[i][j] << " ";

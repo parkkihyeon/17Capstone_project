@@ -2,11 +2,11 @@
 
 node::node(State board) {
 	Init();
-   for(int i = 0; i < HEIGHT_SIZE; i++) {
-	   for(int j = 0; j < WIDTH_SIZE; j++) {
-		   arr[i][j] = board[i][j];
-	   }
-   }
+	for (int i = 0; i < HEIGHT_SIZE; i++) {
+		for (int j = 0; j < WIDTH_SIZE; j++) {
+			arr[i][j] = board[i][j];
+		}
+	}
 }
 node::node() {
 	Init();
@@ -28,17 +28,17 @@ void node::Init() {
 }
 
 // state의 상태를 출력한다.
-void node::Print_State(){
-   for(int i=1 ; i< HEIGHT_SIZE; i++){
-      for(int j=1 ; j< WIDTH_SIZE ; j++)
-         cout << arr[i][j] << " " ;
-      cout << endl ;
-   }
-   cout << endl;
+void node::Print_State() {
+	for (int i = 1; i < HEIGHT_SIZE; i++) {
+		for (int j = 1; j < WIDTH_SIZE; j++)
+			cout << arr[i][j] << " ";
+		cout << endl;
+	}
+	cout << endl;
 };
 
-State node::returnState(){
-	return arr ;
+State node::returnState() {
+	return arr;
 }
 
 void node::getNumOfUnit() {
@@ -59,26 +59,24 @@ void node::getNumOfUnit() {
 			}
 		}
 	}
-
-
 }
 
 
 void node::changeState(int pos[]) {
-  int oldPos1 = pos[0] / 10;
-  int oldPos2 = pos[0] % 10;
-  int newPos1 = pos[1] / 10;
-  int newPos2 = pos[1] % 10;
+	int oldPos1 = pos[0] / 10;
+	int oldPos2 = pos[0] % 10;
+	int newPos1 = pos[1] / 10;
+	int newPos2 = pos[1] % 10;
 
-  if (oldPos1 == 0) {
-    oldPos1 = 10;
-  }
-  if (newPos1 == 0) {
-    newPos1 = 10;
-  }
-  arr[oldPos1][oldPos2] = '-';
-  arr[newPos1][newPos2] = actor;
-  getNumOfUnit();
+	if (oldPos1 == 0) {
+		oldPos1 = 10;
+	}
+	if (newPos1 == 0) {
+		newPos1 = 10;
+	}
+	arr[oldPos1][oldPos2] = '-';
+	arr[newPos1][newPos2] = actor;
+	getNumOfUnit();
 }
 
 void node::UnitOrder(int cho_order, int han_order) {
@@ -199,9 +197,57 @@ void node::UnitOrder(int cho_order, int han_order) {
 	}
 }
 
-void node::Init_Hashkeydata(){
+void node::Init_Hashkeydata() {
 	sum_of_horsepos.first.first = 0;
 	sum_of_horsepos.first.second = 0;
 	sum_of_horsepos.second.first = 0;
 	sum_of_horsepos.second.second = 0;
+}
+
+pair<Cha_pos, Pho_pos> node::getPair() {
+	return sum_of_horsepos;
+}
+
+int node::getNumOfCho() {
+	return num_of_cho;
+}
+
+int node::getNumOfHan() {
+	return num_of_han;
+}
+
+int node::getHost() {
+	return host;
+}
+
+char node::getActor() {
+	return actor;
+}
+
+char node::getKilled() {
+	return killed;
+}
+
+bool node::getCheckMate() {
+	return checkMate;
+}
+
+void node::setCheckMate(bool is) {
+	checkMate = is;
+}
+
+void node::setActor(char unit) {
+	actor = unit;
+}
+
+void node::setKilled(char unit) {
+	killed = unit;
+}
+
+void node::setHost(int host) {
+	this->host = host;
+}
+
+char node::getArrPos(int xPos, int yPos) {
+	return arr[xPos][yPos];
 }

@@ -11,9 +11,9 @@ State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 	Init();
 };
 State_node::State_node() {
-	for (int i = 0; i< HEIGHT_SIZE; i++) 
+	for (int i = 0; i < HEIGHT_SIZE; i++)
 		memset(arr[i], NULL, sizeof(char)*WIDTH_SIZE);
-	
+
 	Init();
 };
 
@@ -24,7 +24,7 @@ void State_node::Print_State() {
 			if (i == 0) {
 				cout << j << "  ";
 			}
-			else if(j == 0) {
+			else if (j == 0) {
 				cout << i << "  ";
 			}
 			else {
@@ -57,7 +57,7 @@ void State_node::Set_Stateorder(int data) {
 	state_ordernum = data;
 }
 
-void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s){
+void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s) {
 	sum_of_horsepos = s;
 }
 
@@ -77,11 +77,11 @@ void State_node::SetState_number(int setnum) {
 	state_number = setnum;
 }
 
-int State_node::Getnumprev(){
-	return prev->size() ;
+int State_node::Getnumprev() {
+	return prev->size();
 }
 int State_node::Getnumnext() {
-	return next->size() ;
+	return next->size();
 }
 int State_node::Getstate_ordernum() {
 	return state_ordernum;
@@ -94,7 +94,7 @@ int State_node::Getcho() {
 }
 
 int State_node::GetTravelcount() {
-	return travel_count ;
+	return travel_count;
 }
 
 int State_node::GetState_number() {
@@ -109,6 +109,6 @@ vector<State_node*>* State_node::Getprev() {
 	return prev;
 }
 
-pair<Cha_pos, Pho_pos> State_node::GetHorse_pos(){
+pair<Cha_pos, Pho_pos> State_node::GetHorse_pos() {
 	return sum_of_horsepos;
 }

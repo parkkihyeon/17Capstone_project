@@ -2,29 +2,28 @@
 #define __ADJCENCY__GRAPH__  
 
 #include "Statenode.h"
-#include <iostream>
-#include <vector>
 #include <stack>
 #include <map>
 #include <queue>
+#include <fstream>
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
 #define NUMUNIT 17
 
-using namespace std ;
+using namespace std;
 
 typedef pair<Cha_pos, Pho_pos> pair_key;
 typedef multimap<pair_key, State_node*> hash_4d; // 4차원 해쉬
 
 class Adjcency_grpah
 {
-private :
-	State_node *root ;
-	State_node *leaf ;
-	hash_4d hashstate_list[NUMUNIT][NUMUNIT] ;
-	stack<State_node *> state_stack ;
-	int statenode_num ;
+private:
+	State_node *root;
+	State_node *leaf;
+	hash_4d* hashstate_list[NUMUNIT][NUMUNIT];
+	stack<State_node *> state_stack;
+	int statenode_num;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
@@ -40,10 +39,10 @@ public:
 
 	void Init_hashtable();
 	void Insert(vector<State_node*> state);
-	void Backtracking_stack() ;
-	void PushList_Hashtable(State_node* state) ;
-	void Set_4Dhashdata(int &cha_y , int &cha_x, int &pho_y, int &pho_x, State_node* state) ;
-	//void Travelgraph_bfs();
+	void Backtracking_stack();
+	void PushList_Hashtable(State_node* state);
+	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
+	void Travelgraph_bfs();
 
 	State_node* getRoot();
 	State_node* getLeaf();
