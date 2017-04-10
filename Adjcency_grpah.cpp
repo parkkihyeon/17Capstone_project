@@ -23,7 +23,7 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 	Init_hashtable();
 	statenode_num = graph.statenode_num;
 
-	memcpy(hashstate_list, graph.hashstate_list, sizeof(graph.hashstate_list) * NUMUNIT * NUMUNIT);
+	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d) * NUMUNIT * NUMUNIT);
 	//memcpy(&state_stack, &graph.state_stack, sizeof(graph.state_stack) * &graph->state_stack.size());
 }
 //Save Serialize를 위한 깊은 복사 생성자
@@ -34,16 +34,9 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 	statenode_num = graph->statenode_num;
 
 	memcpy(hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
-	memcpy(&state_stack, &graph->state_stack, sizeof(stack<State_node *>) * graph->state_stack.size());
-
-	//vector<State_node*> tempStack;
-	//while (false == graph->state_stack.empty()) {
-	//	tempStack.push_back(graph->state_stack.top());
-	//	graph->state_stack.pop();
-	//}
-	//for (int i = tempStack.size() - 1; i >= 0; i--) {
-	//	state_stack.push(tempStack.at(i));
-	//}
+	//memcpy(&state_stack, &graph->state_stack, sizeof(stack<State_node *>) * graph->state_stack.size());
+	//memcpy(&state_stack, &graph->state_stack, sizeof(graph->state_stack) * graph->state_stack.size());
+	//memcpy(&state_stack, &graph->state_stack, sizeof(graph->state_stack));
 }
 //----------------------------------------------------------------------------------------
 void Adjcency_grpah::Init_hashtable() {

@@ -87,6 +87,7 @@ void Play::createState(string line) {
 		node *Node = new node(StateInfo);
 		Node->setHost(atoi(strResult[0].c_str()));
 		insertStage(Node);
+		//cout << "한수쉼 Data" << endl;
 		return;
 	}
 	// split된 값들을 이용하여 node 생성
@@ -110,7 +111,7 @@ void Play::createState(string line) {
 			StateInfo[i][j] = Node->getArrPos(i, j);
 		}
 	}
-	cout << Node->getHost() << " " << pos[0] << " " << pos[1] << " " << Node->getActor() << " " << Node->getKilled() << " " << Node->getCheckMate() << endl;
+	//cout << Node->getHost() << " " << pos[0] << " " << pos[1] << " " << Node->getActor() << " " << Node->getKilled() << " " << Node->getCheckMate() << endl;
 }
 void Play::printBoard() {
 	for (int i = 0; i < HEIGHT_SIZE; i++) {

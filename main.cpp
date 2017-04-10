@@ -21,7 +21,6 @@ Adjcency_grpah LoadTestData(char *fileName) {
 
 int main()
 {
-
 	Adjcency_grpah *g = new Adjcency_grpah();
 	vector<State_node*> state;
 	vector<Play*> play;
@@ -44,7 +43,8 @@ int main()
 	SaveTestData(g, "G");
 	cout << "Graph Generated" << endl;
 
-	//	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
+	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G"));
+
 
 	clock_t end_t = clock();
 	cout << "½Ã°£ : " << (end_t - start_t) / 1000 << endl;
