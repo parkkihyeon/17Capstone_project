@@ -29,7 +29,7 @@ private:
 	pair<Cha_pos, Pho_pos> sum_of_horsepos;
 
 public:
-	
+
 	node(State board);
 	node();
 

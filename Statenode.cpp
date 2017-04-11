@@ -1,5 +1,36 @@
 #include "Statenode.h"
 
+Now_turn::Now_turn(char act, char kill, bool check) {
+	actor = act;
+	killed = kill;
+	checkmate = check;
+};
+
+Now_turn::Now_turn() {
+	actor = NULL;
+	killed = NULL;
+	checkmate = false;
+}
+
+char Now_turn::GetActor() {
+	return actor;
+}
+
+char Now_turn::GetKilled() {
+	return killed;
+}
+
+bool Now_turn::GetCheckmate() {
+	return checkmate;
+}
+
+void Now_turn::SetTurn(char act, char kill, bool check) {
+	actor = act;
+	killed = kill;
+	checkmate = check;
+}
+
+
 State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 	for (int i = 0; i < WIDTH_SIZE; i++)
 		arr[0][i] = NULL;
@@ -49,6 +80,10 @@ State_node* State_node::NthCheck_Childnode(int n) {
 State_node* State_node::NthCheck_Parentnode(int n) {
 	return prev->at(n);
 };
+Now_turn* State_node::GetTurn() {
+	return this_turn;
+}
+
 void State_node::Set_numUnit(int cho, int han) {
 	unit_of_han = han;
 	unit_of_cho = cho;
@@ -64,9 +99,10 @@ void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s) {
 void State_node::Init() {
 	next = new vector<State_node*>();
 	prev = new vector<State_node*>();
+	this_turn = new Now_turn();
 	state_ordernum = 0;
 	travel_count = 0;
-	state_number = 0;
+	state_number = 1;
 }
 
 void State_node::TravelCountPlus() {
