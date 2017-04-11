@@ -10,14 +10,14 @@ void SaveTestData(Adjcency_grpah *i, char *fileName) {
 }
 //
 ////만들어진 파일을 다시 로드
-//Adjcency_grpah LoadTestData(char *fileName) {
-//	Adjcency_grpah g;
-//	std::ifstream ifs(fileName);
-//	boost::archive::text_iarchive ia(ifs);
-//	ia & BOOST_SERIALIZATION_NVP(g);
-//
-//	return g;
-//}
+Adjcency_grpah LoadTestData(char *fileName) {
+	Adjcency_grpah g;
+	std::ifstream ifs(fileName);
+	boost::archive::text_iarchive ia(ifs);
+	ia & BOOST_SERIALIZATION_NVP(g);
+	cout << "Serial Success" << endl;
+	return g;
+}
 
 void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state)
 {

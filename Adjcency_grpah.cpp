@@ -24,7 +24,7 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 	Init_hashtable();
 	statenode_num = graph.statenode_num;
 
-	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d) * NUMUNIT * NUMUNIT);
+	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
 }
 //Save Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
