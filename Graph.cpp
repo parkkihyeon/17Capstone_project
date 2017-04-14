@@ -7,9 +7,8 @@ void SaveTestData(Adjcency_grpah *i, char *fileName) {
 	//boost::archive::text_oarchive oa(ofs);
 	boost::archive::binary_oarchive oa(ofs);
 	oa & BOOST_SERIALIZATION_NVP(g);
-	cout << "Serialize Success" << endl;
+	cout << "Storing Serialize Success" << endl;
 }
-//
 ////만들어진 파일을 다시 로드
 Adjcency_grpah LoadTestData(char *fileName) {
 	Adjcency_grpah g;
@@ -21,8 +20,7 @@ Adjcency_grpah LoadTestData(char *fileName) {
 	//boost::archive::text_iarchive ia(ifs);
 	boost::archive::binary_iarchive ia(ifs);
 	ia & BOOST_SERIALIZATION_NVP(g);
-	/*ia >> g;*/
-	cout << "Serial Success" << endl;
+	cout << "Restoring Serialize Success" << endl;
 	return g;
 }
 
@@ -53,7 +51,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<State_node*>* sta
 	catch (exception &e) {
 		std::cerr << e.what();
 	}
-	cout << "Graph Generated" << endl;
+	cout << "Graph Generated\n" << endl;
 }
 
 void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<State_node*>* state) {
@@ -73,7 +71,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<State_node*
 
 void Insert_Gibo(vector<Play*> *play)
 {
-	ifstream inStream("testFile.txt");
+	ifstream inStream("testFile_200.txt");
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);

@@ -142,7 +142,11 @@ Play* Play::createPlay(ifstream &file) {
 	string textLine;
 	getline(file, textLine);
 	if (textLine.find('.txt') != string::npos) {
-		//cout << textLine << endl;
+		if (fileNum % 100 == 0) {
+			cout << textLine << endl;
+			cout << endl;
+		}
+		fileNum++;
 		int reportNumber = INITIAL_ORDER,
 			cho = INITIAL_ORDER, han = INITIAL_ORDER, victory = INITIAL_ORDER;
 		bool flag = false;

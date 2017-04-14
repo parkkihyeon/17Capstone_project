@@ -13,6 +13,8 @@
 
 using namespace std;
 
+static int fileNum = 0;
+
 class Play {
 private:
 	// 기보 번호

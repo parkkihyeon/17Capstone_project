@@ -46,6 +46,20 @@ public:
 	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
 	void Travelgraph_bfs();
 
+	bool operator== (Adjcency_grpah *graph) const {
+		if (memcmp(this->hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT)) {
+			return false;
+		}
+		else if (memcmp(this->root, graph->root, sizeof(State_node*))) {
+			return false;
+		}
+		else if (memcmp(this->leaf, graph->leaf, sizeof(State_node*))) {
+			return false;
+		}
+		else
+			return true;
+	};
+
 	State_node* getRoot();
 	State_node* getLeaf();
 

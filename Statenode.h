@@ -89,6 +89,38 @@ public:
 	void TravelCountPlus();
 	void SetState_number(int setnum);
 
+	bool operator==(State_node *node) const{
+		if (memcmp(this->next, node->next, sizeof(vector<State_node*>))) {
+			return false;
+		}
+		else if (memcmp(this->prev, node->prev, sizeof(vector<State_node*>))) {
+			return false;
+		}
+		else if (memcmp(&this->sum_of_horsepos, &node->sum_of_horsepos, sizeof(pair<Cha_pos, Pho_pos>))) {
+			return false;
+		}
+		else if (memcmp(&this->state_ordernum, &node->state_ordernum, sizeof(int))) {
+			return false;
+		}
+		else if (memcmp(&this->unit_of_cho, &node->unit_of_cho, sizeof(int))) {
+			return false;
+		}
+		else if (memcmp(&this->unit_of_han, &node->unit_of_han, sizeof(int))) {
+			return false;
+		}
+		else if (memcmp(&this->travel_count, &node->travel_count, sizeof(int))) {
+			return false;
+		}
+		else if (memcmp(&this->state_number, &node->state_number, sizeof(int))) {
+			return false;
+		}
+		else if (memcmp(this->this_turn, &node->this_turn, sizeof(vector<State_node*>))) {
+			return false;
+		}
+		else
+			return true;
+	}
+
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);
 	State_node* NthCheck_Parentnode(int n);
