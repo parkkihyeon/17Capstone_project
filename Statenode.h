@@ -14,6 +14,9 @@
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/utility.hpp>
 
+#include <boost/archive/binary_iarchive.hpp> // 텍스트 형태로 입력하기 위해
+#include <boost/archive/binary_oarchive.hpp> // 텍스트 형태로 입력하기 위해
+
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/throw_exception.hpp>
 #include <boost/exception/all.hpp>

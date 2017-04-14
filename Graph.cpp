@@ -3,8 +3,9 @@
 //시리얼라이즈를 한 그래프를 파일로 만들어낸다.
 void SaveTestData(Adjcency_grpah *i, char *fileName) {
 	Adjcency_grpah g(i);
-	std::ofstream ofs(fileName);
-	boost::archive::text_oarchive oa(ofs);
+	std::ofstream ofs(fileName, std::ios::binary);
+	//boost::archive::text_oarchive oa(ofs);
+	boost::archive::binary_oarchive oa(ofs);
 	oa & BOOST_SERIALIZATION_NVP(g);
 	cout << "Serialize Success" << endl;
 }
@@ -12,9 +13,15 @@ void SaveTestData(Adjcency_grpah *i, char *fileName) {
 ////만들어진 파일을 다시 로드
 Adjcency_grpah LoadTestData(char *fileName) {
 	Adjcency_grpah g;
-	std::ifstream ifs(fileName);
-	boost::archive::text_iarchive ia(ifs);
+	std::ifstream ifs(fileName, std::ios::binary);
+	if (!ifs) {
+		cout << "Read Error" << endl;
+		exit(1);
+	}
+	//boost::archive::text_iarchive ia(ifs);
+	boost::archive::binary_iarchive ia(ifs);
 	ia & BOOST_SERIALIZATION_NVP(g);
+	/*ia >> g;*/
 	cout << "Serial Success" << endl;
 	return g;
 }
