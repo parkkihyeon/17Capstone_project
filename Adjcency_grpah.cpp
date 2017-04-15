@@ -209,6 +209,20 @@ bool Adjcency_grpah::Diff_State(State_node *stateA, State_node *stateB) {
 	return false;
 }
 
+const bool Adjcency_grpah::operator==(Adjcency_grpah *graph) {
+	if (memcmp(this->hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT)) {
+		return false;
+	}
+	else if (!(this->root->operator==(graph->getRoot()))) {
+		return false;
+	}
+	else if (!(this->leaf->operator==(graph->getLeaf()))) {
+		return false;
+	}
+	else
+		return true;
+}
+
 Second_Graph::Second_Graph(Adjcency_grpah *g) {
 	original_g = new Adjcency_grpah(g);
 }
@@ -246,4 +260,3 @@ State_node* Second_Graph::GetNext_state(vector<State_node*>* state, int index) {
 		return state->at(index + 1);
 	return NULL;
 }
-

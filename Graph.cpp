@@ -4,7 +4,6 @@
 void SaveTestData(Adjcency_grpah *i, char *fileName) {
 	Adjcency_grpah g(i);
 	std::ofstream ofs(fileName, std::ios::binary);
-	//boost::archive::text_oarchive oa(ofs);
 	boost::archive::binary_oarchive oa(ofs);
 	oa & BOOST_SERIALIZATION_NVP(g);
 	cout << "Storing Serialize Success\n" << endl;
@@ -17,7 +16,6 @@ Adjcency_grpah LoadTestData(char *fileName) {
 		cout << "Read Error" << endl;
 		exit(1);
 	}
-	//boost::archive::text_iarchive ia(ifs);
 	boost::archive::binary_iarchive ia(ifs);
 	ia & BOOST_SERIALIZATION_NVP(g);
 	cout << "Restoring Serialize Success\n" << endl;
