@@ -13,6 +13,8 @@
 
 using namespace std;
 
+static int fileNum = 0;
+
 class Play {
 private:
 	// 기보 번호
@@ -39,8 +41,8 @@ public:
 	Play* createPlay(ifstream &file);
 
 	bool getRightNode() {
-		if (cho_order == INITIAL_ORDER || 
-			han_order == INITIAL_ORDER || 
+		if (cho_order == INITIAL_ORDER ||
+			han_order == INITIAL_ORDER ||
 			victory == INITIAL_ORDER) {
 			return false;
 		}

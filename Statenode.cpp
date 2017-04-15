@@ -1,33 +1,33 @@
 #include "Statenode.h"
 
 Now_turn::Now_turn(char act, char kill, bool check) {
-	actor = act ;
-	killed = kill ;
-	checkmate = check ;
+	actor = act;
+	killed = kill;
+	checkmate = check;
 };
 
 Now_turn::Now_turn() {
-	actor = NULL ;
-	killed = NULL ;
-	checkmate = false ;
+	actor = NULL;
+	killed = NULL;
+	checkmate = false;
 }
 
 char Now_turn::GetActor() {
-	return actor ;
+	return actor;
 }
 
 char Now_turn::GetKilled() {
-	return killed ;
+	return killed;
 }
 
 bool Now_turn::GetCheckmate() {
-	return checkmate ;
+	return checkmate;
 }
 
-void Now_turn::SetTurn(char act, char kill, bool check){
-	actor = act ;
-	killed = kill ;
-	checkmate = check ;  
+void Now_turn::SetTurn(char act, char kill, bool check) {
+	actor = act;
+	killed = kill;
+	checkmate = check;
 }
 
 
@@ -42,8 +42,9 @@ State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 	Init();
 };
 State_node::State_node() {
-	for (int i = 0; i< HEIGHT_SIZE; i++) 
+	for (int i = 0; i < HEIGHT_SIZE; i++)
 		memset(arr[i], NULL, sizeof(char)*WIDTH_SIZE);
+
 	Init();
 };
 
@@ -54,7 +55,7 @@ void State_node::Print_State() {
 			if (i == 0) {
 				cout << j << "  ";
 			}
-			else if(j == 0) {
+			else if (j == 0) {
 				cout << i << "  ";
 			}
 			else {
@@ -80,7 +81,7 @@ State_node* State_node::NthCheck_Parentnode(int n) {
 	return prev->at(n);
 };
 Now_turn* State_node::GetTurn() {
-	return this_turn ;
+	return this_turn;
 }
 
 void State_node::Set_numUnit(int cho, int han) {
@@ -91,14 +92,14 @@ void State_node::Set_Stateorder(int data) {
 	state_ordernum = data;
 }
 
-void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s){
+void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s) {
 	sum_of_horsepos = s;
 }
 
 void State_node::Init() {
 	next = new vector<State_node*>();
 	prev = new vector<State_node*>();
-	this_turn = new Now_turn() ;
+	this_turn = new Now_turn();
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
@@ -112,11 +113,11 @@ void State_node::SetState_number(int setnum) {
 	state_number = setnum;
 }
 
-int State_node::Getnumprev(){
-	return prev->size() ;
+int State_node::Getnumprev() {
+	return prev->size();
 }
 int State_node::Getnumnext() {
-	return next->size() ;
+	return next->size();
 }
 int State_node::Getstate_ordernum() {
 	return state_ordernum;
@@ -129,7 +130,7 @@ int State_node::Getcho() {
 }
 
 int State_node::GetTravelcount() {
-	return travel_count ;
+	return travel_count;
 }
 
 int State_node::GetState_number() {
@@ -144,6 +145,38 @@ vector<State_node*>* State_node::Getprev() {
 	return prev;
 }
 
-pair<Cha_pos, Pho_pos> State_node::GetHorse_pos(){
+pair<Cha_pos, Pho_pos> State_node::GetHorse_pos() {
 	return sum_of_horsepos;
+}
+
+const bool State_node::operator==(State_node *node) {
+	if (memcmp(this->next, node->next, sizeof(vector<State_node*>))) {
+		return false;
+	}
+	else if (memcmp(this->prev, node->prev, sizeof(vector<State_node*>))) {
+		return false;
+	}
+	else if (memcmp(&this->sum_of_horsepos, &node->sum_of_horsepos, sizeof(pair<Cha_pos, Pho_pos>))) {
+		return false;
+	}
+	else if (memcmp(&this->state_ordernum, &node->state_ordernum, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(&this->unit_of_cho, &node->unit_of_cho, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(&this->unit_of_han, &node->unit_of_han, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(&this->travel_count, &node->travel_count, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(&this->state_number, &node->state_number, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(this->this_turn, &node->this_turn, sizeof(vector<State_node*>))) {
+		return false;
+	}
+	else
+		return true;
 }
