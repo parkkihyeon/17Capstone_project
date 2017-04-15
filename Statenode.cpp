@@ -1,15 +1,17 @@
 #include "Statenode.h"
 
-Now_turn::Now_turn(char act, char kill, bool check) {
+Now_turn::Now_turn(char act, char kill, bool check, int host) {
 	actor = act;
 	killed = kill;
 	checkmate = check;
+	this->host = host ;
 };
 
 Now_turn::Now_turn() {
 	actor = NULL;
 	killed = NULL;
 	checkmate = false;
+	host = NULL ;
 }
 
 char Now_turn::GetActor() {
@@ -24,10 +26,15 @@ bool Now_turn::GetCheckmate() {
 	return checkmate;
 }
 
-void Now_turn::SetTurn(char act, char kill, bool check) {
+int Now_turn::Gethost() {
+	return host;
+}
+
+void Now_turn::SetTurn(char act, char kill, bool check, int host) {
 	actor = act;
 	killed = kill;
 	checkmate = check;
+	this->host = host ;
 }
 
 

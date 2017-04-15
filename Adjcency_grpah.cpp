@@ -190,9 +190,9 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state) {
 	hash_4d::iterator itCur;
 	pair<hash_4d::iterator, hash_4d::iterator> it_pair;
 	it_pair = m->equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
-	//cout << horse_x << " " << horse_y << endl;
+
 	for (itCur = it_pair.first; itCur != it_pair.second; itCur++) {
-		if (!Diff_State(itCur->second, state))
+		if (!Diff_State(itCur->second, state) && itCur->second->GetTurn()->Gethost() == state->GetTurn()->Gethost() )
 			return itCur->second;
 	}
 
@@ -238,9 +238,9 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 		int actor = now_state->GetTurn()->GetActor();
 		int killed = now_state->GetTurn()->GetKilled();
 		int checkmate = now_state->GetTurn()->GetCheckmate();
-		// 여기에다가 짜면 됨. 
-		// 현재 스테이트의 prev 갯수 now_state->Getnumprev() ;
-		//				next 갯수 now_state->Getnumnext() ;
+		int host = now_state->GetTurn()->Gethost() ;
+
+
 	}
 }
 

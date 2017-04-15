@@ -29,7 +29,7 @@ void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_
 		State_node* now_state = new State_node(node_t->returnState());
 		now_state->Set_numUnit(node_t->getNumOfCho(), node_t->getNumOfHan());
 		now_state->SetHorse_position(node_t->getPair());
-		now_state->GetTurn()->SetTurn(node_t->getActor(), node_t->getKilled(), node_t->getCheckMate());
+		now_state->GetTurn()->SetTurn(node_t->getActor(), node_t->getKilled(), node_t->getCheckMate(), node_t->getHost());
 		state->push_back(now_state);
 	}
 

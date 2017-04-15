@@ -35,25 +35,27 @@ private:
 	char actor;
 	char killed;
 	bool checkmate;
+	int host ;
 
 public:
-	Now_turn(char act, char kill, bool check);
+	Now_turn(char act, char kill, bool check, int host);
 	Now_turn();
 	char GetActor();
 	char GetKilled();
 	bool GetCheckmate();
-	void SetTurn(char act, char kill, bool check);
+	int Gethost() ;
+	void SetTurn(char act, char kill, bool check, int host);
 };
 
 
 class State_node
 {
 private:
-	int state_ordernum;
+	int state_ordernum; //현재 부모의 n번째 자식. n을 뜻함.
 	int unit_of_han;
 	int unit_of_cho;
 	int travel_count;
-	int state_number;
+	int state_number; //  state 번호를 뜻함.
 	Now_turn *this_turn;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
@@ -65,6 +67,7 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(state_ordernum);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
+		ar & BOOST_SERIALIZATION_NVP(travel_count);
 		ar & BOOST_SERIALIZATION_NVP(arr);
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
