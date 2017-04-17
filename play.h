@@ -24,6 +24,15 @@ private:
 	int han_order;
 	int victory;
 
+	friend class boost::serialization::access;
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int ver) {
+		ar & BOOST_SERIALIZATION_NVP(cho_order);
+		ar & BOOST_SERIALIZATION_NVP(han_order);
+		ar & BOOST_SERIALIZATION_NVP(victory);
+		ar & BOOST_SERIALIZATION_NVP(game);
+	}
+
 public:
 	void printBoard();
 	char StateInfo[HEIGHT_SIZE][WIDTH_SIZE];
