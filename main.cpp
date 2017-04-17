@@ -11,8 +11,10 @@ int main()
 	Insert_Gibo(play);
 	Graph_made(g, play, state);
 
-	//SaveTestData(g, "G_BinaryFile");
-	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadTestData("G_BinaryFile"));
+
+	SaveVectorData(play, "V_BinaryFile");
+	SaveGraphData(g, "G_BinaryFile");
+	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("G_BinaryFile"));
 
 	clock_t end_t = clock();
 	cout << "½Ã°£ : " << (end_t - start_t) / 1000 << endl;
