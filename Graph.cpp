@@ -22,7 +22,7 @@ Adjcency_grpah LoadGraphData(char *fileName) {
 	return g;
 }
 //Make Binary file with Vector Serialization 
-void SaveVectorData(vector<Play> *i, char *fileName) {
+void SaveVectorData(vector<Play*> *i, char *fileName) {
 	std::ofstream ofs(fileName, std::ios::binary);
 	boost::archive::binary_oarchive oa(ofs);
 	oa & BOOST_SERIALIZATION_NVP(i);

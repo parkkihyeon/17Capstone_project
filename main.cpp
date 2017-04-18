@@ -5,14 +5,17 @@ int main()
 {
 	clock_t start_t = clock();
 	
-	Adjcency_grpah *g = new Adjcency_grpah();
 	vector<State_node*> *state = new vector<State_node*>();
+	vector<Play*> *LoadPlay = new vector<Play*>(); //--> 복구된 Vector를 복사하기 위해
 	vector<Play*> *play = new vector<Play*>();
+	Adjcency_grpah *g = new Adjcency_grpah();
+	
 	Insert_Gibo(play);
 	Graph_made(g, play, state);
 
-
 	SaveVectorData(play, "V_BinaryFile");
+	LoadPlay = LoadVectorData("V_BinaryFile");
+
 	SaveGraphData(g, "G_BinaryFile");
 	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("G_BinaryFile"));
 

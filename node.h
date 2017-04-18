@@ -4,6 +4,20 @@
 #include <iostream>
 #include <vector>
 
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/vector.hpp> // 직렬화 vector를 사용하기 위해
+#include <boost/serialization/deque.hpp> // 직렬화 stack을 사용하기 위해
+#include <boost/serialization/stack.hpp> // 직렬화 stack을 사용하기 위해
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/utility.hpp>
+
+#include <boost/archive/binary_iarchive.hpp> // 바이너리 형태로 입력하기 위해
+#include <boost/archive/binary_oarchive.hpp> // 바이너리 형태로 입력하기 위해
+
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/throw_exception.hpp>
+#include <boost/exception/all.hpp>
+
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
 
@@ -27,6 +41,19 @@ private:
 	bool checkMate;
 
 	pair<Cha_pos, Pho_pos> sum_of_horsepos;
+
+	friend class boost::serialization::access;
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int ver) {
+		ar & BOOST_SERIALIZATION_NVP(host);
+		ar & BOOST_SERIALIZATION_NVP(num_of_cho);
+		ar & BOOST_SERIALIZATION_NVP(num_of_han);
+		ar & BOOST_SERIALIZATION_NVP(killed);
+		ar & BOOST_SERIALIZATION_NVP(actor);
+		ar & BOOST_SERIALIZATION_NVP(arr);
+		ar & BOOST_SERIALIZATION_NVP(checkMate);
+		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
+	}
 
 public:
 

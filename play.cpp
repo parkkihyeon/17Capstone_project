@@ -194,3 +194,13 @@ Play* Play::createPlay(ifstream &file) {
 	}
 	return returnData;
 }
+bool Play::getRightNode() {
+	if (cho_order == INITIAL_ORDER ||
+		han_order == INITIAL_ORDER ||
+		victory == INITIAL_ORDER) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
