@@ -24,10 +24,21 @@ private:
 	int han_order;
 	int victory;
 
+	friend class boost::serialization::access;
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int ver) {
+		ar & BOOST_SERIALIZATION_NVP(cho_order);
+		ar & BOOST_SERIALIZATION_NVP(han_order);
+		ar & BOOST_SERIALIZATION_NVP(victory);
+		ar & BOOST_SERIALIZATION_NVP(game);
+		ar & BOOST_SERIALIZATION_NVP(reportNumber);
+		ar & BOOST_SERIALIZATION_NVP(StateInfo);
+	}
+
 public:
-	void printBoard();
 	char StateInfo[HEIGHT_SIZE][WIDTH_SIZE];
 	vector<node*> game;
+
 	Play();
 	Play(int reportNum, int cho, int han, int vic);
 
@@ -35,21 +46,14 @@ public:
 	void insertStage(node *state);
 
 	// State¸¦ »ý¼º
-	/*void createState(int pos[], int unit);*/
 	void createState(string line);
+
+	void printBoard();
 
 	Play* createPlay(ifstream &file);
 
-	bool getRightNode() {
-		if (cho_order == INITIAL_ORDER ||
-			han_order == INITIAL_ORDER ||
-			victory == INITIAL_ORDER) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
+	bool getRightNode();
+
 	void initailize();
 };
 #endif

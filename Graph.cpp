@@ -1,15 +1,15 @@
 #include "Graph.h"
 
-//시리얼라이즈를 한 그래프를 파일로 만들어낸다.
-void SaveTestData(Adjcency_grpah *i, char *fileName) {
+//Make Binary file with Graph Serialization 
+void SaveGraphData(Adjcency_grpah *i, char *fileName) {
 	Adjcency_grpah g(i);
 	std::ofstream ofs(fileName, std::ios::binary);
 	boost::archive::binary_oarchive oa(ofs);
 	oa & BOOST_SERIALIZATION_NVP(g);
-	cout << "Storing Serialize Success\n" << endl;
+	cout << "Storing Graphs Serialize Success\n" << endl;
 }
-////만들어진 파일을 다시 로드
-Adjcency_grpah LoadTestData(char *fileName) {
+//Reload Graph Serialized Binary file
+Adjcency_grpah LoadGraphData(char *fileName) {
 	Adjcency_grpah g;
 	std::ifstream ifs(fileName, std::ios::binary);
 	if (!ifs) {
@@ -18,8 +18,28 @@ Adjcency_grpah LoadTestData(char *fileName) {
 	}
 	boost::archive::binary_iarchive ia(ifs);
 	ia & BOOST_SERIALIZATION_NVP(g);
-	cout << "Restoring Serialize Success\n" << endl;
+	cout << "Restoring Graphs Serialize Success\n" << endl;
 	return g;
+}
+//Make Binary file with Vector Serialization 
+void SaveVectorData(vector<Play*> *i, char *fileName) {
+	std::ofstream ofs(fileName, std::ios::binary);
+	boost::archive::binary_oarchive oa(ofs);
+	oa & BOOST_SERIALIZATION_NVP(i);
+	cout << "Storing Vector Serialize Success\n" << endl;
+}
+//Reload Vector Serialized Binary file
+vector<Play*> *LoadVectorData(char *fileName) {
+	vector<Play*> *vec = new vector<Play*>();
+	std::ifstream ifs(fileName, std::ios::binary);
+	if (!ifs) {
+		cout << "Read Error" << endl;
+		exit(1);
+	}
+	boost::archive::binary_iarchive ia(ifs);
+	ia & BOOST_SERIALIZATION_NVP(vec);
+	cout << "Restoring Vector Serialize Success\n" << endl;
+	return vec;
 }
 
 void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state)
