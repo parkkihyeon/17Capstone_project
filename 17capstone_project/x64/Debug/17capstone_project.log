@@ -1,0 +1,32 @@
+﻿빌드 시작: 2017-04-15 오후 7:22:49
+     1>2 노드의 "C:\Users\park\Documents\17Capstone_project\17capstone_project\17capstone_project.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\boost_1_63_0 /Zi /nologo /W3 /WX- /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt ..\Adjcency_grpah.cpp ..\Graph.cpp ..\main.cpp ..\node.cpp ..\play.cpp ..\Statenode.cpp
+         Statenode.cpp
+     1>..\Statenode.cpp(117): warning C4267: 'return' : 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>..\Statenode.cpp(120): warning C4267: 'return' : 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+         play.cpp
+     1>..\play.cpp(69): warning C4267: '=' : 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>..\play.cpp(93): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\string.h(110) : 'strcpy' 선언을 참조하십시오.
+     1>..\play.cpp(144): warning C4305: '인수' : 'int'에서 'char'(으)로 잘립니다.
+     1>..\play.cpp(144): warning C4309: '인수' : 상수 값이 잘립니다.
+         node.cpp
+         main.cpp
+         Graph.cpp
+         Adjcency_grpah.cpp
+     1>..\Adjcency_grpah.cpp(79): warning C4267: '인수' : 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+         코드를 생성하고 있습니다...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\park\Documents\17Capstone_project\17capstone_project\x64\Debug\17capstone_project.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\boost_1_63_0\stage\lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\park\Documents\17Capstone_project\17capstone_project\x64\Debug\17capstone_project.pdb" /SUBSYSTEM:CONSOLE /HEAP:"10485760" /STACK:"10485760" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\park\Documents\17Capstone_project\17capstone_project\x64\Debug\17capstone_project.lib" /MACHINE:X64 x64\Debug\Adjcency_grpah.obj
+         x64\Debug\Graph.obj
+         x64\Debug\main.obj
+         x64\Debug\node.obj
+         x64\Debug\play.obj
+         x64\Debug\Statenode.obj
+     1>libboost_serialization-vc110-mt-gd-1_63.lib(singleton.obj) : fatal error LNK1112: 'X86' 모듈 컴퓨터 종류가 'x64' 대상 컴퓨터 종류와 충돌합니다.
+     1>"C:\Users\park\Documents\17Capstone_project\17capstone_project\17capstone_project.vcxproj" 프로젝트를 빌드했습니다(Build 대상). - 실패
+
+빌드하지 못했습니다.
+
+경과 시간: 00:00:14.68

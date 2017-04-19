@@ -192,7 +192,7 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state) {
 	it_pair = m->equal_range(pair_key(Cha_pos(cha_y, cha_x), Pho_pos(pho_y, pho_x)));
 
 	for (itCur = it_pair.first; itCur != it_pair.second; itCur++) {
-		if (!Diff_State(itCur->second, state) && itCur->second->GetTurn()->Gethost() == state->GetTurn()->Gethost() )
+		if (!Diff_State(itCur->second, state) )
 			return itCur->second;
 	}
 
@@ -201,12 +201,14 @@ State_node* Adjcency_grpah::Is_In_The_List_State(State_node *state) {
 
 // 두 state가 같은지 다른지 확인하는 함수.
 bool Adjcency_grpah::Diff_State(State_node *stateA, State_node *stateB) {
+	if ( stateA->GetTurn()->Gethost() != stateB->GetTurn()->Gethost())
+		return true ;
 	for (int i = 1; i < HEIGHT_SIZE; i++)
 		for (int j = 1; j < WIDTH_SIZE; j++) {
-			if (stateA->arr[i][j] != stateB->arr[i][j])
+			if (stateA->arr[i][j] != stateB->arr[i][j] )
 				return true;
 		}
-	return false;
+	return false  ;
 }
 
 const bool Adjcency_grpah::operator==(Adjcency_grpah *graph) {
