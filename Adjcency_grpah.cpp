@@ -1,11 +1,12 @@
 #include "Adjcency_grpah.h"
 
-int rester_eval = 100;
-int moving_eval = 10;
-int killer_eval = 1000;
-int killee_eval = -1000;
-int checkmater_eval = 500;
-int checkmatee_eval = -1000;
+const int rester_eval = 100;
+const int moving_eval = 10;
+const int killer_eval = 1000;
+const int killee_eval = -1000;
+const int checkmater_eval = 500;
+const int checkmatee_eval = -1000;
+const int learning_rate = 0.9;
 
 Adjcency_grpah::Adjcency_grpah() {
 
@@ -147,7 +148,7 @@ void Adjcency_grpah::Travelgraph_bfs() {
 		temp = q->front();
 		q->pop();
 		stream << "state 번호 : " << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
-		stream << temp->GetTurn()->Gethost() << endl; // 0이면 초, 1이면 한.
+		stream << temp->GetTurn()->Gethost() << ", " << "score : " << temp->GetScore() << endl; // 0이면 초, 1이면 한.
 		// 초에 state이면 다음 차례는 한 이므로 한에 대한 weight를 기재.
 		for (int i = 0; i < 7; i++) {
 			if(temp->GetTurn()->Gethost() == 0)
@@ -256,7 +257,6 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 		now_state = state->at(i);
 		prev_state = GetPrev_state(state, i);
 		prev2_state = GetPrev_state(state, i-1);
-	//	next_state = GetNext_state(state, i);
 		char actor = now_state->GetTurn()->GetActor();
 		char killed = now_state->GetTurn()->GetKilled();
 		bool checkmate = now_state->GetTurn()->GetCheckmate();
@@ -278,7 +278,7 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 				prev_state->WeightCalculate(prev_actor_piece, rester_eval, host_prev);
 		}
 		else {// killed and checkmate는 최소 3수 이상 되어야 가능하므로 prev_state에 대해 예외처리는 하지 않는다.
-			// 움직임 자체에 대해 점수를 준다. +10점
+			// 움직임 자체에 대해 점수를 준다.
 			int now_actor_piece = idxOfPiece(actor);
 			prev_state->WeightCalculate(now_actor_piece, moving_eval, host);
 			if (killed != '0') {
@@ -292,13 +292,19 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 				prev2_state->WeightCalculate(prev_actor_piece, checkmatee_eval, !host);
 			}
 		}
-		/*Bottom Up 보상*/
-	}
-	for (int i = 1; i < state->size(); i++) {
-		state->at(i)->evaluateBoard();
-		//state->at(i)->Print_weight(i);
 	}
 
+	// 각 판에 대한 평가.
+	for (int i = 1; i < state->size(); i++) {
+		state->at(i)->evaluateBoard();
+	}
+
+	/*Bottom Up 보상*/
+	for (int i = state->size() - 2; i >= 1; i--) {
+		now_state = state->at(i);
+		next_state = GetNext_state(state, i);
+		now_state->SetScore(now_state->GetScore() + next_state->GetScore() * learning_rate);
+	}
 }
 
 Adjcency_grpah * Second_Graph::Getgraph() {

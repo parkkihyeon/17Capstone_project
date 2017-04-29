@@ -153,7 +153,11 @@ void State_node::SetCho_weight(int *c_weight) {
 	memcpy(cho_weight, c_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::WeightCalculate(int idx, int score, int host) {
+void State_node::SetScore(int score_) {
+	score = score_;
+}
+
+void State_node::WeightCalculate(int idx, const int score, int host) {
 	if (host == 0) {// cho 
 		cho_weight[idx] += score;	
 	}

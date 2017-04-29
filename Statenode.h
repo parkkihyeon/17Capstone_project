@@ -106,8 +106,9 @@ public:
 	// overeading (?)
 	void SetHan_weight(int *h_weight);
 	void SetCho_weight(int *c_weight);
+	void SetScore(int score_);
 
-	void WeightCalculate(int idx, int score, int host);
+	void WeightCalculate(int idx, const int score, int host);
 	void evaluateBoard();
 
 	const bool operator==(State_node *node);
