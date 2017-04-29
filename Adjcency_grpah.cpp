@@ -1,5 +1,12 @@
 #include "Adjcency_grpah.h"
 
+int rester_eval = 100;
+int moving_eval = 10;
+int killer_eval = 1000;
+int killee_eval = -1000;
+int checkmater_eval = 500;
+int checkmatee_eval = -1000;
+
 Adjcency_grpah::Adjcency_grpah() {
 
 	char Init_jannggi[HEIGHT_SIZE][WIDTH_SIZE];
@@ -13,8 +20,8 @@ Adjcency_grpah::Adjcency_grpah() {
 	Init_hashtable();
 	PushList_Hashtable(root);
 	root->SetState_number(0);
-
 	leaf = NULL;
+
 }
 //Reload Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
@@ -22,7 +29,6 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 	leaf = graph.leaf;
 	Init_hashtable();
 	statenode_num = graph.statenode_num;
-
 	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
 }
 //Save Serialize를 위한 깊은 복사 생성자
@@ -31,7 +37,6 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 	leaf = graph->leaf;
 	Init_hashtable();
 	statenode_num = graph->statenode_num;
-
 	memcpy(hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
 }
 void Adjcency_grpah::Init_hashtable() {
@@ -142,6 +147,15 @@ void Adjcency_grpah::Travelgraph_bfs() {
 		temp = q->front();
 		q->pop();
 		stream << "state 번호 : " << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
+		stream << temp->GetTurn()->Gethost() << endl; // 0이면 초, 1이면 한.
+		// 초에 state이면 다음 차례는 한 이므로 한에 대한 weight를 기재.
+		for (int i = 0; i < 7; i++) {
+			if(temp->GetTurn()->Gethost() == 0)
+				stream << temp->Get_hanweight()[i] << " ";
+			else
+				stream << temp->Get_choweight()[i] << " ";
+		}
+		stream << endl << endl;
 		for (int i = 0; i < temp->Getnumnext(); i++) {
 			if (bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] != -1) {
 				bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] = -1;
@@ -149,7 +163,7 @@ void Adjcency_grpah::Travelgraph_bfs() {
 			}
 		}
 	}
-
+	stream.close();
 }
 
 State_node* Adjcency_grpah::getRoot() {
@@ -230,20 +244,61 @@ Second_Graph::Second_Graph(Adjcency_grpah *g) {
 }
 
 void Second_Graph::Value_process(vector<State_node*>* state) {
-	State_node * now_state = new State_node();
-	State_node * prev_state = new State_node();
-	State_node * next_state = new State_node();
+
+	State_node *now_state = new State_node();
+	State_node *prev_state = new State_node();
+	State_node *prev2_state = new State_node();
+	State_node *next_state = new State_node();
+	char actor_prev;
+	bool host_prev;
+	int prev_actor_piece;
 	for (int i = 1; i < state->size(); i++) {
 		now_state = state->at(i);
 		prev_state = GetPrev_state(state, i);
-		next_state = GetNext_state(state, i);
-		int actor = now_state->GetTurn()->GetActor();
-		int killed = now_state->GetTurn()->GetKilled();
-		int checkmate = now_state->GetTurn()->GetCheckmate();
-		int host = now_state->GetTurn()->Gethost() ;
+		prev2_state = GetPrev_state(state, i-1);
+	//	next_state = GetNext_state(state, i);
+		char actor = now_state->GetTurn()->GetActor();
+		char killed = now_state->GetTurn()->GetKilled();
+		bool checkmate = now_state->GetTurn()->GetCheckmate();
+		bool host = (bool)now_state->GetTurn()->Gethost() ;
 
+		actor_prev = prev_state->GetTurn()->GetActor();
+		host_prev = prev_state->GetTurn()->Gethost();	
+	//	cout << now_state->GetState_number() << " " << now_state->GetTravelcount() << endl;
 
+		// 첫 수가 아닐때.
+		if(actor_prev != FIRST_PIECE)
+			prev_actor_piece = idxOfPiece(actor_prev);
+
+		/*Top Down 평가*/
+ 		if (actor == REST_PIECE) {
+			cout << "한수쉼" << endl;
+			// 연속 한수쉼이 아닌 경우만 !!
+			if(actor_prev != FIRST_PIECE)
+				prev_state->WeightCalculate(prev_actor_piece, rester_eval, host_prev);
+		}
+		else {// killed and checkmate는 최소 3수 이상 되어야 가능하므로 prev_state에 대해 예외처리는 하지 않는다.
+			// 움직임 자체에 대해 점수를 준다. +10점
+			int now_actor_piece = idxOfPiece(actor);
+			prev_state->WeightCalculate(now_actor_piece, moving_eval, host);
+			if (killed != '0') {
+				// 이전 스테이트에서 현재 actor 대한 가치를 높인다
+				prev_state->WeightCalculate(now_actor_piece, killer_eval, host);
+				prev2_state->WeightCalculate(prev_actor_piece, killee_eval, !host);
+			}
+			if (checkmate) {
+				// 이전 스테이트에서 현재 actor 대한 가치를 높인다
+				prev_state->WeightCalculate(now_actor_piece, checkmater_eval, host);
+				prev2_state->WeightCalculate(prev_actor_piece, checkmatee_eval, !host);
+			}
+		}
+		/*Bottom Up 보상*/
 	}
+	for (int i = 1; i < state->size(); i++) {
+		state->at(i)->evaluateBoard();
+		//state->at(i)->Print_weight(i);
+	}
+
 }
 
 Adjcency_grpah * Second_Graph::Getgraph() {
@@ -262,3 +317,30 @@ State_node* Second_Graph::GetNext_state(vector<State_node*>* state, int index) {
 		return state->at(index + 1);
 	return NULL;
 }
+
+int Second_Graph::idxOfPiece(char piece) {
+	switch (piece)
+	{
+	case 'c': case 'C':
+		return 0;
+	case 'p': case 'P':
+		return 1;
+	case 'h': case 'H':
+		return 2;
+	case 'x': case 'X':
+		return 3;
+	case 's': case 'S':
+		return 4;
+	case 'j': case 'J':
+		return 5;
+	case 'k': case 'K':
+		return 6;
+	case '-':
+		return 7;
+	default :
+		cout << "idxOfPiece error" << endl;
+		cout << piece << "<- 문제" << endl;
+		return ERROR_CODE ;
+	}
+}
+

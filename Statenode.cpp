@@ -1,5 +1,7 @@
 #include "Statenode.h"
 
+static const int score_piece[PIECE_NUM]{ 13,7,5,3,3,2,100,0};
+
 Now_turn::Now_turn(char act, char kill, bool check, int host) {
 	actor = act;
 	killed = kill;
@@ -110,6 +112,12 @@ void State_node::Init() {
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
+	for (int i = 0; i < PIECE_NUM; i++) {
+		han_weight[i] = 100000;
+		cho_weight[i] = 100000;
+	}
+	score = 0;
+	reward = 0;
 }
 
 void State_node::TravelCountPlus() {
@@ -118,6 +126,110 @@ void State_node::TravelCountPlus() {
 
 void State_node::SetState_number(int setnum) {
 	state_number = setnum;
+}
+
+void State_node::Print_weight(int idx) {
+	ofstream stream("evaluate.txt", ios::app);
+	stream << idx << "번째 : " << endl;
+	stream << "초 : " << endl;
+	for (int i = 0; i < 7; i++) {
+		stream << cho_weight[i] << " ";
+	}
+	stream << endl;
+	stream << "한 : " << endl;
+	for (int i = 0; i < 7; i++) {
+		stream << han_weight[i] << " ";
+	}
+
+	stream << endl << endl;
+	stream.close();
+}
+
+void State_node::SetHan_weight(int *h_weight) {
+	memcpy(han_weight, h_weight, sizeof(int)*PIECE_NUM);
+}
+
+void State_node::SetCho_weight(int *c_weight) {
+	memcpy(cho_weight, c_weight, sizeof(int)*PIECE_NUM);
+}
+
+void State_node::WeightCalculate(int idx, int score, int host) {
+	if (host == 0) {// cho 
+		cho_weight[idx] += score;	
+	}
+	else { // han
+		han_weight[idx] += score;
+	}
+}
+
+void State_node::evaluateBoard() {
+	for (int i = 1; i < HEIGHT_SIZE; i++) {
+		for (int j = 1; j < WIDTH_SIZE; j++) {
+			switch (arr[i][j])
+			{
+			case 'c':
+				score -= score_piece[0] * han_weight[0];
+				if (i > 5)
+					score -= 10;
+				break;
+			case 'p':
+				score -= score_piece[1] * han_weight[1];
+				if (i > 5)
+					score -= 10;
+				break;
+			case 'h':
+				score -= score_piece[2] * han_weight[2];
+				if (i > 5)
+					score -= 10;
+				break;
+			case 'x':
+				score -= score_piece[3] * han_weight[3];
+				break;
+			case 's':
+				score -= score_piece[4] * han_weight[4];
+				break;
+			case 'j':
+				score -= score_piece[5] * han_weight[5];
+				break;
+			case 'k':
+				score -= score_piece[6] * han_weight[6];
+				break;
+
+			case 'C':
+				score += score_piece[0] * cho_weight[0];
+				if (i > 5)
+					score += 10;
+				break;
+			case 'P':
+				score += score_piece[1] * cho_weight[1];
+				if (i > 5)
+					score += 10;
+				break;
+			case 'H':
+				score += score_piece[2] * cho_weight[2];
+				if (i > 5)
+					score += 10;
+				break;
+			case 'X':
+				score += score_piece[3] * cho_weight[3];
+				break;
+			case 'S':
+				score += score_piece[4] * cho_weight[4];
+				break;
+			case 'J':
+				score += score_piece[5] * cho_weight[5];
+				break;
+			case 'K':
+				score += score_piece[6] * cho_weight[6];
+				break;
+			case '-':
+				break;
+			default:
+				cout << " evaluate error !" << endl;
+				break;
+			}
+		}
+	}
 }
 
 int State_node::Getnumprev() {
@@ -142,6 +254,22 @@ int State_node::GetTravelcount() {
 
 int State_node::GetState_number() {
 	return state_number;
+}
+
+int* State_node::Get_hanweight() {
+	return han_weight;
+}
+
+int* State_node::Get_choweight() {
+	return cho_weight;
+}
+
+int State_node::GetScore() {
+	return score ;
+}
+
+int State_node::GetReward() {
+	return reward;
 }
 
 vector<State_node*>* State_node::Getnext() {
@@ -179,6 +307,12 @@ const bool State_node::operator==(State_node *node) {
 		return false;
 	}
 	else if (memcmp(&this->state_number, &node->state_number, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(&this->score, &node->score, sizeof(int))) {
+		return false;
+	}
+	else if (memcmp(&this->reward, &node->reward, sizeof(int))) {
 		return false;
 	}
 	else if (memcmp(this->this_turn, &node->this_turn, sizeof(vector<State_node*>))) {

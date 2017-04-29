@@ -55,12 +55,13 @@ void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_
 
 }
 
-void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<State_node*>* state) {
+void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node*>*>* state) {
 	try {
 		for (int i = 0; i < play->size(); i++) {
-			state->clear();
-			Play_to_Statenode(play, state, i);
-			g->Insert(state);
+			vector<State_node*>*history = new vector<State_node*>();
+			Play_to_Statenode(play, history, i);
+			g->Insert(history);
+			state->push_back(history);
 			//g->Backtracking_stack();
 			if(i % 100 == 0)
 				cout << i << "¹øÂ°\n" << endl;
@@ -72,13 +73,14 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<State_node*>* sta
 	cout << "Graph Generated\n" << endl;
 }
 
-void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<State_node*>* state) {
+void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*>* state) {
 	try {
 		for (int i = 0; i < play->size(); i++) {
-			state->clear();
-			Play_to_Statenode(play, state, i);
-			g2->Getgraph()->Second_insert(state);
-			g2->Value_process(state);
+		/*	state->clear();
+			Play_to_Statenode(play, state, i);*/
+			g2->Getgraph()->Second_insert(state->at(i));
+		//	cout << "game : " << i << endl;
+			g2->Value_process(state->at(i));
 		}
 	}
 	catch (exception &e) {
@@ -89,7 +91,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<State_node*
 
 void Insert_Gibo(vector<Play*> *play)
 {
-	ifstream inStream("testFile.txt");
+	ifstream inStream("temp.txt");
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);

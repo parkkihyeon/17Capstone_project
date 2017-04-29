@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp> // 직렬화 vector를 사용하기 위해
@@ -21,6 +22,7 @@
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
+#define PIECE_NUM 8 
 
 using namespace std;
 
@@ -54,6 +56,13 @@ private:
 	int unit_of_cho;
 	int travel_count;
 	int state_number; //  state 번호를 뜻함.
+
+	// 평가
+	int han_weight[PIECE_NUM];
+	int cho_weight[PIECE_NUM];
+	int score;
+	int reward;
+
 	Now_turn *this_turn;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
@@ -66,6 +75,10 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
 		ar & BOOST_SERIALIZATION_NVP(travel_count);
+		ar & BOOST_SERIALIZATION_NVP(han_weight);
+		ar & BOOST_SERIALIZATION_NVP(cho_weight);
+		ar & BOOST_SERIALIZATION_NVP(score);
+		ar & BOOST_SERIALIZATION_NVP(reward);
 		ar & BOOST_SERIALIZATION_NVP(arr);
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
@@ -89,6 +102,13 @@ public:
 	void Init();
 	void TravelCountPlus();
 	void SetState_number(int setnum);
+	void Print_weight(int idx);
+	// overeading (?)
+	void SetHan_weight(int *h_weight);
+	void SetCho_weight(int *c_weight);
+
+	void WeightCalculate(int idx, int score, int host);
+	void evaluateBoard();
 
 	const bool operator==(State_node *node);
 
@@ -104,6 +124,10 @@ public:
 	int Getcho();
 	int GetTravelcount();
 	int GetState_number();
+	int* Get_hanweight();
+	int* Get_choweight();
+	int GetScore();
+	int GetReward();
 
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();

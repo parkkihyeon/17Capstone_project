@@ -19,8 +19,8 @@ node::node() {
 void node::Init() {
 	memset(arr, NULL, sizeof(char) * WIDTH_SIZE * HEIGHT_SIZE);
 	host = -1;
-	killed = NULL;
-	actor = NULL;
+	killed = '0';
+	actor = '0';
 	checkMate = false;
 	num_of_cho = 0;
 	num_of_han = 0;

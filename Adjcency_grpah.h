@@ -12,6 +12,9 @@
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
 #define NUMUNIT 17
+#define ERROR_CODE 8
+#define REST_PIECE '0'
+#define FIRST_PIECE '0'
 
 using namespace std;
 
@@ -69,6 +72,7 @@ private:
 public:
 	Second_Graph(Adjcency_grpah *g);
 	void Value_process(vector<State_node*>* state);
+	int idxOfPiece(char piece);
 
 	Adjcency_grpah * Getgraph();
 	State_node* GetPrev_state(vector<State_node*>* state, int index);
