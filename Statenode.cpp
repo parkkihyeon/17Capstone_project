@@ -112,12 +112,13 @@ void State_node::Init() {
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
+	//han_weight = new int[PIECE_NUM];
+	//han_weight = new int[PIECE_NUM];
 	for (int i = 0; i < PIECE_NUM; i++) {
 		han_weight[i] = 100000;
 		cho_weight[i] = 100000;
 	}
 	score = 0;
-	reward = 0;
 }
 
 void State_node::TravelCountPlus() {
@@ -272,10 +273,6 @@ int State_node::GetScore() {
 	return score ;
 }
 
-int State_node::GetReward() {
-	return reward;
-}
-
 vector<State_node*>* State_node::Getnext() {
 	return next;
 }
@@ -314,9 +311,6 @@ const bool State_node::operator==(State_node *node) {
 		return false;
 	}
 	else if (memcmp(&this->score, &node->score, sizeof(int))) {
-		return false;
-	}
-	else if (memcmp(&this->reward, &node->reward, sizeof(int))) {
 		return false;
 	}
 	else if (memcmp(this->this_turn, &node->this_turn, sizeof(vector<State_node*>))) {

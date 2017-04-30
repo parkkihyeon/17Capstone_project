@@ -62,13 +62,13 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 			Play_to_Statenode(play, history, i);
 			g->Insert(history);
 			state->push_back(history);
-			//g->Backtracking_stack();
 			if(i % 100 == 0)
 				cout << i << "¹øÂ°\n" << endl;
 		}
 	}
 	catch (exception &e) {
-		std::cerr << e.what();
+		cerr << e.what() << ", Graph_made" << endl;
+		exit(1);
 	}
 	cout << "Graph Generated\n" << endl;
 }
@@ -76,15 +76,13 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*>* state) {
 	try {
 		for (int i = 0; i < play->size(); i++) {
-		/*	state->clear();
-			Play_to_Statenode(play, state, i);*/
 			g2->Getgraph()->Second_insert(state->at(i));
-		//	cout << "game : " << i << endl;
 			g2->Value_process(state->at(i));
 		}
 	}
 	catch (exception &e) {
-		std::cerr << e.what();
+		cerr << e.what() << ", Second_Graph_made" << endl;
+		exit(1);
 	}
 	cout << "Graph Generated_2" << endl;
 }

@@ -61,7 +61,6 @@ private:
 	int han_weight[PIECE_NUM];
 	int cho_weight[PIECE_NUM];
 	int score;
-	int reward;
 
 	Now_turn *this_turn;
 	vector<State_node*>* next;
@@ -78,7 +77,6 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(han_weight);
 		ar & BOOST_SERIALIZATION_NVP(cho_weight);
 		ar & BOOST_SERIALIZATION_NVP(score);
-		ar & BOOST_SERIALIZATION_NVP(reward);
 		ar & BOOST_SERIALIZATION_NVP(arr);
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
@@ -128,7 +126,6 @@ public:
 	int* Get_hanweight();
 	int* Get_choweight();
 	int GetScore();
-	int GetReward();
 
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();

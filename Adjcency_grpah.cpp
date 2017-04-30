@@ -272,7 +272,7 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 
 		/*Top Down 평가*/
  		if (actor == REST_PIECE) {
-			cout << "한수쉼" << endl;
+		//	cout << "한수쉼" << endl;
 			// 연속 한수쉼이 아닌 경우만 !!
 			if(actor_prev != FIRST_PIECE)
 				prev_state->WeightCalculate(prev_actor_piece, rester_eval, host_prev);
@@ -344,8 +344,8 @@ int Second_Graph::idxOfPiece(char piece) {
 	case '-':
 		return 7;
 	default :
-		cout << "idxOfPiece error" << endl;
-		cout << piece << "<- 문제" << endl;
+		cerr << "idxOfPiece error" << endl;
+		cerr << piece << "<- 문제" << endl;
 		return ERROR_CODE ;
 	}
 }
