@@ -23,11 +23,13 @@
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
 #define PIECE_NUM 8 
+#define INIT_WEIGHT 100000
 
 using namespace std;
 
 typedef pair<int, int> Cha_pos;
 typedef pair<int, int> Pho_pos;
+typedef char (*STATE)[WIDTH_SIZE] ;
 
 class Now_turn
 {
@@ -58,9 +60,10 @@ private:
 	int state_number; //  state 번호를 뜻함.
 
 	// 평가
-	int han_weight[PIECE_NUM];
-	int cho_weight[PIECE_NUM];
+	vector<int> *han_weight ;
+	vector<int> *cho_weight ;
 	int score;
+	char State[HEIGHT_SIZE][WIDTH_SIZE];
 
 	Now_turn *this_turn;
 	vector<State_node*>* next;
@@ -71,19 +74,19 @@ private:
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
 		ar & BOOST_SERIALIZATION_NVP(state_ordernum);
+		ar & BOOST_SERIALIZATION_NVP(state_number);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
 		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
 		ar & BOOST_SERIALIZATION_NVP(travel_count);
 		ar & BOOST_SERIALIZATION_NVP(han_weight);
 		ar & BOOST_SERIALIZATION_NVP(cho_weight);
 		ar & BOOST_SERIALIZATION_NVP(score);
-		ar & BOOST_SERIALIZATION_NVP(arr);
+		ar & BOOST_SERIALIZATION_NVP(State);
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
 		ar & BOOST_SERIALIZATION_NVP(prev);
 	}
 public:
-	char arr[HEIGHT_SIZE][WIDTH_SIZE];
 
 	State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]);
 	State_node();
@@ -115,6 +118,7 @@ public:
 	State_node* NthCheck_Childnode(int n);
 	State_node* NthCheck_Parentnode(int n);
 	Now_turn* GetTurn();
+	STATE GetState();
 
 	int Getnumprev();
 	int Getnumnext();
@@ -123,8 +127,8 @@ public:
 	int Getcho();
 	int GetTravelcount();
 	int GetState_number();
-	int* Get_hanweight();
-	int* Get_choweight();
+	vector<int>* Get_hanweight();
+	vector<int>* Get_choweight();
 	int GetScore();
 
 	vector<State_node*> *Getnext();

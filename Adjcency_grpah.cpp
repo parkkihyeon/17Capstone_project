@@ -152,9 +152,9 @@ void Adjcency_grpah::Travelgraph_bfs() {
 		// 초에 state이면 다음 차례는 한 이므로 한에 대한 weight를 기재.
 		for (int i = 0; i < 7; i++) {
 			if(temp->GetTurn()->Gethost() == 0)
-				stream << temp->Get_hanweight()[i] << " ";
+				stream << temp->Get_hanweight()->at(i) << " ";
 			else
-				stream << temp->Get_choweight()[i] << " ";
+				stream << temp->Get_choweight()->at(i) << " ";
 		}
 		stream << endl << endl;
 		for (int i = 0; i < temp->Getnumnext(); i++) {
@@ -220,7 +220,7 @@ bool Adjcency_grpah::Diff_State(State_node *stateA, State_node *stateB) {
 		return true ;
 	for (int i = 1; i < HEIGHT_SIZE; i++)
 		for (int j = 1; j < WIDTH_SIZE; j++) {
-			if (stateA->arr[i][j] != stateB->arr[i][j] )
+			if (stateA->GetState()[i][j] != stateB->GetState()[i][j] )
 				return true;
 		}
 	return false  ;

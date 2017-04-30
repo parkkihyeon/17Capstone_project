@@ -89,7 +89,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<Stat
 
 void Insert_Gibo(vector<Play*> *play)
 {
-	ifstream inStream("temp.txt");
+	ifstream inStream("a.txt");
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);

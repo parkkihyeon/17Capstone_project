@@ -34,6 +34,7 @@ private:
 	void serialize(Archive &ar, const unsigned int ver) {
 		ar & BOOST_SERIALIZATION_NVP(root);
 		ar & BOOST_SERIALIZATION_NVP(leaf);
+		ar & BOOST_SERIALIZATION_NVP(statenode_num);
 		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
 	}
 public:

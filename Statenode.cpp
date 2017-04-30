@@ -42,17 +42,17 @@ void Now_turn::SetTurn(char act, char kill, bool check, int host) {
 
 State_node::State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]) {
 	for (int i = 0; i < WIDTH_SIZE; i++)
-		arr[0][i] = NULL;
+		State[0][i] = NULL;
 	for (int i = 0; i < HEIGHT_SIZE; i++)
-		arr[i][0] = NULL;
+		State[i][0] = NULL;
 	for (int i = 1; i < HEIGHT_SIZE; i++)
 		for (int j = 1; j < WIDTH_SIZE; j++)
-			arr[i][j] = data[i][j];
+			State[i][j] = data[i][j];
 	Init();
 };
 State_node::State_node() {
 	for (int i = 0; i < HEIGHT_SIZE; i++)
-		memset(arr[i], NULL, sizeof(char)*WIDTH_SIZE);
+		memset(State[i], NULL, sizeof(char)*WIDTH_SIZE);
 
 	Init();
 };
@@ -68,7 +68,7 @@ void State_node::Print_State() {
 				cout << i << "  ";
 			}
 			else {
-				cout << arr[i][j] << "  ";
+				cout << State[i][j] << "  ";
 			}
 		}
 		cout << endl;
@@ -112,11 +112,11 @@ void State_node::Init() {
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
-	//han_weight = new int[PIECE_NUM];
-	//han_weight = new int[PIECE_NUM];
+	han_weight = new vector<int>();
+	cho_weight = new vector<int>();
 	for (int i = 0; i < PIECE_NUM; i++) {
-		han_weight[i] = 100000;
-		cho_weight[i] = 100000;
+		han_weight->push_back(INIT_WEIGHT);
+		cho_weight->push_back(INIT_WEIGHT);
 	}
 	score = 0;
 }
@@ -134,12 +134,12 @@ void State_node::Print_weight(int idx) {
 	stream << idx << "번째 : " << endl;
 	stream << "초 : " << endl;
 	for (int i = 0; i < 7; i++) {
-		stream << cho_weight[i] << " ";
+		stream << cho_weight->at(i) << " ";
 	}
 	stream << endl;
 	stream << "한 : " << endl;
 	for (int i = 0; i < 7; i++) {
-		stream << han_weight[i] << " ";
+		stream << han_weight->at(i) << " ";
 	}
 
 	stream << endl << endl;
@@ -160,72 +160,72 @@ void State_node::SetScore(int score_) {
 
 void State_node::WeightCalculate(int idx, const int score, int host) {
 	if (host == 0) {// cho 
-		cho_weight[idx] += score;	
+		cho_weight->at(idx) += score;	
 	}
 	else { // han
-		han_weight[idx] += score;
+		han_weight->at(idx) += score;
 	}
 }
 
 void State_node::evaluateBoard() {
 	for (int i = 1; i < HEIGHT_SIZE; i++) {
 		for (int j = 1; j < WIDTH_SIZE; j++) {
-			switch (arr[i][j])
+			switch (State[i][j])
 			{
 			case 'c':
-				score -= score_piece[0] * han_weight[0];
+				score -= score_piece[0] * han_weight->at(0);
 				if (i > 5)
 					score -= 10;
 				break;
 			case 'p':
-				score -= score_piece[1] * han_weight[1];
+				score -= score_piece[1] * han_weight->at(1);
 				if (i > 5)
 					score -= 10;
 				break;
 			case 'h':
-				score -= score_piece[2] * han_weight[2];
+				score -= score_piece[2] * han_weight->at(2);
 				if (i > 5)
 					score -= 10;
 				break;
 			case 'x':
-				score -= score_piece[3] * han_weight[3];
+				score -= score_piece[3] * han_weight->at(3);
 				break;
 			case 's':
-				score -= score_piece[4] * han_weight[4];
+				score -= score_piece[4] * han_weight->at(4);
 				break;
 			case 'j':
-				score -= score_piece[5] * han_weight[5];
+				score -= score_piece[5] * han_weight->at(5);
 				break;
 			case 'k':
-				score -= score_piece[6] * han_weight[6];
+				score -= score_piece[6] * han_weight->at(6);
 				break;
 
 			case 'C':
-				score += score_piece[0] * cho_weight[0];
+				score += score_piece[0] * cho_weight->at(0);
 				if (i > 5)
 					score += 10;
 				break;
 			case 'P':
-				score += score_piece[1] * cho_weight[1];
+				score += score_piece[1] * cho_weight->at(1);
 				if (i > 5)
 					score += 10;
 				break;
 			case 'H':
-				score += score_piece[2] * cho_weight[2];
+				score += score_piece[2] * cho_weight->at(2);
 				if (i > 5)
 					score += 10;
 				break;
 			case 'X':
-				score += score_piece[3] * cho_weight[3];
+				score += score_piece[3] * cho_weight->at(3);
 				break;
 			case 'S':
-				score += score_piece[4] * cho_weight[4];
+				score += score_piece[4] * cho_weight->at(4);
 				break;
 			case 'J':
-				score += score_piece[5] * cho_weight[5];
+				score += score_piece[5] * cho_weight->at(5);
 				break;
 			case 'K':
-				score += score_piece[6] * cho_weight[6];
+				score += score_piece[6] * cho_weight->at(6);
 				break;
 			case '-':
 				break;
@@ -235,6 +235,10 @@ void State_node::evaluateBoard() {
 			}
 		}
 	}
+}
+
+STATE State_node::GetState() {
+	return State;
 }
 
 int State_node::Getnumprev() {
@@ -261,11 +265,11 @@ int State_node::GetState_number() {
 	return state_number;
 }
 
-int* State_node::Get_hanweight() {
+vector<int>* State_node::Get_hanweight() {
 	return han_weight;
 }
 
-int* State_node::Get_choweight() {
+vector<int>* State_node::Get_choweight() {
 	return cho_weight;
 }
 
