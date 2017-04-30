@@ -94,6 +94,7 @@ void Play::createState(string line) {
 	node *Node = new node(StateInfo);
 	Node->setHost(atoi(strResult[0].c_str()));
 	Node->setActor(*unit);
+	Node->setPos(pos[0], pos[1]);
 	Node->setKilled(*strResult[4].c_str());
 	if (atoi(strResult[5].c_str()) == 1) {
 		Node->setCheckMate(true);

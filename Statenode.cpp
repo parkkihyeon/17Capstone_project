@@ -32,11 +32,16 @@ int Now_turn::Gethost() {
 	return host;
 }
 
-void Now_turn::SetTurn(char act, char kill, bool check, int host) {
+pair<int, int> Now_turn::Getpos() {
+	return pos;
+}
+
+void Now_turn::SetTurn(char act, char kill, bool check, int host, pair<int, int> Pos) {
 	actor = act;
 	killed = kill;
 	checkmate = check;
 	this->host = host ;
+	pos = Pos;
 }
 
 

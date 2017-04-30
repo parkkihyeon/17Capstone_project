@@ -105,26 +105,6 @@ void Adjcency_grpah::Second_insert(vector<State_node*>* state) {
 	}
 }
 
-void Adjcency_grpah::Backtracking_stack() {
-	State_node* temp = leaf;
-
-	temp->Print_State();
-	cout << temp->Getcho() << " " << temp->Gethan() << " " << temp->GetTravelcount() << endl;
-	state_stack.pop();
-
-	cout << "\n< Start ! > " << endl;
-	while (!state_stack.empty()) {
-		cout << "borad No." << state_stack.size() << endl; //추가
-		temp->Print_State();
-		cout << temp->Getcho() << " " << temp->Gethan() << endl;
-		temp = temp->Getprev()->at(Direction_parentnode(temp));
-	}
-
-	// 스택 비우기
-	while (!state_stack.empty()) state_stack.pop();
-	cout << "< End ! >" << endl << endl << endl;
-}
-
 void Adjcency_grpah::Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state) {
 	cha_y = state->GetHorse_pos().first.first;
 	cha_x = state->GetHorse_pos().first.second;

@@ -37,7 +37,18 @@ private:
 	char actor;
 	char killed;
 	bool checkmate;
-	int host ;
+	int host;
+	pair<int, int> pos;
+
+	friend class boost::serialization::access;
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int ver) {
+		ar & BOOST_SERIALIZATION_NVP(actor);
+		ar & BOOST_SERIALIZATION_NVP(killed);
+		ar & BOOST_SERIALIZATION_NVP(checkmate);
+		ar & BOOST_SERIALIZATION_NVP(host);
+		ar & BOOST_SERIALIZATION_NVP(pos);
+	}
 
 public:
 	Now_turn(char act, char kill, bool check, int host);
@@ -46,7 +57,8 @@ public:
 	char GetKilled();
 	bool GetCheckmate();
 	int Gethost() ;
-	void SetTurn(char act, char kill, bool check, int host);
+	pair<int, int> Getpos();
+	void SetTurn(char act, char kill, bool check, int host, pair<int, int> Pos);
 };
 
 
@@ -85,6 +97,7 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
 		ar & BOOST_SERIALIZATION_NVP(next);
 		ar & BOOST_SERIALIZATION_NVP(prev);
+		ar & BOOST_SERIALIZATION_NVP(this_turn);
 	}
 public:
 

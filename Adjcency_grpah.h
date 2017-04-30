@@ -45,7 +45,6 @@ public:
 	void Init_hashtable();
 	void Insert(vector<State_node*>* state);
 	void Second_insert(vector<State_node*>* state);
-	void Backtracking_stack();
 	void PushList_Hashtable(State_node* state);
 	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
 	void Travelgraph_bfs();

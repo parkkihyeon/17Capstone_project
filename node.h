@@ -33,7 +33,7 @@ private:
 	int host;
 	int num_of_han;
 	int num_of_cho;
-
+	
 	char killed;
 	char actor;
 	char arr[HEIGHT_SIZE][WIDTH_SIZE];
@@ -41,6 +41,7 @@ private:
 	bool checkMate;
 
 	pair<Cha_pos, Pho_pos> sum_of_horsepos;
+	pair<int, int> pos;
 
 	friend class boost::serialization::access;
 	template <typename Archive>
@@ -81,6 +82,7 @@ public:
 	int getNumOfHan();
 	int getNumOfCho();
 	int getHost();
+	pair<int, int> GetPos();
 
 	char getActor();
 	char getKilled();
@@ -90,6 +92,7 @@ public:
 	void setActor(char unit);
 	void setKilled(char unit);
 	void setHost(int host);
+	void setPos(int prev_pos, int post_pos);
 
 	char getArrPos(int xPos, int yPos);
 };

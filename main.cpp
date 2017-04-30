@@ -21,7 +21,7 @@ int main()
 
 	SaveGraphData(second_g->Getgraph(), "G_BinaryFile");
 	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("G_BinaryFile"));
-
+	AiGraph->Travelgraph_bfs();
 
 
 	clock_t end_t = clock();

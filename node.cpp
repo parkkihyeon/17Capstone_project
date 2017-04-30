@@ -24,6 +24,8 @@ void node::Init() {
 	checkMate = false;
 	num_of_cho = 0;
 	num_of_han = 0;
+	pos.first = 0;
+	pos.second = 0;
 	Init_Hashkeydata();
 }
 
@@ -220,6 +222,11 @@ int node::getHost() {
 	return host;
 }
 
+pair<int, int> node::GetPos() {
+	return pos;
+}
+
+
 char node::getActor() {
 	return actor;
 }
@@ -247,6 +254,12 @@ void node::setKilled(char unit) {
 void node::setHost(int host) {
 	this->host = host;
 }
+
+void node::setPos(int prev_pos, int post_pos) {
+	this->pos.first = prev_pos;
+	this->pos.second = post_pos;
+}
+
 
 char node::getArrPos(int xPos, int yPos) {
 	return arr[xPos][yPos];
