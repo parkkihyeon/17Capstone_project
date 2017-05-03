@@ -118,14 +118,19 @@ public:
 	void SetState_number(int setnum);
 	void Print_weight(int idx);
 	// overeading (?)
-	void SetHan_weight(int *h_weight);
-	void SetCho_weight(int *c_weight);
+	void SetHan_weight(vector<int> *h_weight);
+	void SetCho_weight(vector<int> *c_weight);
 	void SetScore(int score_);
+	void SetTravelcount(int _travelCount);
 
 	void WeightCalculate(int idx, const int score, int host);
 	void evaluateBoard();
 
 	const bool operator==(State_node *node);
+	State_node State_node::Copy_node(State_node *_operandNode);
+	void SetNext(vector<State_node*> *_next);
+	void SetPrev(vector<State_node*> *_prev);
+	void SetNow_turn(Now_turn *_turn);
 
 	// n번째 자식을 return
 	State_node* NthCheck_Childnode(int n);

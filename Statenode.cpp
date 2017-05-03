@@ -151,16 +151,31 @@ void State_node::Print_weight(int idx) {
 	stream.close();
 }
 
-void State_node::SetHan_weight(int *h_weight) {
+void State_node::SetHan_weight(vector<int> *h_weight) {
 	memcpy(han_weight, h_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::SetCho_weight(int *c_weight) {
+void State_node::SetCho_weight(vector<int> *c_weight) {
 	memcpy(cho_weight, c_weight, sizeof(int)*PIECE_NUM);
 }
 
 void State_node::SetScore(int score_) {
 	score = score_;
+}
+void State_node::SetTravelcount(int _travelCount) {
+	travel_count = _travelCount;
+}
+
+void State_node::SetNext(vector<State_node*> *_next) {
+	memcpy(next, _next, sizeof(vector<State_node*>) * _next->size());
+}
+
+void State_node::SetPrev(vector<State_node*> *_prev) {
+	memcpy(next, _prev, sizeof(vector<State_node*>) * _prev->size());
+}
+
+void State_node::SetNow_turn(Now_turn *_turn) {
+	memcpy(this_turn, _turn, sizeof(Now_turn*));
 }
 
 void State_node::WeightCalculate(int idx, const int score, int host) {
@@ -327,4 +342,20 @@ const bool State_node::operator==(State_node *node) {
 	}
 	else
 		return true;
+}
+State_node State_node::Copy_node(State_node *_operandNode) {
+	State_node _operatorNode(_operandNode->GetState());
+	_operatorNode.Set_Stateorder(_operandNode->Getstate_ordernum());
+	_operatorNode.Set_numUnit(_operandNode->Getcho(), _operandNode->Gethan());
+	_operatorNode.SetTravelcount(_operandNode->GetTravelcount());
+	_operatorNode.SetState_number(_operandNode->GetState_number());
+	_operatorNode.SetHan_weight(_operandNode->Get_hanweight());
+	_operatorNode.SetCho_weight(_operandNode->Get_choweight());
+	_operatorNode.SetScore(_operandNode->GetScore());
+	_operatorNode.SetNow_turn(_operandNode->GetTurn());
+	_operatorNode.SetNext(_operandNode->Getnext());
+	_operatorNode.SetPrev(_operandNode->Getprev());
+	_operatorNode.SetHorse_position(_operandNode->GetHorse_pos());
+
+	return _operatorNode;
 }
