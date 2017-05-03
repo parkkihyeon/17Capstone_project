@@ -51,11 +51,6 @@ void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_
 		now_state->SetHorse_position(node_t->getPair());
 		now_state->GetTurn()->SetTurn(node_t->getActor(), node_t->getKilled(), node_t->getCheckMate(), node_t->getHost(), node_t->GetPos());
 		state->push_back(now_state);
-
-		//Test Code for Copying State_node Function=======
-		State_node ttp = now_state->Copy_node(now_state);
-		std::cout << "Helo" << std::endl;
-		//================================================
 	}
 
 }
