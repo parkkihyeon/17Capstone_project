@@ -18,7 +18,7 @@ node::node() {
 }
 void node::Init() {
 	memset(arr, NULL, sizeof(char) * WIDTH_SIZE * HEIGHT_SIZE);
-	host = -1;
+	host = 1;
 	killed = '0';
 	actor = '0';
 	checkMate = false;

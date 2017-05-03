@@ -151,11 +151,11 @@ void State_node::Print_weight(int idx) {
 	stream.close();
 }
 
-void State_node::SetHan_weight(int *h_weight) {
+void State_node::SetHan_weight(vector<int> *h_weight) {
 	memcpy(han_weight, h_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::SetCho_weight(int *c_weight) {
+void State_node::SetCho_weight(vector<int> *c_weight) {
 	memcpy(cho_weight, c_weight, sizeof(int)*PIECE_NUM);
 }
 

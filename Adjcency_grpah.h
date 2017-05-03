@@ -48,6 +48,8 @@ public:
 	void PushList_Hashtable(State_node* state);
 	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
 	void Travelgraph_bfs();
+	void AddMoveable();
+	void AddMoveableChild(State_node *now_state);
 
 	const bool operator== (Adjcency_grpah *graph) ;
 

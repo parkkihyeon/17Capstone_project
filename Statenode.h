@@ -118,8 +118,8 @@ public:
 	void SetState_number(int setnum);
 	void Print_weight(int idx);
 	// overeading (?)
-	void SetHan_weight(int *h_weight);
-	void SetCho_weight(int *c_weight);
+	void SetHan_weight(vector<int> *h_weight);
+	void SetCho_weight(vector<int> *c_weight);
 	void SetScore(int score_);
 
 	void WeightCalculate(int idx, const int score, int host);

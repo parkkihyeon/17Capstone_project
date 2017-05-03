@@ -1,4 +1,5 @@
 #include "Graph.h"
+#define TEXT_NAME "아마민동기보.txt"
 
 //Make Binary file with Graph Serialization 
 void SaveGraphData(Adjcency_grpah *i, char *fileName) {
@@ -89,7 +90,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<Stat
 
 void Insert_Gibo(vector<Play*> *play)
 {
-	ifstream inStream("a.txt");
+	ifstream inStream(TEXT_NAME);
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);
