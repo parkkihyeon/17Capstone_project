@@ -1,19 +1,21 @@
 #include "Statenode.h"
 
-static const int score_piece[PIECE_NUM]{ 13,7,5,3,3,2,100,0};
+static int score_piece[PIECE_NUM]{ CHA_VALUE, PHO_VALUE, HORSE_VALUE,
+SANG_VALUE, SA_VALUE, JOL_VALUE, KING_VALUE,NO_UNIT
+};
 
 Now_turn::Now_turn(char act, char kill, bool check, int host) {
 	actor = act;
 	killed = kill;
 	checkmate = check;
-	this->host = host ;
+	this->host = host;
 };
 
 Now_turn::Now_turn() {
 	actor = NULL;
 	killed = NULL;
 	checkmate = false;
-	host = NULL ;
+	host = NULL;
 }
 
 char Now_turn::GetActor() {
@@ -40,7 +42,7 @@ void Now_turn::SetTurn(char act, char kill, bool check, int host, pair<int, int>
 	actor = act;
 	killed = kill;
 	checkmate = check;
-	this->host = host ;
+	this->host = host;
 	pos = Pos;
 }
 
@@ -165,7 +167,7 @@ void State_node::SetScore(int score_) {
 
 void State_node::WeightCalculate(int idx, const int score, int host) {
 	if (host == 0) {// cho 
-		cho_weight->at(idx) += score;	
+		cho_weight->at(idx) += score;
 	}
 	else { // han
 		han_weight->at(idx) += score;
@@ -173,64 +175,77 @@ void State_node::WeightCalculate(int idx, const int score, int host) {
 }
 
 void State_node::evaluateBoard() {
+	int piece_count = 0;
+	for (int i = 1; i < HEIGHT_SIZE; i++) {
+		for (int j = 1; j < WIDTH_SIZE; j++) {
+			if ((State[i][j] >= 'a' && State[i][j] <= 'z') || (State[i][j] >= 'A' && State[i][j] <= 'Z'))
+				piece_count++;
+		}
+	}
+
+	// test¿ë.
+	if (piece_count >= 22) score_piece[PHO] = PHO_VALUE;
+	else if (piece_count >= 13) score_piece[PHO] = PHO_MIDDLE_VALUE;
+	else score_piece[PHO] = PHO_BOTTOM_VALUE;
+
 	for (int i = 1; i < HEIGHT_SIZE; i++) {
 		for (int j = 1; j < WIDTH_SIZE; j++) {
 			switch (State[i][j])
 			{
 			case 'c':
-				score -= score_piece[0] * han_weight->at(0);
+				score += score_piece[CHA] * han_weight->at(CHA);
 				if (i > 5)
 					score -= 10;
 				break;
 			case 'p':
-				score -= score_piece[1] * han_weight->at(1);
+				score += score_piece[PHO] * han_weight->at(PHO);
 				if (i > 5)
 					score -= 10;
 				break;
 			case 'h':
-				score -= score_piece[2] * han_weight->at(2);
+				score += score_piece[HORSE] * han_weight->at(HORSE);
 				if (i > 5)
-					score -= 10;
+					score += 10;
 				break;
 			case 'x':
-				score -= score_piece[3] * han_weight->at(3);
+				score += score_piece[SANG] * han_weight->at(SANG);
 				break;
 			case 's':
-				score -= score_piece[4] * han_weight->at(4);
+				score += score_piece[SA] * han_weight->at(SA);
 				break;
 			case 'j':
-				score -= score_piece[5] * han_weight->at(5);
+				score += score_piece[JOL] * han_weight->at(JOL);
 				break;
 			case 'k':
-				score -= score_piece[6] * han_weight->at(6);
+				score += score_piece[KING] * han_weight->at(KING);
 				break;
 
 			case 'C':
-				score += score_piece[0] * cho_weight->at(0);
+				score += score_piece[CHA] * cho_weight->at(CHA);
 				if (i > 5)
 					score += 10;
 				break;
 			case 'P':
-				score += score_piece[1] * cho_weight->at(1);
+				score += score_piece[PHO] * cho_weight->at(PHO);
 				if (i > 5)
 					score += 10;
 				break;
 			case 'H':
-				score += score_piece[2] * cho_weight->at(2);
+				score += score_piece[HORSE] * cho_weight->at(HORSE);
 				if (i > 5)
 					score += 10;
 				break;
 			case 'X':
-				score += score_piece[3] * cho_weight->at(3);
+				score += score_piece[SANG] * cho_weight->at(SANG);
 				break;
 			case 'S':
-				score += score_piece[4] * cho_weight->at(4);
+				score += score_piece[SA] * cho_weight->at(SA);
 				break;
 			case 'J':
-				score += score_piece[5] * cho_weight->at(5);
+				score += score_piece[JOL] * cho_weight->at(JOL);
 				break;
 			case 'K':
-				score += score_piece[6] * cho_weight->at(6);
+				score += score_piece[KING] * cho_weight->at(KING);
 				break;
 			case '-':
 				break;
@@ -279,7 +294,7 @@ vector<int>* State_node::Get_choweight() {
 }
 
 int State_node::GetScore() {
-	return score ;
+	return score;
 }
 
 vector<State_node*>* State_node::Getnext() {

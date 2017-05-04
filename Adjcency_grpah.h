@@ -15,11 +15,14 @@
 #define ERROR_CODE 8
 #define REST_PIECE '0'
 #define FIRST_PIECE '0'
+#define DRAW -1
 
 using namespace std;
 
 typedef pair<Cha_pos, Pho_pos> pair_key;
 typedef multimap<pair_key, State_node*> hash_4d; // 4차원 해쉬
+
+enum {CHO_PLAY, HAN_PLAY};
 
 class Adjcency_grpah
 {
@@ -73,7 +76,7 @@ private:
 	Adjcency_grpah *original_g;
 public:
 	Second_Graph(Adjcency_grpah *g);
-	void Value_process(vector<State_node*>* state);
+	void Value_process(vector<State_node*>* state, int winner);
 	int idxOfPiece(char piece);
 
 	Adjcency_grpah * Getgraph();

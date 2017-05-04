@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define TEXT_NAME "아마민동기보.txt"
+#define TEXT_NAME "testFile.txt"
 
 //Make Binary file with Graph Serialization 
 void SaveGraphData(Adjcency_grpah *i, char *fileName) {
@@ -78,7 +78,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<Stat
 	try {
 		for (int i = 0; i < play->size(); i++) {
 			g2->Getgraph()->Second_insert(state->at(i));
-			g2->Value_process(state->at(i));
+			g2->Value_process(state->at(i), play->at(i)->GetWinner());
 		}
 	}
 	catch (exception &e) {

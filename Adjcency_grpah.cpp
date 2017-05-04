@@ -6,7 +6,7 @@ const int killer_eval = 100;
 const int killee_eval = -100;
 const int checkmater_eval = 50;
 const int checkmatee_eval = -100;
-const int learning_rate = 0.5;
+const float learning_rate = 0.5;
 
 Adjcency_grpah::Adjcency_grpah() {
 
@@ -224,12 +224,12 @@ Second_Graph::Second_Graph(Adjcency_grpah *g) {
 	original_g = new Adjcency_grpah(g);
 }
 
-void Second_Graph::Value_process(vector<State_node*>* state) {
+void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 
 	State_node *now_state = new State_node();
 	State_node *prev_state = new State_node();
 	State_node *prev2_state = new State_node();
-	State_node *next_state = new State_node();
+	State_node *next2_state = new State_node();
 	char actor_prev;
 	bool host_prev;
 	int prev_actor_piece;
@@ -280,10 +280,22 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 	}
 
 	/*Bottom Up º¸»ó*/
-	for (int i = state->size() - 2; i >= 1; i--) {
+	if (winner == DRAW)
+		return;
+
+	bool host;
+	int reward_start = state->size() - 3;
+
+	for (int i = reward_start ; i >= 1; i--) {
 		now_state = state->at(i);
-		next_state = GetNext_state(state, i);
-		now_state->SetScore(now_state->GetScore() + next_state->GetScore() * learning_rate);
+		host = now_state->GetTurn()->Gethost();
+		next2_state = GetNext_state(state, i+1);
+	    if (host == winner) {
+			now_state->SetScore(now_state->GetScore() + next2_state->GetScore() * learning_rate);
+		}
+		else {
+			now_state->SetScore(now_state->GetScore() - next2_state->GetScore() * learning_rate);
+		}
 	}
 }
 
