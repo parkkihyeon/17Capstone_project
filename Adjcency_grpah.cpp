@@ -232,7 +232,7 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 	State_node *next_state = new State_node();
 	char actor_prev;
 	bool host_prev;
-	int prev_actor_piece;
+	int prev_actor_piece = 0;
 	for (int i = 1; i < state->size(); i++) {
 		now_state = state->at(i);
 		prev_state = GetPrev_state(state, i);
