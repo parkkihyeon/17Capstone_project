@@ -19,7 +19,7 @@ int main()
 	//SaveVectorData(play, "V_BinaryFile");
 	//LoadPlay = LoadVectorData("V_BinaryFile");
 
-	//SaveGraphData(second_g->Getgraph(), "G_BinaryFile");
+	SaveGraphData(second_g->Getgraph(), "G_BinaryFile");
 	//Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("G_BinaryFile"));
 	//AiGraph->Travelgraph_bfs();
 
