@@ -51,6 +51,7 @@ public:
 	void printBoard();
 
 	Play* createPlay(ifstream &file);
+	int GetWinner();
 
 	bool getRightNode();
 

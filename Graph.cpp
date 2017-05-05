@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define FILE "아마민동기보.txt"
+#define TEXT_NAME "testFile.txt"
 
 //Make Binary file with Graph Serialization 
 void SaveGraphData(Adjcency_grpah *i, char *fileName) {
@@ -62,7 +62,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 			Play_to_Statenode(play, history, i);
 			g->Insert(history);
 			state->push_back(history);
-			if(i % 100 == 0)
+			if (i % 100 == 0)
 				cout << i << "번째\n" << endl;
 		}
 	}
@@ -77,7 +77,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<Stat
 	try {
 		for (int i = 0; i < play->size(); i++) {
 			g2->Getgraph()->Second_insert(state->at(i));
-			g2->Value_process(state->at(i));
+			g2->Value_process(state->at(i), play->at(i)->GetWinner());
 		}
 	}
 	catch (exception &e) {
@@ -89,7 +89,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<Stat
 
 void Insert_Gibo(vector<Play*> *play)
 {
-	ifstream inStream(FILE);
+	ifstream inStream(TEXT_NAME);
 	if (inStream.fail()) {
 		cout << "Stream File Failed" << endl;
 		exit(1);

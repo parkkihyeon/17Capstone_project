@@ -23,13 +23,21 @@
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
 #define PIECE_NUM 8 
-#define INIT_WEIGHT 100000
+#define INIT_WEIGHT 10000
 
 using namespace std;
 
 typedef pair<int, int> Cha_pos;
 typedef pair<int, int> Pho_pos;
 typedef char (*STATE)[WIDTH_SIZE] ;
+
+enum { CHA, PHO, HORSE, SANG, SA, JOL, KING, NONE };
+enum {
+	NO_UNIT = 0, JOL_VALUE = 2, SA_VALUE = 3, SANG_VALUE = 3,
+	HORSE_VALUE = 5, PHO_VALUE = 7, CHA_VALUE = 13, KING_VALUE = 100
+};
+
+enum {PHO_MIDDLE_VALUE = 5, PHO_BOTTOM_VALUE = 3};
 
 class Now_turn
 {

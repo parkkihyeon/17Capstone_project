@@ -205,3 +205,7 @@ bool Play::getRightNode() {
 		return true;
 	}
 }
+
+int Play::GetWinner() {
+	return victory;
+}

@@ -1,12 +1,12 @@
 #include "Adjcency_grpah.h"
 
-const int rester_eval = 100;
-const int moving_eval = 10;
-const int killer_eval = 1000;
-const int killee_eval = -1000;
-const int checkmater_eval = 500;
-const int checkmatee_eval = -1000;
-const int learning_rate = 0.9;
+const int rester_eval = 10;
+const int moving_eval = 1;
+const int killer_eval = 100;
+const int killee_eval = -100;
+const int checkmater_eval = 50;
+const int checkmatee_eval = -100;
+const float learning_rate = 0.5;
 
 Adjcency_grpah::Adjcency_grpah() {
 
@@ -128,7 +128,7 @@ void Adjcency_grpah::Travelgraph_bfs() {
 		temp = q->front();
 		q->pop();
 		stream << "state 번호 : " << temp->GetState_number() << " 방문 횟수 : " << temp->GetTravelcount() << endl;
-		stream << temp->GetTurn()->Gethost() << ", " << "score : " << temp->GetScore() << endl; // 0이면 초, 1이면 한.
+		stream << temp->GetTurn()->Gethost() << ", " << "score : " << temp->GetScore() << ", 하위자식 " << temp->Getnumnext() << endl; // 0이면 초, 1이면 한.
 		// 초에 state이면 다음 차례는 한 이므로 한에 대한 weight를 기재.
 		for (int i = 0; i < 7; i++) {
 			if(temp->GetTurn()->Gethost() == 0)
@@ -224,12 +224,12 @@ Second_Graph::Second_Graph(Adjcency_grpah *g) {
 	original_g = new Adjcency_grpah(g);
 }
 
-void Second_Graph::Value_process(vector<State_node*>* state) {
+void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 
 	State_node *now_state = new State_node();
 	State_node *prev_state = new State_node();
 	State_node *prev2_state = new State_node();
-	State_node *next_state = new State_node();
+	State_node *next2_state = new State_node();
 	char actor_prev;
 	bool host_prev;
 	int prev_actor_piece = 0;
@@ -280,10 +280,47 @@ void Second_Graph::Value_process(vector<State_node*>* state) {
 	}
 
 	/*Bottom Up 보상*/
-	for (int i = state->size() - 2; i >= 1; i--) {
+	if (winner == DRAW)
+		return;
+
+	bool host;
+	int reward_start = state->size() - 3;
+
+	for (int i = reward_start ; i >= 1; i--) {
 		now_state = state->at(i);
-		next_state = GetNext_state(state, i);
-		now_state->SetScore(now_state->GetScore() + next_state->GetScore() * learning_rate);
+		host = now_state->GetTurn()->Gethost();
+		next2_state = GetNext_state(state, i+1);
+	    if (host == winner) {
+			now_state->SetScore(now_state->GetScore() + next2_state->GetScore() * learning_rate);
+		}
+		else {
+			now_state->SetScore(now_state->GetScore() - next2_state->GetScore() * learning_rate);
+		}
+	}
+}
+
+void Adjcency_grpah::AddMoveableChild(State_node *now_state) {
+
+}
+
+void Adjcency_grpah::AddMoveable() {
+	queue<State_node*> *q = new queue<State_node*>();
+	State_node *now_state;
+	int* bfs_check = new int[statenode_num + 1];
+	for (int i = 0; i <= statenode_num; i++) {
+		bfs_check[i] = i;
+	}
+	q->push(root);
+
+	while (!q->empty()) {
+		now_state = q->front();
+		q->pop();
+		for (int i = 0; i < now_state->Getnumnext(); i++) {
+			if (bfs_check[now_state->NthCheck_Childnode(i)->GetState_number()] != -1) {
+				bfs_check[now_state->NthCheck_Childnode(i)->GetState_number()] = -1;
+				q->push(now_state->NthCheck_Childnode(i));
+			}
+		}
 	}
 }
 
