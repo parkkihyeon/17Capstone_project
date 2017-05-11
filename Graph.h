@@ -1,6 +1,7 @@
 #include "Statenode.h"
 #include "Adjcency_grpah.h"
 #include "play.h"
+#include "Moveable.h"
 #include <time.h>
 
 void Insert_Gibo(vector<Play*> *play);

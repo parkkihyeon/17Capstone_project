@@ -36,7 +36,7 @@ private:
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
 		ar & BOOST_SERIALIZATION_NVP(root);
-		ar & BOOST_SERIALIZATION_NVP(leaf);
+//		ar & BOOST_SERIALIZATION_NVP(leaf);
 		ar & BOOST_SERIALIZATION_NVP(statenode_num);
 		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
 	}
@@ -51,8 +51,8 @@ public:
 	void PushList_Hashtable(State_node* state);
 	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
 	void Travelgraph_bfs();
-	void AddMoveable();
-	void AddMoveableChild(State_node *now_state);
+	//void AddMoveable();
+	//void AddMoveableChild(State_node *now_state);
 
 	const bool operator== (Adjcency_grpah *graph) ;
 

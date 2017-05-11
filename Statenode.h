@@ -23,7 +23,7 @@
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
 #define PIECE_NUM 8 
-#define INIT_WEIGHT 10000
+#define INIT_WEIGHT 1
 
 using namespace std;
 
@@ -80,9 +80,9 @@ private:
 	int state_number; //  state 번호를 뜻함.
 
 	// 평가
-	vector<int> *han_weight ;
-	vector<int> *cho_weight ;
-	int score;
+	vector<double> *han_weight ;
+	vector<double> *cho_weight ;
+	double score;
 	char State[HEIGHT_SIZE][WIDTH_SIZE];
 
 	Now_turn *this_turn;
@@ -126,11 +126,11 @@ public:
 	void SetState_number(int setnum);
 	void Print_weight(int idx);
 	// overeading (?)
-	void SetHan_weight(vector<int> *h_weight);
-	void SetCho_weight(vector<int> *c_weight);
-	void SetScore(int score_);
+	void SetHan_weight(vector<double> *h_weight);
+	void SetCho_weight(vector<double> *c_weight);
+	void SetScore(double score_);
 
-	void WeightCalculate(int idx, const int score, int host);
+	void WeightCalculate(int idx, const double score, int host);
 	void evaluateBoard();
 
 	const bool operator==(State_node *node);
@@ -148,9 +148,9 @@ public:
 	int Getcho();
 	int GetTravelcount();
 	int GetState_number();
-	vector<int>* Get_hanweight();
-	vector<int>* Get_choweight();
-	int GetScore();
+	vector<double>* Get_hanweight();
+	vector<double>* Get_choweight();
+	double GetScore();
 
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();

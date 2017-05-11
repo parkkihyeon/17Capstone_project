@@ -1,12 +1,13 @@
 #include "Adjcency_grpah.h"
+#include "Moveable.h"
 
-const int rester_eval = 10;
-const int moving_eval = 1;
-const int killer_eval = 100;
-const int killee_eval = -100;
-const int checkmater_eval = 50;
-const int checkmatee_eval = -100;
-const float learning_rate = 0.5;
+const double rester_eval = 0.001;
+const double moving_eval = 0.0001;
+const double killer_eval = 0.01;
+const double killee_eval = -0.01;
+const double checkmater_eval = 0.005;
+const double checkmatee_eval = -0.01;
+const double learning_rate = 0.5;
 
 Adjcency_grpah::Adjcency_grpah() {
 
@@ -21,13 +22,13 @@ Adjcency_grpah::Adjcency_grpah() {
 	Init_hashtable();
 	PushList_Hashtable(root);
 	root->SetState_number(0);
-	leaf = NULL;
+//	leaf = NULL;
 
 }
 //Reload Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 	root = graph.root;
-	leaf = graph.leaf;
+//	leaf = graph.leaf;
 	Init_hashtable();
 	statenode_num = graph.statenode_num;
 	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
@@ -35,7 +36,7 @@ Adjcency_grpah::Adjcency_grpah(Adjcency_grpah &graph) {
 //Save Serialize를 위한 깊은 복사 생성자
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 	root = graph->root;
-	leaf = graph->leaf;
+//	leaf = graph->leaf;
 	Init_hashtable();
 	statenode_num = graph->statenode_num;
 	memcpy(hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
@@ -89,7 +90,7 @@ void Adjcency_grpah::Insert(vector<State_node*>* state) {
 		state_stack.push(now_state);
 		now_state->TravelCountPlus();
 	}
-	leaf = now_state;
+//	leaf = now_state;
 }
 
 void Adjcency_grpah::Second_insert(vector<State_node*>* state) {
@@ -136,6 +137,28 @@ void Adjcency_grpah::Travelgraph_bfs() {
 			else
 				stream << temp->Get_choweight()->at(i) << " ";
 		}
+		// 하드코딩 지우자
+
+		//stream << endl;
+		//stream << "공격자 " << temp->GetTurn()->Gethost() << endl;
+		//for (int i = 1; i < HEIGHT_SIZE; i++) {
+		//	for (int j = 1; j < WIDTH_SIZE; j++) {
+		//		stream << temp->GetState()[i][j] << " ";
+		//	}
+		//	stream << endl;
+		//}
+
+		//for (int i = 0; i < temp->Getnumnext(); i++) {
+		//	stream << "-------------------------------------" << endl;
+		//	stream << "공격자 " << temp->Getnext()->at(i)->GetTurn()->Gethost() << endl;
+		//	for (int j = 1; j < HEIGHT_SIZE; j++) {
+		//		for (int k = 1; k < WIDTH_SIZE; k++) {
+		//			stream << temp->Getnext()->at(i)->GetState()[j][k]<< " ";
+		//		}
+		//		stream << endl;
+		//	}
+		//}
+
 		stream << endl << endl;
 		for (int i = 0; i < temp->Getnumnext(); i++) {
 			if (bfs_check[temp->NthCheck_Childnode(i)->GetState_number()] != -1) {
@@ -213,9 +236,9 @@ const bool Adjcency_grpah::operator==(Adjcency_grpah *graph) {
 	else if (!(this->root->operator==(graph->getRoot()))) {
 		return false;
 	}
-	else if (!(this->leaf->operator==(graph->getLeaf()))) {
-		return false;
-	}
+	//else if (!(this->leaf->operator==(graph->getLeaf()))) {
+	//	return false;
+	//}
 	else
 		return true;
 }
@@ -242,9 +265,13 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 		bool checkmate = now_state->GetTurn()->GetCheckmate();
 		bool host = (bool)now_state->GetTurn()->Gethost() ;
 
+		/*지우자*/
+		/*cout << i << endl;
+		now_state->Print_State();
+		cout << now_state->Getcho() << " " << now_state->Gethan() << endl; */
+
 		actor_prev = prev_state->GetTurn()->GetActor();
 		host_prev = prev_state->GetTurn()->Gethost();	
-	//	cout << now_state->GetState_number() << " " << now_state->GetTravelcount() << endl;
 
 		// 첫 수가 아닐때.
 		if(actor_prev != FIRST_PIECE)
@@ -290,7 +317,7 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 		now_state = state->at(i);
 		host = now_state->GetTurn()->Gethost();
 		next2_state = GetNext_state(state, i+1);
-	    if (host == winner) {
+	    if (host == (bool)winner) {
 			now_state->SetScore(now_state->GetScore() + next2_state->GetScore() * learning_rate);
 		}
 		else {
@@ -298,31 +325,93 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 		}
 	}
 }
-
-void Adjcency_grpah::AddMoveableChild(State_node *now_state) {
-
-}
-
-void Adjcency_grpah::AddMoveable() {
-	queue<State_node*> *q = new queue<State_node*>();
-	State_node *now_state;
-	int* bfs_check = new int[statenode_num + 1];
-	for (int i = 0; i <= statenode_num; i++) {
-		bfs_check[i] = i;
-	}
-	q->push(root);
-
-	while (!q->empty()) {
-		now_state = q->front();
-		q->pop();
-		for (int i = 0; i < now_state->Getnumnext(); i++) {
-			if (bfs_check[now_state->NthCheck_Childnode(i)->GetState_number()] != -1) {
-				bfs_check[now_state->NthCheck_Childnode(i)->GetState_number()] = -1;
-				q->push(now_state->NthCheck_Childnode(i));
-			}
-		}
-	}
-}
+//
+//void Adjcency_grpah::AddMoveableChild(State_node *now_state) {
+//	int cho = now_state->Getcho();
+//	int han = now_state->Gethan();
+//	int cha_y, cha_x, pho_y, pho_x;
+//	bool host = now_state->GetTurn()->Gethost();
+//	Set_4Dhashdata(cha_y, cha_x, pho_y, pho_x, now_state);
+//
+//	hash_4d* m = hashstate_list[cho][han];
+//	hash_4d::iterator itCur;
+//	State_node *candidate_state;
+//	// 잡히지 않은 경우.
+//	for (itCur = m->begin(); itCur != m->end(); itCur++) {
+//		candidate_state = itCur->second;
+//		if (host != candidate_state->GetTurn()->Gethost())
+//			if (moveable(now_state->GetState(), candidate_state->GetState(), host)) {
+//				for (int i = 0; i < now_state->Getnumnext(); i++) {
+//					if (!Diff_State(now_state->Getnext()->at(i), candidate_state))
+//						break; 
+//					else if (i == now_state->Getnumnext() - 1 )
+//						now_state->Addlist_Child(candidate_state);
+//				}
+//			}
+//	}
+//
+//	if (host == CHO_PLAY) {
+//		cho--;
+//		m = hashstate_list[cho][han]; 
+//		for (itCur = m->begin(); itCur != m->end(); itCur++) {
+//			candidate_state = itCur->second;
+//			if (CHO_PLAY != candidate_state->GetTurn()->Gethost())
+//				if (moveable(now_state->GetState(), candidate_state->GetState(), host)) {
+//					for (int i = 0; i < now_state->Getnumnext(); i++) {
+//						if (!Diff_State(now_state->Getnext()->at(i), candidate_state))
+//							break;
+//						else if (i == now_state->Getnumnext() - 1)
+//							now_state->Addlist_Child(candidate_state);
+//					}
+//				}
+//		}
+//	}
+//	// host == HAN_PLAY
+//	else {
+//		han--;
+//		m = hashstate_list[cho][han]; 
+//		for (itCur = m->begin(); itCur != m->end(); itCur++) {
+//			if (HAN_PLAY != candidate_state->GetTurn()->Gethost())
+//				if (moveable(now_state->GetState(), candidate_state->GetState(),host)) {
+//					for (int i = 0; i < now_state->Getnumnext(); i++) {
+//						if (!Diff_State(now_state->Getnext()->at(i), candidate_state))
+//							break;
+//						else if (i == now_state->Getnumnext() - 1)
+//							now_state->Addlist_Child(candidate_state);
+//					}
+//				}
+//		}
+//	}
+//	
+//}
+//
+//void Adjcency_grpah::AddMoveable() {
+//	
+//	queue<State_node*> *q = new queue<State_node*>();
+//	State_node *now_state;
+//	int* bfs_check = new int[statenode_num + 1];
+//	for (int i = 0; i <= statenode_num; i++) {
+//		bfs_check[i] = i;
+//	}
+//	q->push(root);
+//	int n = 0;
+//	while (!q->empty()) {
+//		now_state = q->front();
+//		q->pop();
+//		n++;
+//		if (n % 10 == 0)
+//			cout << n <<"번째 moveable" << endl;
+//		if(now_state != root)
+//			AddMoveableChild(now_state);
+//		
+//		for (int i = 0; i < now_state->Getnumnext(); i++) {
+//			if (bfs_check[now_state->NthCheck_Childnode(i)->GetState_number()] != -1) {
+//				bfs_check[now_state->NthCheck_Childnode(i)->GetState_number()] = -1;
+//				q->push(now_state->NthCheck_Childnode(i));
+//			}
+//		}
+//	}
+//}
 
 Adjcency_grpah * Second_Graph::Getgraph() {
 	return original_g;

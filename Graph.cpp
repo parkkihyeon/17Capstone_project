@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define TEXT_NAME "testFile.txt"
+#define TEXT_NAME "Final.txt"
 
 //Make Binary file with Graph Serialization 
 void SaveGraphData(Adjcency_grpah *i, char *fileName) {

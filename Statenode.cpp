@@ -119,8 +119,8 @@ void State_node::Init() {
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
-	han_weight = new vector<int>();
-	cho_weight = new vector<int>();
+	han_weight = new vector<double>();
+	cho_weight = new vector<double>();
 	for (int i = 0; i < PIECE_NUM; i++) {
 		han_weight->push_back(INIT_WEIGHT);
 		cho_weight->push_back(INIT_WEIGHT);
@@ -153,19 +153,19 @@ void State_node::Print_weight(int idx) {
 	stream.close();
 }
 
-void State_node::SetHan_weight(vector<int> *h_weight) {
+void State_node::SetHan_weight(vector<double> *h_weight) {
 	memcpy(han_weight, h_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::SetCho_weight(vector<int> *c_weight) {
+void State_node::SetCho_weight(vector<double> *c_weight) {
 	memcpy(cho_weight, c_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::SetScore(int score_) {
+void State_node::SetScore(double score_) {
 	score = score_;
 }
 
-void State_node::WeightCalculate(int idx, const int score, int host) {
+void State_node::WeightCalculate(int idx, const double score, int host) {
 	if (host == 0) {// cho 
 		cho_weight->at(idx) += score;
 	}
@@ -285,15 +285,15 @@ int State_node::GetState_number() {
 	return state_number;
 }
 
-vector<int>* State_node::Get_hanweight() {
+vector<double>* State_node::Get_hanweight() {
 	return han_weight;
 }
 
-vector<int>* State_node::Get_choweight() {
+vector<double>* State_node::Get_choweight() {
 	return cho_weight;
 }
 
-int State_node::GetScore() {
+double State_node::GetScore() {
 	return score;
 }
 
