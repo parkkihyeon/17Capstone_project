@@ -1,46 +1,34 @@
 #include "Graph.h"
-#define TEXT_NAME "testFile.txt"
+#define TEXT_NAME "Final5000.txt"
 
-//Make Binary file with Graph Serialization 
-void SaveGraphData(Adjcency_grpah *i, char *fileName) {
+//Make Binary file with Graph Serialization
+void SaveGraphData(Adjcency_grpah *i, const char *fileName) {
 	Adjcency_grpah g(i);
 	std::ofstream ofs(fileName, std::ios::binary);
 	boost::archive::binary_oarchive oa(ofs);
+	cout << "SAVE BOOST SERIALIZATION NVP START" << endl;
 	oa & BOOST_SERIALIZATION_NVP(g);
 	cout << "Storing Graphs Serialize Success\n" << endl;
 }
 //Reload Graph Serialized Binary file
-Adjcency_grpah LoadGraphData(char *fileName) {
+Adjcency_grpah LoadGraphData(const char *fileName) {
 	Adjcency_grpah g;
 	std::ifstream ifs(fileName, std::ios::binary);
 	if (!ifs) {
 		cout << "Read Error" << endl;
 		exit(1);
 	}
-	boost::archive::binary_iarchive ia(ifs);
-	ia & BOOST_SERIALIZATION_NVP(g);
-	cout << "Restoring Graphs Serialize Success\n" << endl;
-	return g;
-}
-//Make Binary file with Vector Serialization 
-void SaveVectorData(vector<Play*> *i, char *fileName) {
-	std::ofstream ofs(fileName, std::ios::binary);
-	boost::archive::binary_oarchive oa(ofs);
-	oa & BOOST_SERIALIZATION_NVP(i);
-	cout << "Storing Vector Serialize Success\n" << endl;
-}
-//Reload Vector Serialized Binary file
-vector<Play*> *LoadVectorData(char *fileName) {
-	vector<Play*> *vec = new vector<Play*>();
-	std::ifstream ifs(fileName, std::ios::binary);
-	if (!ifs) {
-		cout << "Read Error" << endl;
-		exit(1);
+
+	try {
+		boost::archive::binary_iarchive ia(ifs);
+		cout << "LOAD BOOST SERIALIZATION NVP START" << endl;
+		ia & BOOST_SERIALIZATION_NVP(g);
+		cout << "Restoring Graphs Serialize Success\n" << endl;
 	}
-	boost::archive::binary_iarchive ia(ifs);
-	ia & BOOST_SERIALIZATION_NVP(vec);
-	cout << "Restoring Vector Serialize Success\n" << endl;
-	return vec;
+	catch(boost::archive::archive_exception e) {
+		std::cout << "BOOST ERROR " << e.what() << std::endl;
+	}	
+	return g;
 }
 
 void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state)
@@ -57,33 +45,22 @@ void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_
 }
 
 void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node*>*>* state) {
-	try {
-		for (int i = 0; i < play->size(); i++) {
-			vector<State_node*>*history = new vector<State_node*>();
-			Play_to_Statenode(play, history, i);
-			g->Insert(history);
-			state->push_back(history);
-			if(i % 100 == 0)
-				cout << i << "¹øÂ°\n" << endl;
-		}
-	}
-	catch (exception &e) {
-		cerr << e.what() << ", Graph_made" << endl;
-		exit(1);
+	cout << "BF GR PLAY SIZE: " << play->size() << endl;
+	for (int i = 0; i < play->size(); i++) {
+		vector<State_node*>*history = new vector<State_node*>();
+		Play_to_Statenode(play, history, i);
+		g->Insert(history);
+		state->push_back(history);
+		if(i % 1000 == 0)
+			cout << "No." << i << endl;
 	}
 	cout << "Graph Generated\n" << endl;
 }
 
 void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*>* state) {
-	try {
-		for (int i = 0; i < play->size(); i++) {
-			g2->Getgraph()->Second_insert(state->at(i));
-			g2->Value_process(state->at(i), play->at(i)->GetWinner());
-		}
-	}
-	catch (exception &e) {
-		cerr << e.what() << ", Second_Graph_made" << endl;
-		exit(1);
+	for (int i = 0; i < play->size(); i++) {
+		g2->Getgraph()->Second_insert(state->at(i));
+		g2->Value_process(state->at(i), play->at(i)->GetWinner());
 	}
 	cout << "Graph Generated_2" << endl;
 }

@@ -64,7 +64,7 @@ State_node::State_node() {
 	Init();
 };
 
-// stateÀÇ »óÅÂ¸¦ Ãâ·ÂÇÑ´Ù.
+// stateï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 void State_node::Print_State() {
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
 		for (int j = 0; j < WIDTH_SIZE; j++) {
@@ -82,14 +82,14 @@ void State_node::Print_State() {
 	}
 	cout << endl;
 };
-//nodeÀÇ ÀÚ½ÄÀ» »ý¼º.
+//nodeï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 void State_node::Addlist_Child(State_node *add_state) {
 	this->next->push_back(add_state);
 };
 void State_node::Connect_Parent(State_node *parent_state) {
 	this->prev->push_back(parent_state);
 };
-// n¹øÂ° ÀÚ½ÄÀ» return
+// nï¿½ï¿½Â° ï¿½Ú½ï¿½ï¿½ï¿½ return
 State_node* State_node::NthCheck_Childnode(int n) {
 	return next->at(n);
 };
@@ -119,8 +119,8 @@ void State_node::Init() {
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
-	han_weight = new vector<int>();
-	cho_weight = new vector<int>();
+	han_weight = new vector<double>();
+	cho_weight = new vector<double>();
 	for (int i = 0; i < PIECE_NUM; i++) {
 		han_weight->push_back(INIT_WEIGHT);
 		cho_weight->push_back(INIT_WEIGHT);
@@ -138,13 +138,13 @@ void State_node::SetState_number(int setnum) {
 
 void State_node::Print_weight(int idx) {
 	ofstream stream("evaluate.txt", ios::app);
-	stream << idx << "¹øÂ° : " << endl;
-	stream << "ÃÊ : " << endl;
+	stream << idx << "ï¿½ï¿½Â° : " << endl;
+	stream << "ï¿½ï¿½ : " << endl;
 	for (int i = 0; i < 7; i++) {
 		stream << cho_weight->at(i) << " ";
 	}
 	stream << endl;
-	stream << "ÇÑ : " << endl;
+	stream << "ï¿½ï¿½ : " << endl;
 	for (int i = 0; i < 7; i++) {
 		stream << han_weight->at(i) << " ";
 	}
@@ -153,19 +153,19 @@ void State_node::Print_weight(int idx) {
 	stream.close();
 }
 
-void State_node::SetHan_weight(vector<int> *h_weight) {
+void State_node::SetHan_weight(vector<double> *h_weight) {
 	memcpy(han_weight, h_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::SetCho_weight(vector<int> *c_weight) {
+void State_node::SetCho_weight(vector<double> *c_weight) {
 	memcpy(cho_weight, c_weight, sizeof(int)*PIECE_NUM);
 }
 
-void State_node::SetScore(int score_) {
+void State_node::SetScore(double score_) {
 	score = score_;
 }
 
-void State_node::WeightCalculate(int idx, const int score, int host) {
+void State_node::WeightCalculate(int idx, const double score, int host) {
 	if (host == 0) {// cho 
 		cho_weight->at(idx) += score;
 	}
@@ -183,7 +183,7 @@ void State_node::evaluateBoard() {
 		}
 	}
 
-	// test¿ë.
+	// testï¿½ï¿½.
 	if (piece_count >= 22) score_piece[PHO] = PHO_VALUE;
 	else if (piece_count >= 13) score_piece[PHO] = PHO_MIDDLE_VALUE;
 	else score_piece[PHO] = PHO_BOTTOM_VALUE;
@@ -285,15 +285,15 @@ int State_node::GetState_number() {
 	return state_number;
 }
 
-vector<int>* State_node::Get_hanweight() {
+vector<double>* State_node::Get_hanweight() {
 	return han_weight;
 }
 
-vector<int>* State_node::Get_choweight() {
+vector<double>* State_node::Get_choweight() {
 	return cho_weight;
 }
 
-int State_node::GetScore() {
+double State_node::GetScore() {
 	return score;
 }
 
@@ -342,4 +342,8 @@ const bool State_node::operator==(State_node *node) {
 	}
 	else
 		return true;
+}
+
+void State_node::SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]) {
+	memcpy(State, state_, sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
 }

@@ -15,8 +15,6 @@
 #include <boost/archive/binary_oarchive.hpp> // 바이너리 형태로 입력하기 위해
 
 #include <boost/serialization/nvp.hpp>
-#include <boost/serialization/throw_exception.hpp>
-#include <boost/exception/all.hpp>
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11

@@ -6,7 +6,7 @@ Play::Play()
 	for (int i = 0; i < HEIGHT_SIZE; i++)
 		for (int j = 0; j < WIDTH_SIZE; j++)
 			StateInfo[i][j] = NULL;
-	//¸¶»ó¸¶»ó & ¸¶»ó¸¶»ó ±âº»
+	//ï¿½ï¿½ï¿½ó¸¶»ï¿½ & ï¿½ï¿½ï¿½ó¸¶»ï¿½ ï¿½âº»
 	char temp[HEIGHT_SIZE][WIDTH_SIZE] = {
 		{ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' },
 		{ '-', 'C', 'X', 'H', 'S', '-', 'S', 'X', 'H', 'C' },
@@ -28,7 +28,7 @@ Play::Play(int reportNum, int cho, int han, int vic)
 	for (int i = 0; i < HEIGHT_SIZE; i++)
 		for (int j = 0; j < WIDTH_SIZE; j++)
 			StateInfo[i][j] = NULL;
-	//¸¶»ó¸¶»ó & ¸¶»ó¸¶»ó ±âº»
+	//ï¿½ï¿½ï¿½ó¸¶»ï¿½ & ï¿½ï¿½ï¿½ó¸¶»ï¿½ ï¿½âº»
 	char temp[HEIGHT_SIZE][WIDTH_SIZE] = {
 		{ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' },
 		{ '-', 'C', 'X', 'H', 'S', '-', 'S', 'X', 'H', 'C' },
@@ -63,7 +63,7 @@ void Play::createState(string line) {
 
 	int     nCutPos;
 	int     nIndex = 0;
-	// ÀÐ¾îµå¸° stringÀ» °¢ º¯¼ö¿¡ ¸Â°Ô split
+	// ï¿½Ð¾ï¿½ï¿½å¸° stringï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ split
 	string* strResult = new string[TOKEN_SIZE];
 
 	while ((nCutPos = line.find_first_of(' ')) != line.npos)
@@ -82,14 +82,14 @@ void Play::createState(string line) {
 	int pos[2] = { atoi(strResult[1].c_str()), atoi(strResult[2].c_str()) };
 	char *unit = new char(2);
 
-	// ÇÑ¼ö½°ÀÇ °æ¿ì
+	// ï¿½Ñ¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (pos[0] == 0 && pos[1] == 0) {
 		node *Node = new node(StateInfo);
 		Node->setHost(atoi(strResult[0].c_str()));
 		insertStage(Node);
 		return;
 	}
-	// splitµÈ °ªµéÀ» ÀÌ¿ëÇÏ¿© node »ý¼º
+	// splitï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ node ï¿½ï¿½ï¿½ï¿½
 	strcpy(unit, strResult[3].c_str());
 	node *Node = new node(StateInfo);
 	Node->setHost(atoi(strResult[0].c_str()));
@@ -105,7 +105,7 @@ void Play::createState(string line) {
 	Node->changeState(pos);
 	insertStage(Node);
 
-	//play°´Ã¼ÀÇ Board ÃÖ½ÅÈ­
+	//playï¿½ï¿½Ã¼ï¿½ï¿½ Board ï¿½Ö½ï¿½È­
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
 		for (int j = 0; j < WIDTH_SIZE; j++) {
 			StateInfo[i][j] = Node->getArrPos(i, j);
@@ -147,21 +147,22 @@ Play* Play::createPlay(ifstream &file) {
 			cout << textLine << endl;
 			cout << endl;
 		}
+		//cout << textLine<< endl;
 		fileNum++;
 		int reportNumber = INITIAL_ORDER,
 			cho = INITIAL_ORDER, han = INITIAL_ORDER, victory = INITIAL_ORDER;
 		bool flag = false;
-
 		reportNumber = atoi(textLine.c_str());
 
 		getline(file, textLine);
-		//Á¢Àå±âÀÇ °æ¿ì¸¦ ÇÇÇÏ±â À§ÇØ
 		if (textLine.compare("") != 0) {
 			cho = atoi(textLine.c_str());
 			getline(file, textLine);
+
 			if (textLine.compare("") != 0) {
 				han = atoi(textLine.c_str());
 				getline(file, textLine);
+
 				if (textLine.compare("") != 0) {
 					victory = atoi(textLine.c_str());
 				}
@@ -184,7 +185,9 @@ Play* Play::createPlay(ifstream &file) {
 		gameReport->initailize();
 		int state_index = 1;
 		while (getline(file, textLine)) {
-			if (textLine.compare("") == 0) {
+			if (textLine.compare("\r\n") == 0 ||
+				textLine.compare("\r") == 0 ||
+				textLine.compare("\n") == 0) {
 				return gameReport;
 			}
 			else {
