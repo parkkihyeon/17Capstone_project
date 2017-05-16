@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <memory.h>
+#include "Statenode.h"
 #define WIDTH_SIZE			10
 #define DF_PANEL_WIDTH		9
 #define DF_PANEL_HEIGHT		10
@@ -20,7 +21,7 @@
 #define DF_SCORE_SANG		9000
 
 #define DF_INFINITY			9999999
-typedef char(*STATE)[WIDTH_SIZE];
+
 enum MOVERESULT { MR_HANDEAD, MR_CHODEAD, MR_UNMOVED, MR_MOVED };
 
 enum TEAM { TM_NOTHING, TM_HAN, TM_CHO };
@@ -257,7 +258,8 @@ public:
 	int		GetFeedOverDepth() { return sm_nFeedOverDepth; }
 	void	testprint();
 	void	boardChage(char board[][10]);
-	STATE getboard();
+	void 	getboard(char state_[11][10]);
+
 public:
 	static	CHistoryStack	sm_cHistoryStack;
 

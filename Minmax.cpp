@@ -1458,64 +1458,63 @@ bool CJKStage::GetLastMove(SHistory & LMStore)
 }
 
 
-STATE CJKStage::getboard() {
+void CJKStage::getboard(char state_[11][10]) {
 	 
-	char ret[11][10] ;
 	for (int i = 0; i < 11; i++) {
-		ret[i][0] = '-';
+		state_[i][0] = '-';
 	}
 	for (int i = 0; i < 10; i++) {
-		ret[0][i] = '-';
+		state_[0][i] = '-';
 	}
 	for (int i = 1; i < 11; i++) {
 		for (int j = 1; j < 10; j++) {
 			switch (m_enPanel[i-1][j-1])
 			{
 			case PS_NOTHING:
-				ret[i][j] = '-';
+				state_[i][j] = '-';
 				break;
 			case PS_CHO_CHA:
-				ret[i][j] = 'c';
+				state_[i][j] = 'c';
 				break;
 			case PS_CHO_JANG:
-				ret[i][j] = 'k';
+				state_[i][j] = 'k';
 				break;
 			case PS_CHO_JOL:
-				ret[i][j] = 'j';
+				state_[i][j] = 'j';
 				break;
 			case PS_CHO_MA:
-				ret[i][j] = 'h';
+				state_[i][j] = 'h';
 				break;
 			case PS_CHO_PO:
-				ret[i][j] = 'p';
+				state_[i][j] = 'p';
 				break;
 			case PS_CHO_SANG:
-				ret[i][j] = 'x';
+				state_[i][j] = 'x';
 				break;
 			case PS_CHO_SA:
-				ret[i][j] = 's';
+				state_[i][j] = 's';
 				break;
 		
 			case PS_HAN_CHA:
-				ret[i][j] = 'C';
+				state_[i][j] = 'C';
 				break;
 			case PS_HAN_JANG:
-				ret[i][j] = 'K';
+				state_[i][j] = 'K';
 				break;
 			case PS_HAN_JOL:
-				ret[i][j] = 'J';
+				state_[i][j] = 'J';
 				break;
 			case PS_HAN_MA:
-				ret[i][j] = 'H';
+				state_[i][j] = 'H';
 				break;
 			case PS_HAN_PO:
-				ret[i][j] = 'P';
+				state_[i][j] = 'P';
 				break;
 			case PS_HAN_SANG:
-				ret[i][j] = 'X';
+				state_[i][j] = 'X';
 				break;
 			case PS_HAN_SA:
-				ret[i][j] = 'S';
+				state_[i][j] = 'S';
 				break;
 				
 			default:
@@ -1523,14 +1522,7 @@ STATE CJKStage::getboard() {
 			}
 		}
 	}
-	std::cout << "=============================" << std::endl;
-	for(int i = 0; i < 11; i++) {
-		for(int j = 0; j < 10; j++) {
-			std::cout << ret[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-	return ret;
+
 }
 
 

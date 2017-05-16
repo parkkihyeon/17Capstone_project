@@ -345,5 +345,9 @@ const bool State_node::operator==(State_node *node) {
 }
 
 void State_node::SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]) {
-	memcpy(State, state_, sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
+	for(int i = 0 ; i < HEIGHT_SIZE ; i++){
+		for(int j = 0 ; j < WIDTH_SIZE ; j++){
+			State[i][j] = state_[i][j] ;
+		}
+	}
 }

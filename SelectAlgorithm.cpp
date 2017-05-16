@@ -90,19 +90,6 @@ State_node* SetState_fromServer(char state[HEIGHT_SIZE][WIDTH_SIZE], bool host) 
 	return answer;
 }
 
-//bool cmpDscent(State_node* a, State_node* b) {
-//	if (a->GetScore() > b->GetScore())
-//		return true;
-//	else return false;
-//}
-//
-//bool cmpAscent(State_node *a, State_node *b) {
-//	if (a->GetScore() < b->GetScore())
-//		return true;
-//	else return false;
-//}
-
-//�ؽÿ� �����ϸ� ��Ʈ���� ������ ������.
 State_node* SelectState(State_node *now_state) {
 
 	int index = 0;
@@ -136,23 +123,14 @@ State_node* SelectState(State_node *now_state) {
 	return now_state->Getnext()->at(index);
 }
 void MinMax(State_node *game_state, State_node* now_state, bool host) {
-	cout << "\n MinMax \n" << endl;
+	char t_state[11][10] ;
 	CJKStage test;
 
-	cout << "1" << endl;
+	cout << "\n MinMax \n" << endl;
 	test.boardChage(now_state->GetState());
-	cout << "2" << endl;
 	test.Infer(host);
-	cout << "3" << endl;
-	STATE temp = test.getboard() ;
-	char tmp1[11][10];
-	for(int i = 0 ; i < 11 ; i ++){
-		for(int j = 0; j < 10 ; j++)
-			tmp1[i][j] = temp[i][j];
-	}
-	game_state->SetState(tmp1);
-	cout << "4" << endl;
-
+	test.getboard(t_state) ;
+	game_state->SetState(t_state);
 	game_state->Print_State();
 }
 
