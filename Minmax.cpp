@@ -1290,11 +1290,11 @@ int CJKStage::getNumPiece() {
 
 
 	if (count > 25)
-		return 0;
+		return 1;
 	if (count > 15)
-		return 2;
+		return 3;
 	
-	return 3;
+	return 4;
 
 	
 }

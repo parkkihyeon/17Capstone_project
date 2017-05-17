@@ -122,11 +122,18 @@ State_node* SelectState(State_node *now_state) {
 
 	return now_state->Getnext()->at(index);
 }
-void MinMax(State_node *game_state, State_node* now_state, bool host) {
-	char t_state[11][10] ;
-	CJKStage test;
 
-	cout << "\n MinMax \n" << endl;
+bool MoveableMinMax(State_node *game_state, State_node *now_state, Adjcency_grpah *g){
+	State_node *maxVlaueState = new State_node() ;
+	int maxvalue = 0 ;
+
+	/* movable minmax  */
+}
+
+void MinMax(State_node *game_state, State_node* now_state, bool host) {
+	cout << "Min Max " << endl ;
+	char t_state[HEIGHT_SIZE][WIDTH_SIZE] ;
+	CJKStage test;
 	test.boardChage(now_state->GetState());
 	test.Infer(host);
 	test.getboard(t_state) ;
@@ -171,8 +178,9 @@ void SelectMove(Adjcency_grpah *g) {
 			inthe_graph = g->Is_In_The_List_State(now_state); // �ؽþȿ� �����ϸ� �ؽþȿ� �ִ� state�� �����ϰԵȴ�.
 
 			// �ؽÿ� �������� ������
-			if(inthe_graph == NULL )
+			if(inthe_graph == NULL ){
 				MinMax(game_state, now_state, host); 
+			}
 			else {
 				select_state = SelectState(inthe_graph);
 				// �ؽÿ� �����ϰ�, �ڽ��� ��ġ�� ����̸�
@@ -181,8 +189,9 @@ void SelectMove(Adjcency_grpah *g) {
 					game_state->SetState(select_state->GetState());
 				}
 				// �ؽÿ� �����ϳ�, �ڽ��� ��ġ�� �����̸�.
-				else
+				else{
 					MinMax(game_state, now_state, host);
+				}
 			}
 			/*
 				�¼� : server -> unity ��ġ ��ȯ.

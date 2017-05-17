@@ -206,6 +206,7 @@ void Adjcency_grpah::Travelgraph_bfs() {
 	q->push(root);
 
 	cout << " ½ºÅ×ÀÌÆ® ¹øÈ£ , ¹æ¹® È½¼ö " << endl;
+
 	while (!q->empty()) {
 		temp = q->front();
 		q->pop();
@@ -220,25 +221,25 @@ void Adjcency_grpah::Travelgraph_bfs() {
 		}
 		// ÇÏµåÄÚµù Áö¿ìÀÚ
 
-		//stream << endl;
-		//stream << "°ø°ÝÀÚ " << temp->GetTurn()->Gethost() << endl;
-		//for (int i = 1; i < HEIGHT_SIZE; i++) {
-		//	for (int j = 1; j < WIDTH_SIZE; j++) {
-		//		stream << temp->GetState()[i][j] << " ";
-		//	}
-		//	stream << endl;
-		//}
+		// stream << endl;
+		// stream << "°ø°ÝÀÚ " << temp->GetTurn()->Gethost() << endl;
+		// for (int i = 1; i < HEIGHT_SIZE; i++) {
+		// 	for (int j = 1; j < WIDTH_SIZE; j++) {
+		// 		stream << temp->GetState()[i][j] << " ";
+		// 	}
+		// 	stream << endl;
+		// }
 
-		//for (int i = 0; i < temp->Getnumnext(); i++) {
-		//	stream << "-------------------------------------" << endl;
-		//	stream << "°ø°ÝÀÚ " << temp->Getnext()->at(i)->GetTurn()->Gethost() << endl;
-		//	for (int j = 1; j < HEIGHT_SIZE; j++) {
-		//		for (int k = 1; k < WIDTH_SIZE; k++) {
-		//			stream << temp->Getnext()->at(i)->GetState()[j][k]<< " ";
-		//		}
-		//		stream << endl;
-		//	}
-		//}
+		// for (int i = 0; i < temp->Getnumnext(); i++) {
+		// 	stream << "-------------------------------------" << endl;
+		// 	stream << "°ø°ÝÀÚ " << temp->Getnext()->at(i)->GetTurn()->Gethost() << endl;
+		// 	for (int j = 1; j < HEIGHT_SIZE; j++) {
+		// 		for (int k = 1; k < WIDTH_SIZE; k++) {
+		// 			stream << temp->Getnext()->at(i)->GetState()[j][k]<< " ";
+		// 		}
+		// 		stream << endl;
+		// 	}
+		// }
 
 		stream << endl << endl;
 		for (int i = 0; i < temp->Getnumnext(); i++) {

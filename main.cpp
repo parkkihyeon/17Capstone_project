@@ -21,10 +21,12 @@ int main()
 
 	// SaveGraphData(second_g->Getgraph(), "LINUX_Binary_5000");
 	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("LINUX_Binary"));
+	//AiGraph->Travelgraph_bfs() ;
+	// while(true) {
+	// 	SelectMove(AiGraph);
+	// }
 
-	while(true) {
-		SelectMove(AiGraph);
-	}
+	SetSocket(AiGraph);
 
 	clock_t end_t = clock();
 	cout << "Time : " << (end_t - start_t) / 1000 << endl;
