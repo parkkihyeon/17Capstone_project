@@ -7,7 +7,18 @@
 #include <fstream>
 #include "node.h"
 
-#define MIN 200
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/vector.hpp> // ï¿½ï¿½ï¿½ï¿½È­ vectorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/serialization/deque.hpp> // ï¿½ï¿½ï¿½ï¿½È­ stackï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/serialization/stack.hpp> // ï¿½ï¿½ï¿½ï¿½È­ stackï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/utility.hpp>
+
+#include <boost/archive/binary_iarchive.hpp> // ï¿½ï¿½ï¿½Ì³Ê¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ô·ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/archive/binary_oarchive.hpp> // ï¿½ï¿½ï¿½Ì³Ê¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ô·ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+#include <boost/serialization/nvp.hpp>
+
 #define TOKEN_SIZE 6
 #define INITIAL_ORDER -2
 
@@ -17,9 +28,9 @@ static int fileNum = 0;
 
 class Play {
 private:
-	// ±âº¸ ¹øÈ£
+	// ï¿½âº¸ ï¿½ï¿½È£
 	int reportNumber;
-	// °¢ Áø¿µÀÇ Æ÷Áø
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int cho_order;
 	int han_order;
 	int victory;
@@ -42,10 +53,10 @@ public:
 	Play();
 	Play(int reportNum, int cho, int han, int vic);
 
-	// State¸¦ ¸â¹ö º¯¼ö¿¡ »ðÀÔ
+	// Stateï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void insertStage(node *state);
 
-	// State¸¦ »ý¼º
+	// Stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void createState(string line);
 
 	void printBoard();

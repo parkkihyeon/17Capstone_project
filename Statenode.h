@@ -129,7 +129,6 @@ public:
 	void SetHan_weight(vector<double> *h_weight);
 	void SetCho_weight(vector<double> *c_weight);
 	void SetScore(double score_);
-
 	void WeightCalculate(int idx, const double score, int host);
 	void evaluateBoard();
 

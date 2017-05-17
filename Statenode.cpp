@@ -64,7 +64,7 @@ State_node::State_node() {
 	Init();
 };
 
-// stateÀÇ »óÅÂ¸¦ Ãâ·ÂÇÑ´Ù.
+// stateï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 void State_node::Print_State() {
 	for (int i = 0; i < HEIGHT_SIZE; i++) {
 		for (int j = 0; j < WIDTH_SIZE; j++) {
@@ -82,14 +82,14 @@ void State_node::Print_State() {
 	}
 	cout << endl;
 };
-//nodeÀÇ ÀÚ½ÄÀ» »ý¼º.
+//nodeï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 void State_node::Addlist_Child(State_node *add_state) {
 	this->next->push_back(add_state);
 };
 void State_node::Connect_Parent(State_node *parent_state) {
 	this->prev->push_back(parent_state);
 };
-// n¹øÂ° ÀÚ½ÄÀ» return
+// nï¿½ï¿½Â° ï¿½Ú½ï¿½ï¿½ï¿½ return
 State_node* State_node::NthCheck_Childnode(int n) {
 	return next->at(n);
 };
@@ -138,13 +138,13 @@ void State_node::SetState_number(int setnum) {
 
 void State_node::Print_weight(int idx) {
 	ofstream stream("evaluate.txt", ios::app);
-	stream << idx << "¹øÂ° : " << endl;
-	stream << "ÃÊ : " << endl;
+	stream << idx << "ï¿½ï¿½Â° : " << endl;
+	stream << "ï¿½ï¿½ : " << endl;
 	for (int i = 0; i < 7; i++) {
 		stream << cho_weight->at(i) << " ";
 	}
 	stream << endl;
-	stream << "ÇÑ : " << endl;
+	stream << "ï¿½ï¿½ : " << endl;
 	for (int i = 0; i < 7; i++) {
 		stream << han_weight->at(i) << " ";
 	}
@@ -183,7 +183,7 @@ void State_node::evaluateBoard() {
 		}
 	}
 
-	// test¿ë.
+	// testï¿½ï¿½.
 	if (piece_count >= 22) score_piece[PHO] = PHO_VALUE;
 	else if (piece_count >= 13) score_piece[PHO] = PHO_MIDDLE_VALUE;
 	else score_piece[PHO] = PHO_BOTTOM_VALUE;
@@ -342,4 +342,12 @@ const bool State_node::operator==(State_node *node) {
 	}
 	else
 		return true;
+}
+
+void State_node::SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]) {
+	for(int i = 0 ; i < HEIGHT_SIZE ; i++){
+		for(int j = 0 ; j < WIDTH_SIZE ; j++){
+			State[i][j] = state_[i][j] ;
+		}
+	}
 }

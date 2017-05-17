@@ -8,6 +8,9 @@
 #include <map>
 #include <queue>
 #include <fstream>
+#include <cstring>
+#include <string>
+#include <string.h>
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
@@ -16,11 +19,13 @@
 #define REST_PIECE '0'
 #define FIRST_PIECE '0'
 #define DRAW -1
+#define MOVABLE_KEY 7
 
 using namespace std;
 
 typedef pair<Cha_pos, Pho_pos> pair_key;
-typedef multimap<pair_key, State_node*> hash_4d; // 4Â÷¿ø ÇØ½¬
+typedef multimap<pair_key, State_node*> hash_4d; // 4ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½
+typedef multimap<string, State_node*> movableHash;
 
 enum {CHO_PLAY, HAN_PLAY};
 
@@ -42,8 +47,13 @@ private:
 	}
 public:
 	Adjcency_grpah();
-	Adjcency_grpah(Adjcency_grpah &graph);
+	Adjcency_grpah(const Adjcency_grpah &graph);
 	Adjcency_grpah(Adjcency_grpah *graph);
+
+	void MovableHashInit();
+	int convertKeyhash(int key, int key_index);
+	string getMovableKey(State_node* now_state);
+	void insertMovableHash(State_node* now_state);
 
 	void Init_hashtable();
 	void Insert(vector<State_node*>* state);
@@ -59,15 +69,15 @@ public:
 	State_node* getRoot();
 	State_node* getLeaf();
 
-	// ÇöÀç À§Ä¡ÇÑ ³ëµå¿¡¼­ÀÇ ÀÚ½Ä³ëµå¿Í Ãß°¡ÇÒ state¿Í °°Àº°Ô ÀÖ´ÂÁö.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½å¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½Ä³ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½.
 	int Is_Have_childnode(State_node* sub_root, State_node* state);
-	// ÇöÀç À§Ä¡ÇÑ ³ëµå¿¡¼­ ¾î¶² ºÎ¸ð³ëµå¿¡¼­ ¿Ô´ÂÁö ºñ±³ÇÔ.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½î¶² ï¿½Î¸ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½Ô´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	int Direction_parentnode(State_node* sub_node);
 
-	// ÇöÀç ³ëµå state°¡ ±×·¡ÇÁ·Î Á¸ÀçÇÏ°í ÀÖ´ÂÁö
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ stateï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½
 	State_node* Is_In_The_List_State(State_node *state);
 
-	// µÎ state°¡ °°ÀºÁö ´Ù¸¥Áö È®ÀÎÇÏ´Â ÇÔ¼ö.
+	// ï¿½ï¿½ stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½.
 	bool Diff_State(State_node *stateA, State_node *stateB);
 };
 
