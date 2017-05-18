@@ -144,20 +144,6 @@ void SetSocket(Adjcency_grpah * graph) {
 	int count = 1;
 
 	std::cout << "Graph Module Generated" << std::endl;
-	char state[HEIGHT_SIZE][WIDTH_SIZE] = {
-		{ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' },
-		{ '-', 'C', 'H', 'X', 'S', '-', 'S', 'H', 'X', 'C' },
-		{ '-', '-', '-', '-', '-', 'K', '-', '-', '-', '-' },
-		{ '-', '-', 'P', '-', '-', '-', '-', '-', 'P', '-' },
-		{ '-', 'J', '-', 'J', '-', 'J', '-', 'J', '-', 'J' },
-		{ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' },
-		{ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' },
-		{ '-', 'j', '-', 'j', '-', 'j', '-', 'j', '-', 'j' },
-		{ '-', '-', 'p', '-', '-', '-', '-', '-', 'p', '-' },
-		{ '-', '-', '-', '-', '-', 'k', '-', '-', '-', '-' },
-		{ '-', 'c', 'h', 'x', 's', '-', 's', 'h', 'x', 'c' }
-	};
-
 
 	while (true) {
 		temps = master;
@@ -186,7 +172,6 @@ void SetSocket(Adjcency_grpah * graph) {
 					sprintf(sendMSG, "ORDER|%d", order);
 					write(_socket, sendMSG, strlen(sendMSG));
 					cout << "POS-1: " << checkBit.first << " " << "POS-2: " << checkBit.second << endl;
-					//PlaceSelect(state, order, order);
 				}
 				// IF CHECKBIT != -4 -> BOARD DATA
 				else {
@@ -210,8 +195,7 @@ void SetSocket(Adjcency_grpah * graph) {
 						if (select_state) {
 							select_state->Print_State();
 							game_state->SetState(select_state->GetState());
-							pos = game_state->GetTurn()->Getpos();
-							cout << "POS-1: " << pos.first << " " << "POS-2: " << pos.second << endl;
+							pos = GetStatePos(game_state, now_state);
 						}
 						else {
 							MinMax(game_state, now_state, host);
