@@ -7,14 +7,14 @@
 #include <fstream>
 
 #include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp> // Á÷·ÄÈ­ vector¸¦ »ç¿ëÇÏ±â À§ÇØ
-#include <boost/serialization/deque.hpp> // Á÷·ÄÈ­ stackÀ» »ç¿ëÇÏ±â À§ÇØ
-#include <boost/serialization/stack.hpp> // Á÷·ÄÈ­ stackÀ» »ç¿ëÇÏ±â À§ÇØ
+#include <boost/serialization/vector.hpp> // ï¿½ï¿½ï¿½ï¿½È­ vectorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/serialization/deque.hpp> // ï¿½ï¿½ï¿½ï¿½È­ stackï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/serialization/stack.hpp> // ï¿½ï¿½ï¿½ï¿½È­ stackï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/utility.hpp>
 
-#include <boost/archive/binary_iarchive.hpp> // ¹ÙÀÌ³Ê¸® ÇüÅÂ·Î ÀÔ·ÂÇÏ±â À§ÇØ
-#include <boost/archive/binary_oarchive.hpp> // ¹ÙÀÌ³Ê¸® ÇüÅÂ·Î ÀÔ·ÂÇÏ±â À§ÇØ
+#include <boost/archive/binary_iarchive.hpp> // ï¿½ï¿½ï¿½Ì³Ê¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ô·ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+#include <boost/archive/binary_oarchive.hpp> // ï¿½ï¿½ï¿½Ì³Ê¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ô·ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/throw_exception.hpp>
@@ -73,13 +73,13 @@ public:
 class State_node
 {
 private:
-	int state_ordernum; //ÇöÀç ºÎ¸ðÀÇ n¹øÂ° ÀÚ½Ä. nÀ» ¶æÇÔ.
+	int state_ordernum; //ï¿½ï¿½ï¿½ï¿½ ï¿½Î¸ï¿½ï¿½ï¿½ nï¿½ï¿½Â° ï¿½Ú½ï¿½. nï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	int unit_of_han;
 	int unit_of_cho;
 	int travel_count;
-	int state_number; //  state ¹øÈ£¸¦ ¶æÇÔ.
+	int state_number; //  state ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
-	// Æò°¡
+	// ï¿½ï¿½
 	vector<double> *han_weight ;
 	vector<double> *cho_weight ;
 	double score;
@@ -112,10 +112,10 @@ public:
 	State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]);
 	State_node();
 
-	// stateÀÇ »óÅÂ¸¦ Ãâ·ÂÇÑ´Ù.
+	// stateï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	void Print_State();
 
-	//nodeÀÇ ÀÚ½ÄÀ» »ý¼º.
+	//nodeï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	void Addlist_Child(State_node *add_state);
 	void Connect_Parent(State_node *parent_state);
 	void Set_numUnit(int cho, int han);
@@ -129,14 +129,12 @@ public:
 	void SetHan_weight(vector<double> *h_weight);
 	void SetCho_weight(vector<double> *c_weight);
 	void SetScore(double score_);
-	void SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]);
-
 	void WeightCalculate(int idx, const double score, int host);
 	void evaluateBoard();
 
 	const bool operator==(State_node *node);
 
-	// n¹øÂ° ÀÚ½ÄÀ» return
+	// nï¿½ï¿½Â° ï¿½Ú½ï¿½ï¿½ï¿½ return
 	State_node* NthCheck_Childnode(int n);
 	State_node* NthCheck_Parentnode(int n);
 	Now_turn* GetTurn();
@@ -156,6 +154,8 @@ public:
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();
 	pair<Cha_pos, Pho_pos> GetHorse_pos();
+
+	void SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]);
 };
 
 #endif
