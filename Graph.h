@@ -39,7 +39,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*> * state);
 void SaveGraphData(Adjcency_grpah *i, const char *fileName);
 Adjcency_grpah LoadGraphData(const char *fileName);
-void SetSocket(Adjcency_grpah * graph);
+void SetSocket(Adjcency_grpah *graph);
 void GetBoard(char* parsedData, char (&board)[HEIGHT_SIZE][WIDTH_SIZE]);
 pair<int, int> CheckType(char* msg);
 pair<int, int> GetStatePos(State_node *nextState, State_node *prevState);
