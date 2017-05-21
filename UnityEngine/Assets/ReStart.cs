@@ -30,9 +30,10 @@ public class ReStart : MonoBehaviour {
 
 	public void ReStartGame(){
 		Debug.Log ("game restart");
+		GameManager.Instance.DontTouch = false;
+		GameManager.Instance.StartGame = false;
 		GameManager.Instance.MyCharim = charim;
 		GameManager.Instance.SetStartGame (0);
 	}
-
 
 }

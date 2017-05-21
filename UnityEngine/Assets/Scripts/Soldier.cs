@@ -212,6 +212,7 @@ public class Soldier : MonoBehaviour
 
     public void MoveTo(Board target) // 실제로 병사를 이동시켜주는 함수
     {
+
         anim.Play("Walk"); // 걷는 애니메이션으로 바꿔준다.
         GetMoveList(target); // 이동 루트를 계산해서 얻어온다.
 
@@ -234,7 +235,16 @@ public class Soldier : MonoBehaviour
             if (enemy)
 			{
 				//AutoCame@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				//
+				if(MyTeam != GameManager.Instance.MyTeam){
+					GameManager.Instance.myAutoCam.SetTarget (Target.Player.transform);
+				}
+
 				GameManager.Instance.myAutoCam.gameObject.SetActive (true);
+
+				if (GameManager.Instance.Cell [ty] [tx].Type == SoldierType.왕) {
+					GameManager.Instance.IsGameOver = true;
+				}
 
                 transform.DOMove(MoveList[0].transform.position, 1f).SetDelay(timer).SetEase(Ease.Linear).OnComplete(CompleteAttack).OnStart(Attack);
                 timer += 2f;
@@ -251,7 +261,14 @@ public class Soldier : MonoBehaviour
                 if (enemy && i == 1)
                 {
 					//AutoCame@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+					if(MyTeam != GameManager.Instance.MyTeam){
+						GameManager.Instance.myAutoCam.SetTarget (Target.Player.transform);
+					}
 					GameManager.Instance.myAutoCam.gameObject.SetActive (true);
+
+					if (GameManager.Instance.Cell [ty] [tx].Type == SoldierType.왕) {
+						GameManager.Instance.IsGameOver = true;
+					}
 
                     transform.DOMove(MoveList[0].transform.position, 1f).SetDelay(timer).SetEase(Ease.Linear).OnComplete(CompleteAttack).OnStart(Attack);
                     timer += 2f;
@@ -268,7 +285,14 @@ public class Soldier : MonoBehaviour
                 if (enemy && i == 1)
                 {
 					//AutoCame@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+					if(MyTeam != GameManager.Instance.MyTeam){
+						GameManager.Instance.myAutoCam.SetTarget (Target.Player.transform);
+					}
 					GameManager.Instance.myAutoCam.gameObject.SetActive (true);
+
+					if (GameManager.Instance.Cell [ty] [tx].Type == SoldierType.왕) {
+						GameManager.Instance.IsGameOver = true;
+					}
 
                     transform.DOMove(MoveList[0].transform.position, 1f).SetDelay(timer).SetEase(Ease.Linear).OnComplete(CompleteAttack).OnStart(Attack);
                     timer += 2f;
@@ -289,7 +313,14 @@ public class Soldier : MonoBehaviour
             if (enemy)
             {
 				//AutoCame@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				if(MyTeam != GameManager.Instance.MyTeam){
+					GameManager.Instance.myAutoCam.SetTarget (Target.Player.transform);
+				}
 				GameManager.Instance.myAutoCam.gameObject.SetActive (true);
+
+				if (GameManager.Instance.Cell [ty] [tx].Type == SoldierType.왕) {
+					GameManager.Instance.IsGameOver = true;
+				}
 
                 transform.DOMove(MoveList[1].transform.position, 1f).SetDelay(timer).SetEase(Ease.Linear).OnComplete(CompleteAttack).OnStart(Attack);
                 timer += 2f;
@@ -310,7 +341,14 @@ public class Soldier : MonoBehaviour
             if (enemy)
             {
 				//AutoCame@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				if(MyTeam != GameManager.Instance.MyTeam){
+					GameManager.Instance.myAutoCam.SetTarget (Target.Player.transform);
+				}
 				GameManager.Instance.myAutoCam.gameObject.SetActive (true);
+
+				if (GameManager.Instance.Cell [ty] [tx].Type == SoldierType.왕) {
+					GameManager.Instance.IsGameOver = true;
+				}
 
                 transform.DOMove(MoveList[1].transform.position, 1f).SetDelay(timer).SetEase(Ease.Linear).OnComplete(CompleteAttack).OnStart(Attack);
                 timer += 2f;
@@ -336,7 +374,14 @@ public class Soldier : MonoBehaviour
             if (enemy)
             {
 				//AutoCame@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				if(MyTeam != GameManager.Instance.MyTeam){
+					GameManager.Instance.myAutoCam.SetTarget (Target.Player.transform);
+				}
 				GameManager.Instance.myAutoCam.gameObject.SetActive (true);
+
+				if (GameManager.Instance.Cell [ty] [tx].Type == SoldierType.왕) {
+					GameManager.Instance.IsGameOver = true;
+				}
 
                 transform.DOMove(MoveList[0].transform.position, 1f).SetDelay(timer).SetEase(Ease.Linear).OnComplete(CompleteAttack).OnStart(Attack);
                 timer += 2f;

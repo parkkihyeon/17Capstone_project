@@ -9,7 +9,7 @@ public class DropdownOption : MonoBehaviour {
 	List<string> Mycharim = new List<string> (){ "마상마상", "마상상마", "상마마상", "상마상마" };
 
 	public Dropdown dropdown0;
-	//public Dropdown dropdown1;
+	public Dropdown GameOver;
 
 	//public Text selectedName;
 
@@ -17,11 +17,10 @@ public class DropdownOption : MonoBehaviour {
 		//ConnectServer.Instance.Charim = index;
 			GameManager.Instance.MyCharim = index;
 	}
-	/*
-	public void Dropdown1_Index(int index){
+
+	public void GameOver_Index(int index){
 		GameManager.Instance.MyCharim = index;
 	}
-	*/
 		
 	void Start () {
 		PopulateList();
@@ -29,7 +28,7 @@ public class DropdownOption : MonoBehaviour {
 
 	public void PopulateList(){
 		dropdown0.AddOptions (Mycharim);
-		//dropdown1.AddOptions (Mycharim);
+		GameOver.AddOptions (Mycharim);
 	}
 
 }

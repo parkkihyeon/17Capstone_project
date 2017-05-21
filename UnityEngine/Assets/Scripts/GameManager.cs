@@ -10,8 +10,11 @@ public class GameManager : MonoBehaviour
 	public bool flag;
 	public bool check = false;
 
+	public bool IsGameOver = false;
+
 	public int FromY, FromX, ToY, ToX;
 
+	public GameObject OverGame;
 
 	public Soldier tempSoldier = null;
 
@@ -62,7 +65,7 @@ public class GameManager : MonoBehaviour
 
 	public Transform OverPopup, NoticePopup; // 게임오버 팝업, 노티 팝업 오브젝트
 	public bool StartGame = false, Moving = false, DontTouch = false; // 각각 게임이 시작된 상태, 병사이 움직이는 상태, 터치 금지 상태를 나타낸다.
-	public string NickName; // 나의 닉네임을 저장한다.
+	//public string NickName; // 나의 닉네임을 저장한다.
 
 	Vector3 origin, cameraPos;
 
@@ -78,74 +81,74 @@ public class GameManager : MonoBehaviour
 	{
 		//@@@@차림 0 : 마상마상, 1 : 마상상마, 2 : 상마마상, 3 : 상마상마
 		// ma : 2, sang : 3
-		if (team == 0) {
-			switch (MyCharim) {
-			case 0:
-				board [9] [1] = '2';
-				board [9] [2] = '3';
-				board [9] [6] = '2';
-				board [9] [7] = '3';
-				break;
-			case 1:
-				board [9] [1] = '2';
-				board [9] [2] = '3';
-				board [9] [6] = '3';
-				board [9] [7] = '2';
-				break;
-			case 2:
-				//no change
-				board [9] [1] = '3';
-				board [9] [2] = '2';
-				board [9] [6] = '2';
-				board [9] [7] = '3';
-				break;
-			case 3:
-				board [9] [1] = '3';
-				board [9] [2] = '2';
-				board [9] [6] = '3';
-				board [9] [7] = '2';
-				break;
-			default:
-				board [9] [1] = '2';
-				board [9] [2] = '3';
-				board [9] [6] = '3';
-				board [9] [7] = '2';
-				break;
-			}
-			//@@@@차림 0 : 마상마상, 1 : 마상상마, 2 : 상마마상, 3 : 상마상마
-			switch (OtherCharim) {
-			case 0:
-				board [0] [1] = '2';
-				board [0] [2] = '3';
-				board [0] [6] = '2';
-				board [0] [7] = '3';
-				break;
-			case 1:
-				board [0] [1] = '2';
-				board [0] [2] = '3';
-				board [0] [6] = '3';
-				board [0] [7] = '2';
-				break;
-			case 2:
-				//no change
-				board [0] [1] = '3';
-				board [0] [2] = '2';
-				board [0] [6] = '2';
-				board [0] [7] = '3';
-				break;
-			case 3:
-				board [0] [1] = '3';
-				board [0] [2] = '2';
-				board [0] [6] = '3';
-				board [0] [7] = '2';
-				break;
-			}
-		}
+		Debug.Log("MyCharim : " + MyCharim);
 
+		switch (MyCharim) {
+		case 0:
+				//마상마상
+			board [9] [1] = '2';
+			board [9] [2] = '3';
+			board [9] [6] = '2';
+			board [9] [7] = '3';
+				//0마상마상
+			board [0] [1] = '2';
+			board [0] [2] = '3';
+			board [0] [6] = '2';
+			board [0] [7] = '3';
+			break;
+		case 1:
+				//마상상마
+			board [9] [1] = '2';
+			board [9] [2] = '3';
+			board [9] [6] = '3';
+			board [9] [7] = '2';
+				//3상마상마
+			board [0] [1] = '3';
+			board [0] [2] = '2';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
+			break;
+		case 2:
+				//상마마상
+			board [9] [1] = '3';
+			board [9] [2] = '2';
+			board [9] [6] = '2';
+			board [9] [7] = '3';
+				//1마상상마
+			board [0] [1] = '2';
+			board [0] [2] = '3';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
+			break;
+		case 3:
+				//상마상마
+			board [9] [1] = '3';
+			board [9] [2] = '2';
+			board [9] [6] = '3';
+			board [9] [7] = '2';
+				//3상마상마
+			board [0] [1] = '3';
+			board [0] [2] = '2';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
+			break;
+		default:
+				//마상상마
+			board [9] [1] = '2';
+			board [9] [2] = '3';
+			board [9] [6] = '3';
+			board [9] [7] = '2';
+				//상마상마
+			board [0] [1] = '3';
+			board [0] [2] = '2';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
+			break;
+		}
 		CurTurn = SolTeam.BLUE; // 시작은 무조건 블루팀이 먼저 한다.
 		MyTeam = (SolTeam)team; // 유저에 따라 블루팀은 team이 0으로 레드팀은 1로 호출된다.
 		//myAutoCam.gameObject.SetActive(true); // 프리뷰 카메라를 활성화시킨다.
-		StartGame = true; // 게임이 시작된 상태로 설정한다.
+		StartGame = true; //게임이 시작된 상태로 설정한다.
 		ConnectServer.Instance.ReStartGame();
 		DoStart(); // 게임 시작 처리를 위한 함수 호출
 	}
@@ -158,8 +161,12 @@ public class GameManager : MonoBehaviour
 
 	public void QuitPopup(string text) // 게임오버 팝업 메세지를 처리한다.
 	{
-		OverPopup.GetChild(0).GetComponent<Text>().text = text;
-		OverPopup.gameObject.SetActive(true);
+		OverPopup.GetChild (0).GetComponent<Text> ().text = text;
+		OverPopup.gameObject.SetActive (true);
+	}
+
+	public void exit(){
+		ConnectServer.Instance.Close ();
 	}
 
 	void Awake()
@@ -256,6 +263,7 @@ public class GameManager : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Escape)) // ESC키를 누르면 종료 팝업이 뜨도록 해준다.
 		{
+			DontTouch = true;
 			QuitPopup("게임을 종료하시겠습니까?");
 		}
 
@@ -339,37 +347,44 @@ public class GameManager : MonoBehaviour
 						Moving = true; // 병사이 이동중임을 나타낸다.
 					}
 
-					CheckJang ();
+					//CheckJang ();
 
 					ClikedSoldier = null; // 클릭된 병사를 초기화한다.
 					ShowRoot(false); // 이동 가능한 루트를 모두 비활성화시킨다.
 				}
 			}
 			flag = false;
-			if (check) {
+			/*if (check) {
 				//장군입니다. 팝업으로 알려주기
 
 				Popup ("장군입니다.");
 
 				check = false;
-			}
+			}*/
 		}
 	}
 
 	public void MovePlayer(int FromY, int FromX, int ToY, int ToX) // 실제로 병사를 이동시켜주는 함수
 	{
 		//int x = from % 9, y = from / 9; // offset값을 좌표로 변환한다.
+		//if (FromY >= 0 && FromX >= 0 && ToY >= 0 && ToX >= 0) {
 
-		Debug.Log ("FromY : " + FromY);
-		Debug.Log ("FromX : " + FromX);
-		Debug.Log ("ToY : " + ToY);
-		Debug.Log ("ToX : " + ToX);
+			//ConnectServer.Instance.FromY = 0;
+			//ConnectServer.Instance.FromX = 0;
+			//ConnectServer.Instance.ToY = 0;
+			//ConnectServer.Instance.ToX = 0;
 
-		Cell[FromY][FromX].Player.MoveTo(Cell[ToY][ToX]); // from 위치에 있는 병사를 이동시킨다.
-		Cell[FromY][FromX].Player = null; // 현재 위치에 있는 병사가 다른 위치로 이동할 것이므로 현재 위치의 오브젝트를 초기화해준다.
-		Cell[FromY][FromX].Type = SoldierType.NONE; // 현재 위치의 병사 타입도 NONE으로 초기화
+			Debug.Log ("FromY : " + FromY);
+			Debug.Log ("FromX : " + FromX);
+			Debug.Log ("ToY : " + ToY);
+			Debug.Log ("ToX : " + ToX);
 
-		Moving = true;
+			Cell [FromY] [FromX].Player.MoveTo (Cell [ToY] [ToX]); // from 위치에 있는 병사를 이동시킨다.
+			Cell [FromY] [FromX].Player = null; // 현재 위치에 있는 병사가 다른 위치로 이동할 것이므로 현재 위치의 오브젝트를 초기화해준다.
+			Cell [FromY] [FromX].Type = SoldierType.NONE; // 현재 위치의 병사 타입도 NONE으로 초기화
+			Moving = true;
+		//}
+
 	}
 
 	public void ChangeTurn() // 병사의 이동이 끝나면 턴을 바꿔준다.
@@ -382,11 +397,20 @@ public class GameManager : MonoBehaviour
 
 		//StartCoroutine (Wait(2.5f));
 
-		ConnectServer.flag = true;
+		CheckJang ();
 
-		if (tempSoldier.MyTeam == MyTeam) {
+		//ConnectServer.flag = true;
+
+		if (IsGameOver) {
+			OverGame.SetActive (true);
+		}
+			
+		if (tempSoldier.MyTeam == MyTeam ) {
+
 			tempSoldier = null;
 			ConnectServer.Instance.SendUnitBoard (FromY, FromX, ToY, ToX);
+
+			Status.SetActive (true);
 		}
 	}
 
@@ -802,16 +826,16 @@ public class GameManager : MonoBehaviour
 	void CheckJang() // 선택된 캐릭터가 이동할 수 있는 위치를 표시해준다. 파라미터로 움직인 병사 받아오기, 클릭된 병사가 아닌 움직인 병사를 확인해야 한다.
 	{
 
-		if (ClikedSoldier != null) { // 선택한 병사가 있는지 확인
-			int x = ClikedSoldier.PosX; // 병사의 좌표를 얻어온다.
-			int y = ClikedSoldier.PosY;
+		if (tempSoldier != null) { // 선택한 병사가 있는지 확인
+			int x = tempSoldier.PosX; // 병사의 좌표를 얻어온다.
+			int y = tempSoldier.PosY;
 
-			if (ClikedSoldier.SType == SoldierType.졸) { // '졸' 병사의 이동 가능한 위치 설정
-				CheckPointTexture (x, y - (ClikedSoldier.MyTeam == SolTeam.RED ? -1 : 1));
+			if (tempSoldier.SType == SoldierType.졸) { // '졸' 병사의 이동 가능한 위치 설정
+				CheckPointTexture (x, y - (tempSoldier.MyTeam == SolTeam.RED ? -1 : 1));
 				CheckPointTexture (x - 1, y);
 				CheckPointTexture (x + 1, y);
 
-				if (ClikedSoldier.MyTeam == SolTeam.BLUE) {
+				if (tempSoldier.MyTeam == SolTeam.BLUE) {
 					if (x == 3 && y == 2) {
 						CheckPointTexture (x + 1, y - 1);
 					}
@@ -834,10 +858,10 @@ public class GameManager : MonoBehaviour
 						CheckPointTexture (x + 1, y + 1);
 					}
 				}
-			} else if (ClikedSoldier.SType == SoldierType.차) { // '차' 병사의 이동 가능한 위치 설정
+			} else if (tempSoldier.SType == SoldierType.차) { // '차' 병사의 이동 가능한 위치 설정
 				for (int i = x + 1; i < 9; i++) {
 					if (Cell [y] [i].Type != SoldierType.NONE) {
-						if (Cell [y] [i].Team == ClikedSoldier.MyTeam)
+						if (Cell [y] [i].Team == tempSoldier.MyTeam)
 							break;
 					}
 					CheckPointTexture (i, y);
@@ -846,7 +870,7 @@ public class GameManager : MonoBehaviour
 				}
 				for (int i = x - 1; i >= 0; i--) {
 					if (Cell [y] [i].Type != SoldierType.NONE) {
-						if (Cell [y] [i].Team == ClikedSoldier.MyTeam)
+						if (Cell [y] [i].Team == tempSoldier.MyTeam)
 							break;
 					}
 					CheckPointTexture (i, y);
@@ -855,7 +879,7 @@ public class GameManager : MonoBehaviour
 				}
 				for (int i = y + 1; i < 10; i++) {
 					if (Cell [i] [x].Type != SoldierType.NONE) {
-						if (Cell [i] [x].Team == ClikedSoldier.MyTeam)
+						if (Cell [i] [x].Team == tempSoldier.MyTeam)
 							break;
 					}
 					CheckPointTexture (x, i);
@@ -864,7 +888,7 @@ public class GameManager : MonoBehaviour
 				}
 				for (int i = y - 1; i >= 0; i--) {
 					if (Cell [i] [x].Type != SoldierType.NONE) {
-						if (Cell [i] [x].Team == ClikedSoldier.MyTeam)
+						if (Cell [i] [x].Team == tempSoldier.MyTeam)
 							break;
 					}
 					CheckPointTexture (x, i);
@@ -902,7 +926,7 @@ public class GameManager : MonoBehaviour
 						CheckPointTexture (x - 2, y - 2);
 					}
 				}
-			} else if (ClikedSoldier.SType == SoldierType.포) { // '포' 병사의 이동 가능한 위치 설정
+			} else if (tempSoldier.SType == SoldierType.포) { // '포' 병사의 이동 가능한 위치 설정
 				int count = 0;
 
 				for (int i = x + 1; i < 9; i++) {
@@ -911,7 +935,7 @@ public class GameManager : MonoBehaviour
 
 					if (count > 0) {
 						if (Cell [y] [i].Type != SoldierType.NONE) {
-							if (Cell [y] [i].Team == ClikedSoldier.MyTeam)
+							if (Cell [y] [i].Team == tempSoldier.MyTeam)
 								break;
 						}
 						CheckPointTexture (i, y);
@@ -930,7 +954,7 @@ public class GameManager : MonoBehaviour
 
 					if (count > 0) {
 						if (Cell [y] [i].Type != SoldierType.NONE) {
-							if (Cell [y] [i].Team == ClikedSoldier.MyTeam)
+							if (Cell [y] [i].Team == tempSoldier.MyTeam)
 								break;
 						}
 						CheckPointTexture (i, y);
@@ -949,7 +973,7 @@ public class GameManager : MonoBehaviour
 
 					if (count > 0) {
 						if (Cell [i] [x].Type != SoldierType.NONE) {
-							if (Cell [i] [x].Team == ClikedSoldier.MyTeam)
+							if (Cell [i] [x].Team == tempSoldier.MyTeam)
 								break;
 						}
 						CheckPointTexture (x, i);
@@ -968,7 +992,7 @@ public class GameManager : MonoBehaviour
 
 					if (count > 0) {
 						if (Cell [i] [x].Type != SoldierType.NONE) {
-							if (Cell [i] [x].Team == ClikedSoldier.MyTeam)
+							if (Cell [i] [x].Team == tempSoldier.MyTeam)
 								break;
 						}
 						CheckPointTexture (x, i);
@@ -979,7 +1003,7 @@ public class GameManager : MonoBehaviour
 							count = 1;
 					}
 				}
-			} else if (ClikedSoldier.SType == SoldierType.마) { // '마' 병사의 이동 가능한 위치 설정
+			} else if (tempSoldier.SType == SoldierType.마) { // '마' 병사의 이동 가능한 위치 설정
 				if (y - 1 >= 0 && Cell [y - 1] [x].Type == SoldierType.NONE) {
 					CheckCell (x - 1, y - 2);
 					CheckCell (x + 1, y - 2);
@@ -996,7 +1020,7 @@ public class GameManager : MonoBehaviour
 					CheckCell (x + 2, y - 1);
 					CheckCell (x + 2, y + 1);
 				}
-			} else if (ClikedSoldier.SType == SoldierType.상) { // '상' 병사의 이동 가능한 위치 설정
+			} else if (tempSoldier.SType == SoldierType.상) { // '상' 병사의 이동 가능한 위치 설정
 				if (y - 1 >= 0 && Cell [y - 1] [x].Type == SoldierType.NONE) { // 상 좌우
 					if (x - 2 >= 0 && y - 3 >= 0) { // 
 						if (Cell [y - 2] [x - 1].Type == SoldierType.NONE)
@@ -1041,8 +1065,13 @@ public class GameManager : MonoBehaviour
 		}
 		//@@@@@@@@@@@@@@@@@@@@@@
 		//장군입니다. 팝업으로 알려주기
-	}
+		if (check) {
+			//장군입니다. 팝업으로 알려주기
+			check = false;
+			Popup ("장군입니다.");
+		}
 
+	}
 
 	void CheckPointTexture(int x, int y) // 이동할 수 있는 위치를 나타내는 포인트 스프라이트를 끄거나 켜준다.
 	{
@@ -1063,7 +1092,7 @@ public class GameManager : MonoBehaviour
 		if (x >= 0 && x < 9 && y >= 0 && y < 10)
 		{
 			if (Cell[y][x].Type == SoldierType.NONE) CheckPointTexture(x, y);
-			else if (Cell[y][x].Team != ClikedSoldier.MyTeam) CheckPointTexture(x, y);
+			else if (Cell[y][x].Team != tempSoldier.MyTeam) CheckPointTexture(x, y);
 		}
 	}
 
