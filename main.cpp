@@ -19,9 +19,9 @@ int main()
 	// Second_Graph_made(second_g, play, state);
 	// second_g->Getgraph()->AddMoveable();
 
-	// SaveGraphData(second_g->Getgraph(), "LINUX_Binary_5000");
+	//SaveGraphData(second_g->Getgraph(), "LINUX_Binary");
 	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("LINUX_Binary"));
-	//AiGraph->Travelgraph_bfs() ;
+	// AiGraph->Travelgraph_bfs() ;
 	// while(true) {
 	// 	SelectMove(AiGraph);
 	// }

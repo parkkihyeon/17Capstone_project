@@ -27,6 +27,74 @@ bool Pos::isValidation() {
 	return true;
 }
 
+void save_moveable_board(vector<Board> &boardPush , char board[][WIDTH_SIZE] , int turn){
+	// char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
+	char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
+	Board tmpObj;
+	if(turn == CHO_PLAY){
+		for(int i = 1 ; i < HEIGHT_SIZE ; i ++){
+			for(int j = 1 ; j < WIDTH_SIZE ; j++){
+				if(board[i][j] > 'A' && board[i][j] < 'Z'){
+					for(int y = 1 ;  y < HEIGHT_SIZE; y++){
+						for(int x = 1 ; x < WIDTH_SIZE; x++){
+							if(board[y][x] > 'A' && board[y][x] < 'Z'){
+							}else{
+								memcpy(tmp_board , board , sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
+								tmp_board[i][j] = '-';
+								tmp_board[y][x] = board[i][j];
+								if(moveable(board , tmp_board, false)){
+									tmpObj.setBoard(tmp_board);
+									boardPush.push_back(tmpObj);
+								}
+							}
+						
+						}
+					}
+				
+				
+				
+				}
+
+			}
+			
+		}
+	}
+	else{ // HAN_PLAY
+        for(int i = 1 ; i < HEIGHT_SIZE ; i ++){
+            for(int j = 1 ; j < WIDTH_SIZE ; j++){
+                if(board[i][j] > 'a' && board[i][j] < 'z'){
+                    for(int y = 1 ;  y < HEIGHT_SIZE; y++){
+                        for(int x = 1 ; x < WIDTH_SIZE; x++){
+                            if(board[y][x] > 'a' && board[y][x] < 'z'){
+                            }else{
+                                memcpy(tmp_board , board , sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
+                                tmp_board[i][j] = '-';
+                                tmp_board[y][x] = board[i][j];
+                                if(moveable(board , tmp_board, false)){
+                                    tmpObj.setBoard(tmp_board);
+                                    boardPush.push_back(tmpObj);
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    
+                    
+                }
+                
+            }
+            
+        }
+
+	
+	
+	
+	}
+	//std::cout << "SAVE COMPLETE " << std::endl;
+}
+
+
 bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) {
 
 	int cnt = 0;
@@ -88,7 +156,7 @@ bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) 
 		case 's': case 'S': case 'k': case 'K':
 			return moveAbleGungAndSa(from, to, board);
 		default:
-			std::cout << " SIBAL MOVEABLE ERROR!!!!!" << std::endl;
+			//std::cout << " SIBAL MOVEABLE ERROR!!!!!" << std::endl;
 			break;
 		}
 	return false;
@@ -186,6 +254,8 @@ bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	int nx, ny;
 	nx = cur.x - dest.x;
 	ny = cur.y - dest.y;
+	if(nx != 0 && ny != 0)
+		return false;
 	if (nx == 0) { // move forward y
 		if (ny > 0) { // move up
 			for (int i = dest.y + 1; i < cur.y; i++)
@@ -413,18 +483,7 @@ bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// 한과 초
 		}
 	}
 
-
-	/*int px = cur.x - dest.x;
-	int py = cur.y - dest.y;
-
-	if ((cur.y == 1 && (cur.x ==  || cur.x == 8)) ||
-	(cur.y == 2 && (cur.x == 0 || cur.x == 2 || cur.x == 7 || cur.x == 9)) ||
-	(cur.y == 3 && (cur.x == 1 || cur.x == 8))) {
-	if (px*px + py*py > 2)
 	return false;
-
-	}*/
-	return true;
 
 } // gun
 bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
@@ -458,19 +517,35 @@ bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
 
 	int ny = cur.y - dest.y;
 	int nx = cur.x - dest.x;
-	if (cur.x - 1 == dest.x || cur.x + 1 == dest.x)
-		if (ny == 0)
+	//std::cout << ">>>>" << std::endl;
+
+	if(ny >=2 || nx >=2)
+		return false;
+	if(abs(ny)+abs(nx) >1)
+		return false;
+	if (cur.x - 1 == dest.x || cur.x + 1 == dest.x){
+		if (ny == 0){
+			//std::cout << " 1 " <<std::endl;
 			return true;
+		}
+	}
 	if (board[cur.y][cur.x] >= 97) {//초 차례이다.
-		if (ny < 0)
+		if (ny < 0){
+			//std::cout << "2" << std::endl;
 			return false;
+		}
 	}
 	else { // 한차례이다.
-		if (ny > 0)
+		//std::cout << "!@#!#!" << std::endl;
+		if (ny > 0){
 			return false;
+		}
 	}
 	if (abs(ny) != 1)
 		return false;
+
+	
+	//std::cout << "??sdfasfa" << std::endl;
 	return true;
 
 } // jol
@@ -565,6 +640,9 @@ bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	int nx, ny;
 	nx = cur.x - dest.x;
 	ny = cur.y - dest.y;
+
+	if(nx != 0 && ny != 0)
+		return false;
 
 	int piece_count = 0;
 

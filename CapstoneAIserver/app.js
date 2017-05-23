@@ -37,11 +37,12 @@ const server = app.listen(6110, function () {
 const io = new Socket(server);
 var net = require('net');
 
-// var exec = require('child_process').exec;
-// exec('ulimit', ['-s 1073741824']);
-//
+var exec = require('child_process').exec;
+exec('ulimit', ['-s 1073741824']);
+
+//, ['-Wl,--stack,1073741824,--heap,1073741824 -j 4']
 // var spawn = require('child_process').spawn;
-// GraphSocket = spawn('./_PreGraphModule', ['-Wl,--stack,1073741824,--heap,1073741824 -j 4']);
+// GraphSocket = spawn('./_PreGraphModule');
 // GraphSocket.stdout.on('data', function (log) {
 //     console.log('==========================MODULE OUTPUT====================================================');
 //     console.log("MODULE > " + log.toString());
