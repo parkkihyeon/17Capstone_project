@@ -4,6 +4,7 @@ using DG.Tweening;
 
 public class GameOver : MonoBehaviour
 {
+
 	public void QuitGame()
 	{
 		GameManager.Instance.exit ();

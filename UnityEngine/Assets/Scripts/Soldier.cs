@@ -191,26 +191,59 @@ public class Soldier : MonoBehaviour
         }
         else if (SType == SoldierType.포) // 포의 이동 루트 처리
         {
-            if (tx > x) // RIGHT
-            {
-                for (int i = x; i <= tx; i++) MoveList.Add(GameManager.Instance.Cell[ty][i]);
-            }
-            else if (tx < x) // LEFT
-            {
-                for (int i = x; i >= tx; i--) MoveList.Add(GameManager.Instance.Cell[ty][i]);
-            }
-            else if (ty > y) // DOWN
-            {
-                for (int i = y; i <= ty; i++) MoveList.Add(GameManager.Instance.Cell[i][tx]);
-            }
-            else if (ty < y) // UP
-            {
-                for (int i = y; i >= ty; i--) MoveList.Add(GameManager.Instance.Cell[i][tx]);
-            }
+
+			int distX = tx - x, distY = ty - y;
+
+			if (distX != 0 && distY != 0)
+			{
+				int xx = distX < 0 ? -1 : 1;
+				int yy = distY < 0 ? -1 : 1;
+
+				for (int i = 0; i <= Mathf.Abs(distX); i++)
+				{
+					MoveList.Add(GameManager.Instance.Cell[y + (i * yy)][x + (i * xx)]);
+				}
+			}
+			else
+			{
+				if (tx > x) // RIGHT
+				{
+					for (int i = x; i <= tx; i++) MoveList.Add(GameManager.Instance.Cell[ty][i]);
+				}
+				else if (tx < x) // LEFT
+				{
+					for (int i = x; i >= tx; i--) MoveList.Add(GameManager.Instance.Cell[ty][i]);
+				}
+				else if (ty > y) // DOWN
+				{
+					for (int i = y; i <= ty; i++) MoveList.Add(GameManager.Instance.Cell[i][tx]);
+				}
+				else if (ty < y) // UP
+				{
+					for (int i = y; i >= ty; i--) MoveList.Add(GameManager.Instance.Cell[i][tx]);
+				}
+			}
+				
+			//if (tx > x) // RIGHT
+            //{
+             //   for (int i = x; i <= tx; i++) MoveList.Add(GameManager.Instance.Cell[ty][i]);
+            //}
+            //else if (tx < x) // LEFT
+           // {
+            //    for (int i = x; i >= tx; i--) MoveList.Add(GameManager.Instance.Cell[ty][i]);
+           // }
+           // else if (ty > y) // DOWN
+           // {
+           //     for (int i = y; i <= ty; i++) MoveList.Add(GameManager.Instance.Cell[i][tx]);
+          //  }
+          //  else if (ty < y) // UP
+          //  {
+          //      for (int i = y; i >= ty; i--) MoveList.Add(GameManager.Instance.Cell[i][tx]);
+           // }
         }
     }
-
-    public void MoveTo(Board target) // 실제로 병사를 이동시켜주는 함수
+		
+	public void MoveTo(Board target) // 실제로 병사를 이동시켜주는 함수
     {
 
         anim.Play("Walk"); // 걷는 애니메이션으로 바꿔준다.

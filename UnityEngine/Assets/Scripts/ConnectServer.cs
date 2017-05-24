@@ -33,11 +33,10 @@ public class ConnectServer : MonoBehaviour
     public static char[,] Board;
 
 	public void ReStartGame(){
-
 		for (int i = 1; i <= 10; i++) {
 			for (int j = 1; j <= 9; j++) {
 				if (i < 5) {
-					switch (GameManager.Instance.board [i-1] [j-1]) {
+					switch (GameManager.Instance.board [i - 1] [j - 1]) {
 					case '0':
 						Board [i, j] = 'J';
 						break;
@@ -65,7 +64,7 @@ public class ConnectServer : MonoBehaviour
 					}
 				}
 				else {
-					switch (GameManager.Instance.board [i-1] [j-1]) {
+					switch (GameManager.Instance.board [i - 1] [j - 1]) {
 					case '0':
 						Board [i, j] = 'j';
 						break;
@@ -94,6 +93,9 @@ public class ConnectServer : MonoBehaviour
 				}
 			}
 		}
+		Debug.Log ("asdasdasdasasd: " + GameManager.Instance.board[0][1]);
+		Debug.Log ("qwe1231231231 : " + Board[ 1, 2]);
+
 	}
 
     void Start()
@@ -258,6 +260,8 @@ public class ConnectServer : MonoBehaviour
     //public void SendUnitBoard(int _host, char[,] _boardPos)
     public void SendUnitBoard(int FromY, int FromX, int ToY, int ToX)
     {
+
+		Debug.Log ("TEST@@@@@@@@@@@@@@@@@@@@@ : " + Board[1,2]);
 
 		Debug.Log ("FromY in Sendunit :" + FromY);
 		Debug.Log ("FromX in Sendunit :" + FromX);

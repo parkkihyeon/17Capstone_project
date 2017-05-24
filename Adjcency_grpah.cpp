@@ -6,8 +6,10 @@ const double moving_eval = 0.0001;
 const double killer_eval = 0.01;
 const double killee_eval = -0.01;
 const double checkmater_eval = 0.005;
-const double checkmatee_eval = -0.01;
-const double learning_rate = 0.5;
+const double checkmatee_eval = -0.005;
+//const double checkmatee_eval = -0.01;
+const double learning_rate = 0.3;
+//const double learing_rate = 0.5;
 
 movableHash *moveableHash[NUMUNIT][NUMUNIT];
 
@@ -403,7 +405,8 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 			now_state->SetScore(now_state->GetScore() + next2_state->GetScore() * learning_rate);
 		}
 		else {
-			now_state->SetScore(now_state->GetScore() - next2_state->GetScore() * learning_rate);
+			now_state->SetScore(now_state->GetScore() - next2_state->GetScore() * learning_rate * 2);
+			//now_state->SetScore(now_state->GetScore() - next2_state->GetScore() * learning_rate);
 		}
 	}
 }
