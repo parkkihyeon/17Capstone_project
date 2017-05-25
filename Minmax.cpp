@@ -5,6 +5,10 @@
 //#include "stdafx.h"
 #include "Minmax.h"
 
+#define BEGINING_DEPTH_LEVEL 1
+#define MIDDLE_DEPTH_LEVEL 2
+#define END_DEPTH_LEVEL 2
+
 //#ifdef _DEBUG
 //#undef THIS_FILE
 //static char THIS_FILE[] = __FILE__;
@@ -1289,12 +1293,12 @@ int CJKStage::getNumPiece() {
 	}
 
 
-	if (count > 25)
-		return 1;
-	if (count > 15)
-		return 3;
+	if (count > 25) //BEGINNING
+		return BEGINING_DEPTH_LEVEL;
+	if (count > 15) //MIDDLE
+		return MIDDLE_DEPTH_LEVEL;
 	
-	return 4;
+	return END_DEPTH_LEVEL; //END
 
 	
 }
@@ -1332,8 +1336,6 @@ int CJKStage::MinValue(int nAlpha, int nBeta)
 
 CJKStage * CJKStage::DeleteNode(CJKStage *pNode)
 {
-	//fprintf(fp1, "%s", "DeleteNode\n");
-	//printf("DeleteNode\n");
 	if (pNode)
 	{
 		if (pNode->m_pPrev)
@@ -1353,8 +1355,6 @@ CJKStage * CJKStage::DeleteNode(CJKStage *pNode)
 
 MOVERESULT CJKStage::Infer(int turn)
 {
-	//fprintf(fp1, "%s", "Infer\n");
-	//printf("Infer\n");
 	/////////////////////////////////////////////////////
 	// ALPHA - maximum value of child for max
 	// BETA	 - minimum value of child for min
@@ -1380,7 +1380,6 @@ MOVERESULT CJKStage::Infer(int turn)
 	ClearList();
 	GetNextStage();
 	//TODO
-//	std::cout << "Noode Count : " << m_nNodeCount << std::endl;
 	sm_nCutOffDepth = 6 - (m_nNodeCount / 10) + getNumPiece();
 	sm_nFeedOverDepth = 10 - (m_nNodeCount / 10);
 
@@ -1388,8 +1387,6 @@ MOVERESULT CJKStage::Infer(int turn)
 	if (sm_nFeedOverDepth < 8) sm_nFeedOverDepth = 8;
 
 	if (m_pFirst == NULL) return MR_UNMOVED;
-	//std::cout << "CutOffDepth : " << sm_nCutOffDepth;
-	//std::cout << "  feedOverDepth : " << sm_nFeedOverDepth << std::endl;
 	////////////////////////////////////////
 	// In case of team HAN
 	if (m_bAmIMax)

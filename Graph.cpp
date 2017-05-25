@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define TEXT_NAME "Final5000.txt"
+#define TEXT_NAME "Final.txt"
 
 //Make Binary file with Graph Serialization
 void SaveGraphData(Adjcency_grpah *i, const char *fileName) {
@@ -80,7 +80,7 @@ void Insert_Gibo(vector<Play*> *play)
 		}
 	}
 }
-void SetSocket(Adjcency_grpah * graph) {
+void SetSocket(Adjcency_grpah *graph) {
 	int host = INITIALIZE;
 	int bytesread;
 	int fd_max; //maximum file descriptor number
@@ -183,7 +183,7 @@ void SetSocket(Adjcency_grpah * graph) {
 					State_node *game_state = new State_node();
 					State_node *inthe_graph = new State_node();
 					State_node *select_state = new State_node();
-					State_node *now_state = SetState_fromServer(board, host);
+					State_node *now_state = SetState_fromServer(board, 0);
 
 					inthe_graph = graph->Is_In_The_List_State(now_state);
 					if (inthe_graph == NULL) {

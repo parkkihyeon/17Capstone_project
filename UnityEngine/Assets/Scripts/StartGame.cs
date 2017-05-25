@@ -7,7 +7,7 @@ public class StartGame : MonoBehaviour
 {
     public GameObject StartButton;
     public Dropdown dropdown0;
-    public Dropdown dropdown1;
+    //public Dropdown dropdown1;
 
     public void ShowStartButton()
     {

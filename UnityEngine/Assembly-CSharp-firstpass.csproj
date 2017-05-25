@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{B0DFCABF-59C6-E168-DD26-B04CE755B66D}</ProjectGuid>
+    <ProjectGuid>{7CC425D5-5ADC-9A01-50C7-CFA07B888999}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
@@ -108,25 +108,25 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="DOTween">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/Demigiant/DOTween/DOTween.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/Demigiant/DOTween/DOTween.dll</HintPath>
  </Reference>
  <Reference Include="DOTween43">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/Demigiant/DOTween/DOTween43.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/Demigiant/DOTween/DOTween43.dll</HintPath>
  </Reference>
  <Reference Include="EngineIoClientDotNet">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/packages/EngineIoClientDotNet.0.9.22/lib/net35/EngineIoClientDotNet.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/packages/EngineIoClientDotNet.0.9.22/lib/net35/EngineIoClientDotNet.dll</HintPath>
  </Reference>
  <Reference Include="Newtonsoft.Json">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/packages/Newtonsoft.Json.8.0.1/lib/net35/Newtonsoft.Json.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/packages/Newtonsoft.Json.8.0.1/lib/net35/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="SocketIoClientDotNet">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/packages/SocketIoClientDotNet.0.9.13/lib/net35/SocketIoClientDotNet.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/packages/SocketIoClientDotNet.0.9.13/lib/net35/SocketIoClientDotNet.dll</HintPath>
  </Reference>
  <Reference Include="System.Threading.Tasks.NET35">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/packages/System.Threading.Tasks.Unofficial.3.1/lib/net35/System.Threading.Tasks.NET35.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/packages/System.Threading.Tasks.Unofficial.3.1/lib/net35/System.Threading.Tasks.NET35.dll</HintPath>
  </Reference>
  <Reference Include="WebSocket4Net">
- <HintPath>/Users/mindong/Desktop/unityPro/janggi_window(final)/Assets/packages/WebSocket4Net.0.14.1/lib/net35/WebSocket4Net.dll</HintPath>
+ <HintPath>/Users/mindong/Desktop/unityPro/UnityEngine/Assets/packages/WebSocket4Net.0.14.1/lib/net35/WebSocket4Net.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -16,7 +16,7 @@ public class ConnectServer : MonoBehaviour
     
     static int count = 1;
 
-    public static bool flag = false;
+    public bool flag = false;
 
     public int FromY;
     public int FromX;
@@ -33,11 +33,10 @@ public class ConnectServer : MonoBehaviour
     public static char[,] Board;
 
 	public void ReStartGame(){
-
 		for (int i = 1; i <= 10; i++) {
 			for (int j = 1; j <= 9; j++) {
 				if (i < 5) {
-					switch (GameManager.Instance.board [i-1] [j-1]) {
+					switch (GameManager.Instance.board [i - 1] [j - 1]) {
 					case '0':
 						Board [i, j] = 'J';
 						break;
@@ -65,7 +64,7 @@ public class ConnectServer : MonoBehaviour
 					}
 				}
 				else {
-					switch (GameManager.Instance.board [i-1] [j-1]) {
+					switch (GameManager.Instance.board [i - 1] [j - 1]) {
 					case '0':
 						Board [i, j] = 'j';
 						break;
@@ -103,7 +102,7 @@ public class ConnectServer : MonoBehaviour
         Board = new char[,]
     {
         { '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' },
-        { '-', 'C', 'X', 'H', 'S', '-', 'S', 'X', 'H', 'C' },
+        { '-', 'C', 'H', 'X', 'S', '-', 'S', 'H', 'X', 'C' },
         { '-', '-', '-', '-', '-', 'K', '-', '-', '-', '-' },
         { '-', '-', 'P', '-', '-', '-', '-', '-', 'P', '-' },
         { '-', 'J', '-', 'J', '-', 'J', '-', 'J', '-', 'J' },
@@ -177,21 +176,27 @@ public class ConnectServer : MonoBehaviour
     }
     void Update()
     {
-		//Debug.Log ("Server fromy : " + FromY);
-		//Debug.Log ("Server fromx : " + FromX);
-		//Debug.Log ("Server toy : " + ToY);
-		//Debug.Log ("Server tox :" + ToX);
-		//if (flag == true) {
+
+			//Debug.Log ("Server fromy : " + FromY);
+			//Debug.Log ("Server fromx : " + FromX);
+			//Debug.Log ("Server toy : " + ToY);
+			//Debug.Log ("Server tox :" + ToX);
+		if (flag == true) {
 			flag = false;
 			//Debug.Log ("inside");
+
+			GameManager.Instance.Status.SetActive (false);
+
 			GameManager.Instance.MovePlayer (FromY - 1, FromX - 1, ToY - 1, ToX - 1);
-		//}
+
+		}
     }
 
     public void Execute()
     {
         // CONNECT TO SERVER SOCKET.IO
         socket = IO.Socket("Http://203.246.112.146:6110");
+		//socket = IO.Socket("Http://192.168.23.60:6110");
 
         //SendUnitOrder (Charim);
         SendUnitOrder(0);
@@ -234,30 +239,34 @@ public class ConnectServer : MonoBehaviour
 			Debug.Log ("Server toy : " + ToY);
 			Debug.Log ("Server tox :" + ToX);
 
+			flag = true;
+
 
 			Board [ToY, ToX] = Board [FromY, FromX];
 			Board [FromY, FromX] = '-';
 
 		});
-
+		/*
 		socket.On ("AI_Order", (_receivedOrder) => {
 			//int order = int.Parse (_receivedOrder.ToString ());
 			GameManager.Instance.OtherCharim = int.Parse (_receivedOrder.ToString ());
 		});
+		*/
+
     }
     //public void SendUnitBoard(int _host, char[,] _boardPos)
     public void SendUnitBoard(int FromY, int FromX, int ToY, int ToX)
     {
 
+		Debug.Log ("TEST@@@@@@@@@@@@@@@@@@@@@ : " + Board[1,2]);
+
+		Debug.Log ("FromY in Sendunit :" + FromY);
+		Debug.Log ("FromX in Sendunit :" + FromX);
+		Debug.Log ("ToY in Sendunit :" + ToY);
+		Debug.Log ("ToX in Sendunit :" + ToX);
+
         Board[ToY + 1, ToX + 1] = Board[FromY + 1, FromX + 1];
         Board[FromY + 1, FromX + 1] = '-';
-
-		for (int i = 0; i <= 10; i++) {
-			for (int j = 0; j <= 9; j++) {
-				Console.Write (Board[i,j]);
-			}
-			Console.WriteLine ("");
-		}
 
 
         _BoardData _preJsonData = new _BoardData() { host = 1, board = Board };

@@ -27,6 +27,74 @@ bool Pos::isValidation() {
 	return true;
 }
 
+void save_moveable_board(vector<Board> &boardPush , char board[][WIDTH_SIZE] , int turn){
+	// char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
+	char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
+	Board tmpObj;
+	if(turn == CHO_PLAY){
+		for(int i = 1 ; i < HEIGHT_SIZE ; i ++){
+			for(int j = 1 ; j < WIDTH_SIZE ; j++){
+				if(board[i][j] > 'A' && board[i][j] < 'Z'){
+					for(int y = 1 ;  y < HEIGHT_SIZE; y++){
+						for(int x = 1 ; x < WIDTH_SIZE; x++){
+							if(board[y][x] > 'A' && board[y][x] < 'Z'){
+							}else{
+								memcpy(tmp_board , board , sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
+								tmp_board[i][j] = '-';
+								tmp_board[y][x] = board[i][j];
+								if(moveable(board , tmp_board, false)){
+									tmpObj.setBoard(tmp_board);
+									boardPush.push_back(tmpObj);
+								}
+							}
+						
+						}
+					}
+				
+				
+				
+				}
+
+			}
+			
+		}
+	}
+	else{ // HAN_PLAY
+        for(int i = 1 ; i < HEIGHT_SIZE ; i ++){
+            for(int j = 1 ; j < WIDTH_SIZE ; j++){
+                if(board[i][j] > 'a' && board[i][j] < 'z'){
+                    for(int y = 1 ;  y < HEIGHT_SIZE; y++){
+                        for(int x = 1 ; x < WIDTH_SIZE; x++){
+                            if(board[y][x] > 'a' && board[y][x] < 'z'){
+                            }else{
+                                memcpy(tmp_board , board , sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
+                                tmp_board[i][j] = '-';
+                                tmp_board[y][x] = board[i][j];
+                                if(moveable(board , tmp_board, false)){
+                                    tmpObj.setBoard(tmp_board);
+                                    boardPush.push_back(tmpObj);
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    
+                    
+                }
+                
+            }
+            
+        }
+
+	
+	
+	
+	}
+	//std::cout << "SAVE COMPLETE " << std::endl;
+}
+
+
 bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) {
 
 	int cnt = 0;
@@ -53,7 +121,7 @@ bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) 
 		to.x = prr[1].x;
 		to.y = prr[1].y;
 
-	}//Ãâ¹ßÁö¿Í µµÂøÁö¸¦ ±¸ºÐÇÑ´Ù.
+	}//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	else {
 		from.x = prr[1].x;
 		from.y = prr[1].y;
@@ -62,12 +130,12 @@ bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) 
 
 	}
 	if (host == CHO_PLAY) {
-		//´ë¹®ÀÚ¸¸
+		//ï¿½ë¹®ï¿½Ú¸ï¿½
 		if (board[from.y][from.x] < 'A' || board[from.y][from.x] >'Z')
 			return false;
 	}
 	else {
-		//¼Ò¹®ÀÚ¸¸
+		//ï¿½Ò¹ï¿½ï¿½Ú¸ï¿½
 		if (board[from.y][from.x] < 'a' || board[from.y][from.x] >'z')
 			return false;
 
@@ -88,7 +156,6 @@ bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) 
 		case 's': case 'S': case 'k': case 'K':
 			return moveAbleGungAndSa(from, to, board);
 		default:
-			std::cout << " SIBAL MOVEABLE ERROR!!!!!" << std::endl;
 			break;
 		}
 	return false;
@@ -107,7 +174,7 @@ bool isExistTeam(Pos cur, Pos dest ,char board[][WIDTH_SIZE]) {
 		return false;
 
 	return true;
-}//µµÂøÁö¿¡ °°ÀºÆÀÀÌ Á¸ÀçÇÏ¸é °¥ ¼ö ¾ø´Ù.
+}//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
  //Moveable Piece
  //Moveable Piece
@@ -118,7 +185,7 @@ bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	if (cur.y == 2 && cur.x == 5) {
 		if (dest.y == 1 && dest.x == 4 || cur.y == 1 && cur.x == 6 || cur.y == 3 && cur.x == 4 || cur.y == 3 && cur.x == 6)
 			return true;
-	} // Áß¾Ó
+	} // ï¿½ß¾ï¿½
 	if (cur.y == 1 && cur.x == 4) {
 		if (dest.y == 2 && dest.x == 5) return true;
 		if (dest.y == 3 && dest.x == 6) {
@@ -152,7 +219,7 @@ bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	if (cur.y == 9 && cur.x == 5) {
 		if (dest.y == 8 && dest.x == 4 || cur.y == 8 && cur.x == 6 || cur.y == 10 && cur.x == 4 || cur.y == 10 && cur.x == 6)
 			return true;
-	} // Áß¾Ó
+	} // ï¿½ß¾ï¿½
 	if (cur.y == 8 && cur.x == 4) {
 		if (dest.y == 9 && dest.x == 5) return true;
 		if (dest.y == 10 && dest.x == 6) {
@@ -186,6 +253,8 @@ bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	int nx, ny;
 	nx = cur.x - dest.x;
 	ny = cur.y - dest.y;
+	if(nx != 0 && ny != 0)
+		return false;
 	if (nx == 0) { // move forward y
 		if (ny > 0) { // move up
 			for (int i = dest.y + 1; i < cur.y; i++)
@@ -214,7 +283,7 @@ bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	return true;
 
 } // cha
-bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// ÇÑ°ú ÃÊ¸¦ ±¸ºÐÇØÁà¾ß ÇÑ´Ù.
+bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// ï¿½Ñ°ï¿½ ï¿½Ê¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 	if (!isExistTeam(cur, dest , board))
 		return false;
 
@@ -222,7 +291,7 @@ bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// ÇÑ°ú ÃÊ
 	int py = cur.y - dest.y;
 
 
-	if (board[cur.y][cur.x] >= 97) { // ÃÊ ¼ø¼­ÀÌ´Ù.
+	if (board[cur.y][cur.x] >= 97) { // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
 		if ((dest.y == 10 && (dest.x >= 4 && dest.x <= 6)) ||
 			(dest.y == 9 && (dest.x >= 4 && dest.x <= 6)) ||
 			(dest.y == 8 && (dest.x >= 4 && dest.x <= 6))) {
@@ -318,7 +387,7 @@ bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// ÇÑ°ú ÃÊ
 
 
 	}
-	else { //ÇÑ ¼ø¼­ÀÌ´Ù.
+	else { //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
 		if ((dest.y == 1 && (dest.x >= 4 && dest.x <= 6)) ||
 			(dest.y == 2 && (dest.x >= 4 && dest.x <= 6)) ||
 			(dest.y == 3 && (dest.x >= 4 && dest.x <= 6))) {
@@ -413,18 +482,7 @@ bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// ÇÑ°ú ÃÊ
 		}
 	}
 
-
-	/*int px = cur.x - dest.x;
-	int py = cur.y - dest.y;
-
-	if ((cur.y == 1 && (cur.x ==  || cur.x == 8)) ||
-	(cur.y == 2 && (cur.x == 0 || cur.x == 2 || cur.x == 7 || cur.x == 9)) ||
-	(cur.y == 3 && (cur.x == 1 || cur.x == 8))) {
-	if (px*px + py*py > 2)
 	return false;
-
-	}*/
-	return true;
 
 } // gun
 bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
@@ -435,7 +493,7 @@ bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
 	if (cur.y == 2 && cur.x == 5) {
 		if (dest.y == 1 && dest.x == 4 || cur.y == 1 && cur.x == 6)
 			return true;
-	} // Áß¾Ó
+	} // ï¿½ß¾ï¿½
 	if (cur.y == 3 && cur.x == 4) {
 		if (dest.y == 2 && dest.x == 5) return true;
 	}
@@ -447,30 +505,41 @@ bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
 	if (cur.y == 9 && cur.x == 5) {
 		if (cur.y == 10 && cur.x == 4 || cur.y == 10 && cur.x == 6)
 			return true;
-	} // Áß¾Ó
+	} // ï¿½ß¾ï¿½
 	if (cur.y == 8 && cur.x == 4) {
 		if (dest.y == 9 && dest.x == 5) return true;
 	}
 	if (cur.y == 8 && cur.x == 6) {
 		if (dest.y == 9 && dest.x == 5) return true;
-	}//´ë°¢¼± Ã³¸® ! 
+	}//ï¿½ë°¢ï¿½ï¿½ Ã³ï¿½ï¿½ ! 
 	 //////////////////////////////////////////////////////////////////////////////////////
 
 	int ny = cur.y - dest.y;
 	int nx = cur.x - dest.x;
-	if (cur.x - 1 == dest.x || cur.x + 1 == dest.x)
-		if (ny == 0)
+
+	if(ny >=2 || nx >=2)
+		return false;
+	if(abs(ny)+abs(nx) >1)
+		return false;
+	if (cur.x - 1 == dest.x || cur.x + 1 == dest.x){
+		if (ny == 0){
 			return true;
-	if (board[cur.y][cur.x] >= 97) {//ÃÊ Â÷·ÊÀÌ´Ù.
-		if (ny < 0)
-			return false;
+		}
 	}
-	else { // ÇÑÂ÷·ÊÀÌ´Ù.
-		if (ny > 0)
+	if (board[cur.y][cur.x] >= 97) {//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
+		if (ny < 0){
 			return false;
+		}
+	}
+	else { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
+		if (ny > 0){
+			return false;
+		}
 	}
 	if (abs(ny) != 1)
 		return false;
+
+	
 	return true;
 
 } // jol
@@ -503,7 +572,7 @@ bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	if (!isExistTeam(cur, dest , board))
 		return false;
 
-	if (board[dest.y][dest.x] == 'p' || board[dest.y][dest.x] == 'P') //¸ñÀûÁö¿¡ Æ÷°¡ ÀÖÀ¸¸é °¥ ¼ö ¾ø´Ù.
+	if (board[dest.y][dest.x] == 'p' || board[dest.y][dest.x] == 'P') //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 		return false;
 
 	if (cur.y == 1 && cur.x == 4) {
@@ -566,6 +635,9 @@ bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	nx = cur.x - dest.x;
 	ny = cur.y - dest.y;
 
+	if(nx != 0 && ny != 0)
+		return false;
+
 	int piece_count = 0;
 
 	if (nx == 0) {
@@ -590,9 +662,9 @@ bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 	else {
 		if (nx > 0) {
 			for (int i = cur.x - 1; i > dest.x; i--) {
-				if (board[cur.y][i] != '-') //°¡´Â ±æ¸ñ¿¡ ¸»ÀÌ 1°³ÀÎÁö¸¦ ÆÄ¾ÇÇÑ´Ù.
+				if (board[cur.y][i] != '-') //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¾ï¿½ï¿½Ñ´ï¿½.
 					piece_count++;
-				if (board[cur.y][i] == 'p' || board[cur.y][i] == 'P') //°¡´Â ±æ¸ñ¿¡ Æ÷°¡ ÀÖÀ¸¸é ³ÑÁö ¸øÇÑ´Ù.
+				if (board[cur.y][i] == 'p' || board[cur.y][i] == 'P') //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½.
 					return false;
 			}
 		}
@@ -606,7 +678,7 @@ bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 
 		}
 	}
-	if (piece_count == 1) //¸ñÀûÁö±îÁö ¸»ÀÌ ÇÏ³ª¸¸ Á¸ÀçÇØ¾ß °¥ ¼ö ÀÖ´Ù.
+	if (piece_count == 1) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½.
 		return true;
 	else
 		return false;
