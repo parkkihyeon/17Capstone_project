@@ -196,8 +196,8 @@ public class ConnectServer : MonoBehaviour
 	public void Execute()
 	{
 		// CONNECT TO SERVER SOCKET.IO
-		//socket = IO.Socket("Http://203.246.112.146:6110");
-		socket = IO.Socket("Http://192.168.23.60:6110");
+		socket = IO.Socket("Http://203.246.112.146:6110");
+		//socket = IO.Socket("Http://192.168.23.60:6110");
 
 
 		//SendUnitOrder (Charim);

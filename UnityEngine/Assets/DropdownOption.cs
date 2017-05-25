@@ -9,10 +9,10 @@ public class DropdownOption : MonoBehaviour {
 	List<string> charim = new List<string> (){ "마상마상", "마상상마", "상마마상", "상마상마" };
 
 	public Dropdown myDrop;
-	public Dropdown otherDrop;
+	//public Dropdown otherDrop;
 
 	public Dropdown gameover_My;
-	public Dropdown gameover_Other;
+	//public Dropdown gameover_Other;
 
 	//public Text selectedName;
 
@@ -20,17 +20,17 @@ public class DropdownOption : MonoBehaviour {
 		//ConnectServer.Instance.Charim = index;
 		GameManager.Instance.MyCharim = index;
 	}
-	public void Other_Index(int index){
-		GameManager.Instance.OtherCharim = index;
-	}
+	//public void Other_Index(int index){
+	//	GameManager.Instance.OtherCharim = index;
+	//}
 
 	public void GameOver_My_Index(int index){
 		GameManager.Instance.MyCharim = index;
 	}
 
-	public void GameOver_Other_Index(int index){
-		GameManager.Instance.OtherCharim = index;
-	}
+	//public void GameOver_Other_Index(int index){
+	//	GameManager.Instance.OtherCharim = index;
+	//}
 
 		
 	void Start () {
@@ -39,9 +39,9 @@ public class DropdownOption : MonoBehaviour {
 
 	public void PopulateList(){
 		myDrop.AddOptions (charim);
-		otherDrop.AddOptions (charim);
+		//otherDrop.AddOptions (charim);
 		gameover_My.AddOptions (charim);
-		gameover_Other.AddOptions (charim);
+		//gameover_Other.AddOptions (charim);
 	}
 
 }

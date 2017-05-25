@@ -178,14 +178,14 @@ MonoBehaviour:
     width: 400
     height: 467
   m_SceneLighting: 1
-  lastFramingTime: 277.46262496709824
+  lastFramingTime: 173.3359790444374
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.3364992, y: -2.3877878, z: 4.1346517}
+    m_Target: {x: 512, y: 435.1, z: 0}
     speed: 2
-    m_Value: {x: 1.3364992, y: -2.3877878, z: 4.1346517}
+    m_Value: {x: 512, y: 435.1, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -212,9 +212,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 22
+    m_Target: 268.60056
     speed: 2
-    m_Value: 22
+    m_Value: 268.60056
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -303,23 +303,23 @@ MonoBehaviour:
     height: 467
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
+    m_SelectedIDs: 8e060000
     m_LastClickedID: 0
-    m_ExpandedIDs: defbffff00000000
+    m_ExpandedIDs: defbffff00000000f42c0000582f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Dropdown
+      m_OriginalName: Dropdown
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 12814
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 7}
     m_SearchString: 
@@ -578,18 +578,18 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/Scripts
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /Users/mindong/Desktop/unityPro/UnityEngine
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 34}
-    m_SelectedIDs: fe250000
-    m_LastClickedID: 9726
+    m_SelectedIDs: 34270000
+    m_LastClickedID: 10036
     m_ExpandedIDs: 00000000fe25000004260000fa270000c0280000c42800000e29000040290000fa290000902a00000c2c0000102c0000fa3a000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -643,9 +643,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: 8e060000
+    m_LastClickedInstanceID: 1678
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c2380000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

@@ -8,11 +8,11 @@ public class ReStart : MonoBehaviour {
 	public Button OkButton;
 	public Button CanCelButton;
 	public Dropdown position;
-	public Dropdown other_position;
+	//public Dropdown other_position;
 	public GameObject PopUp;
 
 	public int charim;
-	public int other;
+	//public int other;
 
 	List<string> Mycharim = new List<string> (){ "마상마상", "마상상마", "상마마상", "상마상마" };
 
@@ -21,9 +21,9 @@ public class ReStart : MonoBehaviour {
 		charim = index;
 	}
 
-	public void other_position_index(int index){
-		other = index;
-	}
+	//public void other_position_index(int index){
+	//	other = index;
+	//}
 
 	void Start () {
 		PopulateList();
@@ -31,7 +31,7 @@ public class ReStart : MonoBehaviour {
 
 	public void PopulateList(){
 		position.AddOptions (Mycharim);
-		other_position.AddOptions (Mycharim);
+	//	other_position.AddOptions (Mycharim);
 	}
 
 	public void ReStartGame(){
@@ -40,7 +40,7 @@ public class ReStart : MonoBehaviour {
 		GameManager.Instance.DontTouch = false;
 		GameManager.Instance.StartGame = false;
 		GameManager.Instance.MyCharim = charim;
-		GameManager.Instance.OtherCharim = other;
+		//GameManager.Instance.OtherCharim = other;
 		GameManager.Instance.SetStartGame (0);
 	}
 

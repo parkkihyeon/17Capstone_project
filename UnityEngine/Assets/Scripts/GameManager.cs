@@ -92,10 +92,10 @@ public class GameManager : MonoBehaviour
 			board [9] [6] = '2';
 			board [9] [7] = '3';
 			//0마상마상
-			//board [0] [1] = '2';
-			//board [0] [2] = '3';
-			//board [0] [6] = '2';
-			//board [0] [7] = '3';
+			board [0] [1] = '2';
+			board [0] [2] = '3';
+			board [0] [6] = '2';
+			board [0] [7] = '3';
 			break;
 		case 1:
 			//마상상마
@@ -104,10 +104,10 @@ public class GameManager : MonoBehaviour
 			board [9] [6] = '3';
 			board [9] [7] = '2';
 			//3상마상마
-			//board [0] [1] = '3';
-			//board [0] [2] = '2';
-			//board [0] [6] = '3';
-			//board [0] [7] = '2';
+			board [0] [1] = '3';
+			board [0] [2] = '2';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
 			break;
 		case 2:
 			//상마마상
@@ -116,10 +116,10 @@ public class GameManager : MonoBehaviour
 			board [9] [6] = '2';
 			board [9] [7] = '3';
 			//1마상상마
-			//board [0] [1] = '2';
-			//board [0] [2] = '3';
-			//board [0] [6] = '3';
-			//board [0] [7] = '2';
+			board [0] [1] = '2';
+			board [0] [2] = '3';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
 			break;
 		case 3:
 			//상마상마
@@ -128,10 +128,10 @@ public class GameManager : MonoBehaviour
 			board [9] [6] = '3';
 			board [9] [7] = '2';
 			//3상마상마
-			//board [0] [1] = '3';
-			//board [0] [2] = '2';
-			//board [0] [6] = '3';
-			//board [0] [7] = '2';
+			board [0] [1] = '3';
+			board [0] [2] = '2';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
 			break;
 		default:
 			//마상상마
@@ -140,13 +140,15 @@ public class GameManager : MonoBehaviour
 			board [9] [6] = '3';
 			board [9] [7] = '2';
 			//상마상마
-			//board [0] [1] = '3';
-			//board [0] [2] = '2';
-			//board [0] [6] = '3';
-			//board [0] [7] = '2';
+			board [0] [1] = '3';
+			board [0] [2] = '2';
+			board [0] [6] = '3';
+			board [0] [7] = '2';
 			break;
 		}
-		switch (OtherCharim) {
+
+		/*
+		 * switch (OtherCharim) {
 		case 0:
 			//마상마상
 			board [0] [1] = '2';
@@ -183,6 +185,8 @@ public class GameManager : MonoBehaviour
 			board [0] [7] = '2';
 			break;
 		}
+		*/
+
 
 		CurTurn = SolTeam.BLUE; // 시작은 무조건 블루팀이 먼저 한다.
 		MyTeam = (SolTeam)team; // 유저에 따라 블루팀은 team이 0으로 레드팀은 1로 호출된다.

@@ -93,9 +93,6 @@ public class ConnectServer : MonoBehaviour
 				}
 			}
 		}
-		Debug.Log ("asdasdasdasasd: " + GameManager.Instance.board[0][1]);
-		Debug.Log ("qwe1231231231 : " + Board[ 1, 2]);
-
 	}
 
     void Start()
@@ -198,8 +195,8 @@ public class ConnectServer : MonoBehaviour
     public void Execute()
     {
         // CONNECT TO SERVER SOCKET.IO
-        //socket = IO.Socket("Http://203.246.112.146:6110");
-		socket = IO.Socket("Http://192.168.23.60:6110");
+        socket = IO.Socket("Http://203.246.112.146:6110");
+		//socket = IO.Socket("Http://192.168.23.60:6110");
 
         //SendUnitOrder (Charim);
         SendUnitOrder(0);
