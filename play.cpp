@@ -86,6 +86,7 @@ void Play::createState(string line) {
 	if (pos[0] == 0 && pos[1] == 0) {
 		node *Node = new node(StateInfo);
 		Node->setHost(atoi(strResult[0].c_str()));
+		Node->getNumOfUnit();
 		insertStage(Node);
 		return;
 	}

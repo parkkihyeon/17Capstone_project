@@ -46,9 +46,9 @@ State node::returnState() {
 void node::getNumOfUnit() {
 	for (int i = 1; i < HEIGHT_SIZE; i++) {
 		for (int j = 1; j < WIDTH_SIZE; j++) {
-			if (65 <= arr[i][j] && arr[i][j] <= 90)
+			if ('A' <= arr[i][j] && arr[i][j] <= 'Z')
 				num_of_han++;
-			else if (97 <= arr[i][j] && arr[i][j] <= 122)
+			else if ('a' <= arr[i][j] && arr[i][j] <= 'z')
 				num_of_cho++;
 
 			if (arr[i][j] == 'c' || arr[i][j] == 'C') {
