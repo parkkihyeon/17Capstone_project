@@ -1,0 +1,1 @@
+if another file is moved to "doc" directory or generated, you can delete this file.
