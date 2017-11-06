@@ -1,5 +1,5 @@
 #include"SelectAlgorithm.h"
-#include "Minmax.h"
+#include "Minmaxstage.h"
 
 //const static int THRESHOLD = 10000;
 //const static int CHILD_NUM = 3;
@@ -133,7 +133,7 @@ bool MoveableMinMax(State_node *game_state, State_node *now_state, Adjcency_grpa
 void MinMax(State_node *game_state, State_node* now_state, bool host) {
 	cout << "Min Max " << endl ;
 	char t_state[HEIGHT_SIZE][WIDTH_SIZE] ;
-	CJKStage test;
+	Minmaxstage test;
 	test.boardChage(now_state->GetState());
 	test.Infer(host);
 	test.getboard(t_state) ;
