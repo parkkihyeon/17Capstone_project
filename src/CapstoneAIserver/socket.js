@@ -5,6 +5,11 @@
 var _Socket_;
 var clients = [];
 
+var game_collection = new function() {
+    this.total_game_count = 0,
+    this.game_list = {}
+};
+
 // io = FROM UNITY ENGINE & _Socket_ = FROM GRAPH ENGINE
 // var socket = io.connect('http://localhost:3000', {'force new connection': true}); -> 강제 새로운 소켓 오픈
 
@@ -46,14 +51,24 @@ module.exports = function (io, net) {
 
     io.on('connection', function (socket) { // If websocket connected
         console.log('New Client Connected (ID : ' + socket.id + ')');
-        clients.push(socket);
+        var gameId = (Math.random()+1).toString(36).slice(2, 18);
+        game_collection.game_list.game_id = gameId;
+        game_collection.game_list.game_id.player_one = socket.username;
+        game_collection.game_list.game_id.open = true;
+        game_collection.total_game_count++;
+
+        //Game Loading Buffering.....(code)
 
         io.emit('Initialize', "START");
+        io.emit('game_created', {
+            username:socket.username,
+            game_id: gameId
+        });
 
         socket.on('Order', function (_order) { // If client request event named 'Order'
             console.log('User Unit Order: ' + _order);
             var _orderMSG = 'order|' + _order;
-            _Socket_.write(_orderMSG);
+            //_Socket_.write(_orderMSG);
         });
 
         // ANDROID SEND REQUEST & SERVER SEND RESPONSE
@@ -62,7 +77,7 @@ module.exports = function (io, net) {
 
             // JSON OBJECT PARSING
             var _sendMSG = JSON.parse(pos);
-            _Socket_.write(_sendMSG.Host.toString() + '|' + _sendMSG.Board.toString());
+            //_Socket_.write(_sendMSG.Host.toString() + '|' + _sendMSG.Board.toString());
         });
 
         // USER DISCONNECTED
