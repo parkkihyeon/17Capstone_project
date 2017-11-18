@@ -31,7 +31,7 @@ Adjcency_grpah LoadGraphData(const char *fileName) {
 	return g;
 }
 
-void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state)
+void Node2StateNode(vector<Play*> *play, vector<State_node*> *state, int now_state)
 {
 	for (int j = 0; j < play->at(now_state)->game.size(); j++) {
 		node * node_t = play->at(now_state)->game.at(j);
@@ -48,7 +48,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 	cout << "BF GR PLAY SIZE: " << play->size() << endl;
 	for (int i = 0; i < play->size(); i++) {
 		vector<State_node*>*history = new vector<State_node*>();
-		Play_to_Statenode(play, history, i);
+		Node2StateNode(play, history, i);
 		g->Insert(history);
 		state->push_back(history);
 		if(i % 1000 == 0)

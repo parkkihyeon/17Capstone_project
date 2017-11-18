@@ -29,18 +29,18 @@ using namespace std;
 
 typedef pair<int, int> Cha_pos;
 typedef pair<int, int> Pho_pos;
+typedef pair<Cha_pos, Pho_pos> pair_key;
 typedef char (*STATE)[WIDTH_SIZE] ;
 
+enum {CHO_PLAY, HAN_PLAY};
 enum { CHA, PHO, HORSE, SANG, SA, JOL, KING, NONE };
 enum {
 	NO_UNIT = 0, JOL_VALUE = 2, SA_VALUE = 3, SANG_VALUE = 3,
 	HORSE_VALUE = 5, PHO_VALUE = 7, CHA_VALUE = 13, KING_VALUE = 100
 };
-
 enum {PHO_MIDDLE_VALUE = 5, PHO_BOTTOM_VALUE = 2};
-//enum {PHO_MIDDLE_VALUE = 5, PHO_BOTTOM_VALUE = 3};
 
-class Now_turn
+class stateCondition
 {
 private:
 	char actor;
@@ -60,8 +60,8 @@ private:
 	}
 
 public:
-	Now_turn(char act, char kill, bool check, int host);
-	Now_turn();
+	stateCondition(char act, char kill, bool check, int host);
+	stateCondition();
 	char GetActor();
 	char GetKilled();
 	bool GetCheckmate();
@@ -75,8 +75,8 @@ class State_node
 {
 private:
 	int state_ordernum; //���� �θ��� n��° �ڽ�. n�� ����.
-	int unit_of_han;
-	int unit_of_cho;
+	int numofHan;
+	int numofCho;
 	int travel_count;
 	int state_number; //  state ��ȣ�� ����.
 
@@ -86,24 +86,24 @@ private:
 	double score;
 	char State[HEIGHT_SIZE][WIDTH_SIZE];
 
-	Now_turn *this_turn;
+	stateCondition *this_turn;
 	vector<State_node*>* next;
 	vector<State_node*>* prev;
-	pair<Cha_pos, Pho_pos> sum_of_horsepos;
+	pair_key sumofKeyPosition;
 
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
 		ar & BOOST_SERIALIZATION_NVP(state_ordernum);
 		ar & BOOST_SERIALIZATION_NVP(state_number);
-		ar & BOOST_SERIALIZATION_NVP(unit_of_cho);
-		ar & BOOST_SERIALIZATION_NVP(unit_of_han);
+		ar & BOOST_SERIALIZATION_NVP(numofCho);
+		ar & BOOST_SERIALIZATION_NVP(numofHan);
 		ar & BOOST_SERIALIZATION_NVP(travel_count);
 		ar & BOOST_SERIALIZATION_NVP(han_weight);
 		ar & BOOST_SERIALIZATION_NVP(cho_weight);
 		ar & BOOST_SERIALIZATION_NVP(score);
 		ar & BOOST_SERIALIZATION_NVP(State);
-		ar & BOOST_SERIALIZATION_NVP(sum_of_horsepos);
+		ar & BOOST_SERIALIZATION_NVP(sumofKeyPosition);
 		ar & BOOST_SERIALIZATION_NVP(next);
 		ar & BOOST_SERIALIZATION_NVP(prev);
 		ar & BOOST_SERIALIZATION_NVP(this_turn);
@@ -121,7 +121,7 @@ public:
 	void Connect_Parent(State_node *parent_state);
 	void Set_numUnit(int cho, int han);
 	void Set_Stateorder(int data);
-	void SetHorse_position(pair<Cha_pos, Pho_pos> s);
+	void SetHorse_position(pair_key s);
 	void Init();
 	void TravelCountPlus();
 	void SetState_number(int setnum);
@@ -138,7 +138,7 @@ public:
 	// n��° �ڽ��� return
 	State_node* NthCheck_Childnode(int n);
 	State_node* NthCheck_Parentnode(int n);
-	Now_turn* GetTurn();
+	stateCondition* GetTurn();
 	STATE GetState();
 
 	int Getnumprev();
@@ -154,7 +154,7 @@ public:
 
 	vector<State_node*> *Getnext();
 	vector<State_node*> *Getprev();
-	pair<Cha_pos, Pho_pos> GetHorse_pos();
+	pair_key GetHorse_pos();
 
 	void SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]);
 };

@@ -4,41 +4,41 @@ static int score_piece[PIECE_NUM]{ CHA_VALUE, PHO_VALUE, HORSE_VALUE,
 SANG_VALUE, SA_VALUE, JOL_VALUE, KING_VALUE,NO_UNIT
 };
 
-Now_turn::Now_turn(char act, char kill, bool check, int host) {
+stateCondition::stateCondition(char act, char kill, bool check, int host) {
 	actor = act;
 	killed = kill;
 	checkmate = check;
 	this->host = host;
 };
 
-Now_turn::Now_turn() {
+stateCondition::stateCondition() {
 	actor = NULL;
 	killed = NULL;
 	checkmate = false;
 	host = NULL;
 }
 
-char Now_turn::GetActor() {
+char stateCondition::GetActor() {
 	return actor;
 }
 
-char Now_turn::GetKilled() {
+char stateCondition::GetKilled() {
 	return killed;
 }
 
-bool Now_turn::GetCheckmate() {
+bool stateCondition::GetCheckmate() {
 	return checkmate;
 }
 
-int Now_turn::Gethost() {
+int stateCondition::Gethost() {
 	return host;
 }
 
-pair<int, int> Now_turn::Getpos() {
+pair<int, int> stateCondition::Getpos() {
 	return pos;
 }
 
-void Now_turn::SetTurn(char act, char kill, bool check, int host, pair<int, int> Pos) {
+void stateCondition::SetTurn(char act, char kill, bool check, int host, pair<int, int> Pos) {
 	actor = act;
 	killed = kill;
 	checkmate = check;
@@ -96,26 +96,26 @@ State_node* State_node::NthCheck_Childnode(int n) {
 State_node* State_node::NthCheck_Parentnode(int n) {
 	return prev->at(n);
 };
-Now_turn* State_node::GetTurn() {
+stateCondition* State_node::GetTurn() {
 	return this_turn;
 }
 
 void State_node::Set_numUnit(int cho, int han) {
-	unit_of_han = han;
-	unit_of_cho = cho;
+	numofHan = han;
+	numofCho = cho;
 }
 void State_node::Set_Stateorder(int data) {
 	state_ordernum = data;
 }
 
-void State_node::SetHorse_position(pair<Cha_pos, Pho_pos> s) {
-	sum_of_horsepos = s;
+void State_node::SetHorse_position(pair_key s) {
+	sumofKeyPosition = s;
 }
 
 void State_node::Init() {
 	next = new vector<State_node*>();
 	prev = new vector<State_node*>();
-	this_turn = new Now_turn();
+	this_turn = new stateCondition();
 	state_ordernum = 0;
 	travel_count = 0;
 	state_number = 1;
@@ -166,7 +166,7 @@ void State_node::SetScore(double score_) {
 }
 
 void State_node::WeightCalculate(int idx, const double score, int host) {
-	if (host == 0) {// cho 
+	if (host == CHO_PLAY) { 
 		cho_weight->at(idx) += score;
 	}
 	else { // han
@@ -271,10 +271,10 @@ int State_node::Getstate_ordernum() {
 	return state_ordernum;
 }
 int State_node::Gethan() {
-	return unit_of_han;
+	return numofHan;
 }
 int State_node::Getcho() {
-	return unit_of_cho;
+	return numofCho;
 }
 
 int State_node::GetTravelcount() {
@@ -305,8 +305,8 @@ vector<State_node*>* State_node::Getprev() {
 	return prev;
 }
 
-pair<Cha_pos, Pho_pos> State_node::GetHorse_pos() {
-	return sum_of_horsepos;
+pair_key State_node::GetHorse_pos() {
+	return sumofKeyPosition;
 }
 
 const bool State_node::operator==(State_node *node) {
@@ -316,16 +316,16 @@ const bool State_node::operator==(State_node *node) {
 	else if (memcmp(this->prev, node->prev, sizeof(vector<State_node*>))) {
 		return false;
 	}
-	else if (memcmp(&this->sum_of_horsepos, &node->sum_of_horsepos, sizeof(pair<Cha_pos, Pho_pos>))) {
+	else if (memcmp(&this->sumofKeyPosition, &node->sumofKeyPosition, sizeof(pair<Cha_pos, Pho_pos>))) {
 		return false;
 	}
 	else if (memcmp(&this->state_ordernum, &node->state_ordernum, sizeof(int))) {
 		return false;
 	}
-	else if (memcmp(&this->unit_of_cho, &node->unit_of_cho, sizeof(int))) {
+	else if (memcmp(&this->numofCho, &node->numofCho, sizeof(int))) {
 		return false;
 	}
-	else if (memcmp(&this->unit_of_han, &node->unit_of_han, sizeof(int))) {
+	else if (memcmp(&this->numofHan, &node->numofHan, sizeof(int))) {
 		return false;
 	}
 	else if (memcmp(&this->travel_count, &node->travel_count, sizeof(int))) {
