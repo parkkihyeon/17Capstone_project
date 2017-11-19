@@ -24,6 +24,7 @@
 #define HEIGHT_SIZE 11
 #define PIECE_NUM 8 
 #define INIT_WEIGHT 1
+#define NUM_OF_PIECE 14
 
 using namespace std;
 
@@ -35,8 +36,14 @@ typedef char (*STATE)[WIDTH_SIZE] ;
 enum {CHO_PLAY, HAN_PLAY};
 enum { CHA, PHO, HORSE, SANG, SA, JOL, KING, NONE };
 enum {
-	NO_UNIT = 0, JOL_VALUE = 2, SA_VALUE = 3, SANG_VALUE = 3,
-	HORSE_VALUE = 5, PHO_VALUE = 7, CHA_VALUE = 13, KING_VALUE = 100
+	NO_UNIT = 0, 
+	JOL_VALUE = 2, 
+	SA_VALUE = 3, 
+	SANG_VALUE = 3,
+	HORSE_VALUE = 5, 
+	PHO_VALUE = 7, 
+	CHA_VALUE = 13, 
+	KING_VALUE = 100
 };
 enum {PHO_MIDDLE_VALUE = 5, PHO_BOTTOM_VALUE = 2};
 
@@ -74,7 +81,7 @@ public:
 class State_node
 {
 private:
-	int state_ordernum; //���� �θ��� n��° �ڽ�. n�� ����.
+	int state_ordernum; 
 	int numofHan;
 	int numofCho;
 	int travel_count;
@@ -131,6 +138,7 @@ public:
 	void SetCho_weight(vector<double> *c_weight);
 	void SetScore(double score_);
 	void WeightCalculate(int idx, const double score, int host);
+	void setNumOfPiece(int *piece) ;
 	void evaluateBoard();
 
 	const bool operator==(State_node *node);
@@ -141,8 +149,8 @@ public:
 	stateCondition* GetTurn();
 	STATE GetState();
 
-	int Getnumprev();
-	int Getnumnext();
+	int SizeofPrev();
+	int SizeofNext();
 	int Getstate_ordernum();
 	int Gethan();
 	int Getcho();
@@ -152,9 +160,9 @@ public:
 	vector<double>* Get_choweight();
 	double GetScore();
 
-	vector<State_node*> *Getnext();
-	vector<State_node*> *Getprev();
-	pair_key GetHorse_pos();
+	vector<State_node*> *GetNext();
+	vector<State_node*> *GetPrev();
+	pair_key GetPieceOfKey();
 
 	void SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]);
 };

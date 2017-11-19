@@ -94,16 +94,17 @@ State_node* SelectState(State_node *now_state) {
 
 	int index = 0;
 	int max ;
-	int next_childnum = now_state->Getnext()->size();
+	int sizeOfChild = now_state->GetNext()->size();
 
-	if (next_childnum == 0)
+	if (!sizeOfChild)
 		return NULL;
-	max = now_state->Getnext()->at(0)->GetScore();
+	
+	max = now_state->GetNext()->at(0)->GetScore();
 
 	// �ƽ��� ã��
-	for (int i = 1; i < next_childnum; i++) {
-		if (now_state->Getnext()->at(i)->GetScore() > max) {
-			max = now_state->Getnext()->at(i)->GetScore();
+	for (int i = 1; i < sizeOfChild; i++) {
+		if (now_state->GetNext()->at(i)->GetScore() > max) {
+			max = now_state->GetNext()->at(i)->GetScore();
 			index = i;
 		}
 	}
@@ -114,13 +115,12 @@ State_node* SelectState(State_node *now_state) {
 	}
 		
 
-	// ��ºκ�
-	for (int i = 0 ; i < next_childnum; i++) {
-		cout << now_state->Getnext()->at(i)->GetScore() << " ";
+	for (int i = 0 ; i < sizeOfChild; i++) {
+		cout << now_state->GetNext()->at(i)->GetScore() << " ";
 	}
-	cout << endl << "SELECT : " << now_state->Getnext()->at(index)->GetScore() << endl;
+	cout << endl << "SELECT : " << now_state->GetNext()->at(index)->GetScore() << endl;
 
-	return now_state->Getnext()->at(index);
+	return now_state->GetNext()->at(index);
 }
 
 bool MoveableMinMax(State_node *game_state, State_node *now_state, Adjcency_grpah *g){
@@ -175,7 +175,7 @@ void SelectMove(Adjcency_grpah *g) {
 	for (int i = 0; game_ing == true; i++) {
 		if (i % 2 == host) { // -> ���� ��ũ���ͷ� ��ȯ.
 			now_state = SetState_fromServer(game_state->GetState(), !host);
-			inthe_graph = g->Is_In_The_List_State(now_state); // �ؽþȿ� �����ϸ� �ؽþȿ� �ִ� state�� �����ϰԵȴ�.
+			inthe_graph = g->IsHaveStateInHash(now_state); // �ؽþȿ� �����ϸ� �ؽþȿ� �ִ� state�� �����ϰԵȴ�.
 
 			// �ؽÿ� �������� ������
 			if(inthe_graph == NULL ){

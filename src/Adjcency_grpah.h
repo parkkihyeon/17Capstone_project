@@ -25,7 +25,6 @@ using namespace std;
 
 typedef multimap<pair_key, State_node*> hash_4d; // 4���� �ؽ�
 typedef multimap<string, State_node*> movableHash;
-typedef vector<State_node*>* gameVectors ;
 
 class Adjcency_grpah
 {
@@ -53,10 +52,10 @@ public:
 	void insertMovableHash(State_node* now_state);
 
 	void Init_hashtable();
-	void Insert(gameVectors state);
-	void Second_insert(gameVectors state);
+	void Insert(vector<State_node*>*  state);
+	void Second_insert(vector<State_node*>*  state);
 	void PushList_Hashtable(State_node* state);
-	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
+	void Set_4Dhashdata(int key[4], State_node* state);
 	void AddMoveableChild(State_node *now_state);
 	void AddMoveable() ;
 
@@ -65,10 +64,9 @@ public:
 	State_node* GetRoot();
 	State_node* GetLeaf();
 
-	int Is_Have_childnode(State_node* sub_root, State_node* state);
-	int Direction_parentnode(State_node* sub_node);
+	int IsHaveChildnode(State_node* sub_root, State_node* state);
 
-	State_node* Is_In_The_List_State(State_node *state);
+	State_node* IsHaveStateInHash(State_node *state);
 	bool Diff_State(State_node *stateA, State_node *stateB);
 };
 
@@ -77,12 +75,12 @@ private:
 	Adjcency_grpah *original_g;
 public:
 	Second_Graph(Adjcency_grpah *g);
-	void Value_process(gameVectors state, int winner);
+	void Value_process(vector<State_node*>*  state, int winner);
 	int idxOfPiece(char piece);
 
 	Adjcency_grpah * Getgraph();
-	State_node* GetPrev_state(gameVectors state, int index);
-	State_node* GetNext_state(gameVectors state, int index);
+	State_node* GetPrevState(vector<State_node*>*  state, int index);
+	State_node* GetNextState(vector<State_node*>*  state, int index);
 };
 
 
