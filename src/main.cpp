@@ -18,7 +18,7 @@ int main()
 	Second_Graph *second_g = new Second_Graph(g);
 	Second_Graph_made(second_g, play, state);
 // 	second_g->Getgraph()->AddMoveable();
-	cout << "ssss3" << endl ;
+	
 	SaveGraphData(second_g->Getgraph(), "LINUX_Binary");
 
 	Adjcency_grpah *AiGraph = new Adjcency_grpah(LoadGraphData("LINUX_Binary"));

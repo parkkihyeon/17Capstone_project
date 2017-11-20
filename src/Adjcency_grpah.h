@@ -21,6 +21,14 @@
 #define DRAW -1
 #define MOVABLE_KEY 7
 
+#define RESTER_EVAL 0.001
+#define MOVING_EVAL 0.0001
+#define KILLER_EVAL 0.01
+#define KILLEE_EVAL -0.01
+#define CHECKMATER_EVAL 0.005
+#define CHECKMATEE_EVAL -0.005
+#define LEARNING_RATE 0.3
+
 using namespace std;
 
 typedef multimap<pair_key, State_node*> hash_4d; // 4���� �ؽ�
@@ -75,7 +83,10 @@ private:
 	Adjcency_grpah *original_g;
 public:
 	Second_Graph(Adjcency_grpah *g);
-	void Value_process(vector<State_node*>*  state, int winner);
+	void AdjustWeight(vector<State_node*>* state) ;
+	void Evaluating(vector<State_node*>* state) ;
+	void LearningProcess(vector<State_node*>*  state, int winner);
+	void BackPropagation(vector<State_node*>* state, int winner);
 	int idxOfPiece(char piece);
 
 	Adjcency_grpah * Getgraph();

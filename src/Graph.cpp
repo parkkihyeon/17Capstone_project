@@ -61,7 +61,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*>* state) {
 	for (int i = 0; i < play->size(); i++) {
 		g2->Getgraph()->Second_insert(state->at(i));
-		g2->Value_process(state->at(i), play->at(i)->GetWinner());
+		g2->LearningProcess(state->at(i), play->at(i)->GetWinner());
 	}
 	cout << "Graph Generated_2" << endl;
 }

@@ -173,22 +173,21 @@ void SelectMove(Adjcency_grpah *g) {
 	game_state->Print_State();
 
 	for (int i = 0; game_ing == true; i++) {
-		if (i % 2 == host) { // -> ���� ��ũ���ͷ� ��ȯ.
+		if (i % 2 == host) { 
 			now_state = SetState_fromServer(game_state->GetState(), !host);
-			inthe_graph = g->IsHaveStateInHash(now_state); // �ؽþȿ� �����ϸ� �ؽþȿ� �ִ� state�� �����ϰԵȴ�.
-
-			// �ؽÿ� �������� ������
+			inthe_graph = g->IsHaveStateInHash(now_state); 
+			
 			if(inthe_graph == NULL ){
 				MinMax(game_state, now_state, host); 
 			}
 			else {
 				select_state = SelectState(inthe_graph);
-				// �ؽÿ� �����ϰ�, �ڽ��� ��ġ�� ����̸�
+
 				if (select_state) {
 					select_state->Print_State();
 					game_state->SetState(select_state->GetState());
 				}
-				// �ؽÿ� �����ϳ�, �ڽ��� ��ġ�� �����̸�.
+
 				else{
 					MinMax(game_state, now_state, host);
 				}

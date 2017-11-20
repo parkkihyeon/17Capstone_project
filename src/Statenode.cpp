@@ -137,23 +137,6 @@ void State_node::SetState_number(int setnum) {
 	state_number = setnum;
 }
 
-void State_node::Print_weight(int idx) {
-	ofstream stream("evaluate.txt", ios::app);
-	stream << idx << "��° : " << endl;
-	stream << "�� : " << endl;
-	for (int i = 0; i < 7; i++) {
-		stream << cho_weight->at(i) << " ";
-	}
-	stream << endl;
-	stream << "�� : " << endl;
-	for (int i = 0; i < 7; i++) {
-		stream << han_weight->at(i) << " ";
-	}
-
-	stream << endl << endl;
-	stream.close();
-}
-
 void State_node::SetHan_weight(vector<double> *h_weight) {
 	memcpy(han_weight, h_weight, sizeof(int)*PIECE_NUM);
 }
@@ -206,16 +189,7 @@ void State_node::setNumOfPiece(int *piece) {
 			case 'J': piece[JOL+7]++ ; break;
 			case 'K': piece[KING+7]++ ; break;
 			case '-': break;
-			default: cout << " evaluate error !" << endl;
-				for (int i = 1; i < HEIGHT_SIZE; i++) {
-					for (int j = 1; j < WIDTH_SIZE; j++) {
-			cout << State[i][j] << " " ;
-		}
-					cout << endl;
-				}
-		
-
-			 exit(1);
+			default: cout << " evaluate error !" << endl; break ;
 			}
 		}
 }

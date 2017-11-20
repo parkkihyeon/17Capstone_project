@@ -1,14 +1,6 @@
 #include "Adjcency_grpah.h"
 #include "Moveable.h"
 
-const double rester_eval = 0.001;
-const double moving_eval = 0.0001;
-const double killer_eval = 0.01;
-const double killee_eval = -0.01;
-const double checkmater_eval = 0.005;
-const double checkmatee_eval = -0.005;
-const double learning_rate = 0.3;
-
 movableHash *moveableHash[NUMUNIT][NUMUNIT];
 
 int pow(int var, int exp) {
@@ -253,12 +245,9 @@ Second_Graph::Second_Graph(Adjcency_grpah *g) {
 	original_g = new Adjcency_grpah(g);
 }
 
-void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
+void Second_Graph::AdjustWeight(vector<State_node*>* state){
 
-	State_node *now_state = new State_node();
-	State_node *prev_state = new State_node();
-	State_node *prev2_state = new State_node();
-	State_node *next2_state = new State_node();
+	State_node *now_state,*prev_state,*prev2_state,*next2_state ;
 	stateCondition *nowTurn = new stateCondition() ;
 
 	char actor_prev, actor, killed ;
@@ -273,8 +262,6 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 		prev2_state = GetPrevState(state, i - 1);
 
 		actor = nowTurn->GetActor();
-		killed = nowTurn->GetKilled();
-		checkmate = nowTurn->GetCheckmate();
 		host = (bool)nowTurn->Gethost();
 
 		actor_prev = prev_state->GetTurn()->GetActor();
@@ -285,19 +272,19 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 
 		if (actor == REST_PIECE) {
 			if (actor_prev != FIRST_PIECE)
-				prev_state->WeightCalculate(prevActor, rester_eval, preHost);
+				prev_state->WeightCalculate(prevActor, RESTER_EVAL, preHost);
 		}
 		else {// killed and checkmate
 			int nowActor = idxOfPiece(actor);
-			int sumOfPrevEval = moving_eval;
+			int sumOfPrevEval = MOVING_EVAL;
 			int sumOfPrev2Eval = 0;
-			if (killed != '0') {
-				sumOfPrevEval += killer_eval ;
-				sumOfPrev2Eval += killee_eval ;
+			if (nowTurn->GetKilled() != '0') {
+				sumOfPrevEval += KILLER_EVAL ;
+				sumOfPrev2Eval += KILLEE_EVAL ;
 			}
-			if (checkmate) {
-				sumOfPrevEval += checkmater_eval ;
-				sumOfPrev2Eval += checkmatee_eval ;
+			if (nowTurn->GetCheckmate()) {
+				sumOfPrevEval += CHECKMATER_EVAL ;
+				sumOfPrev2Eval += CHECKMATEE_EVAL ;
 			}
 
 			prev_state->WeightCalculate(nowActor, sumOfPrevEval, host);
@@ -308,31 +295,43 @@ void Second_Graph::Value_process(vector<State_node*>* state, int winner) {
 		}
 
 	}
+}
 
+void Second_Graph::Evaluating(vector<State_node*>* state){
 	for (int i = 1; i < state->size(); i++) {
 		state->at(i)->evaluateBoard();
 	}	
+}
 
-	// if the game was draw, then we don't give any scores.
-	if (winner == DRAW)
-		return;
-
+void Second_Graph::BackPropagation(vector<State_node*>* state, int winner){
 	int reward_start = state->size() - 3;
+	State_node *nowState, *next2State ;
+	bool host ;
+	double sumOfScore, addScore ;
 
 	//backpropagation
 	for (int i = reward_start; i >= 1; i--) {
-		now_state = state->at(i);
-		host = now_state->GetTurn()->Gethost();
-		next2_state = GetNextState(state, i + 1);
-
-		double sumOfScore = now_state->GetScore() ;
-		double addScore = next2_state->GetScore() * learning_rate ;
+		nowState = state->at(i);
+		host = nowState->GetTurn()->Gethost();
+		next2State = GetNextState(state, i + 1);
+		sumOfScore = nowState->GetScore() ;
+		addScore = next2State->GetScore() * LEARNING_RATE ;
 
 		if (host != (bool)winner) {
 			sumOfScore -= addScore*3 ;			
 		}
-		now_state->SetScore(sumOfScore + addScore);
+		nowState->SetScore(sumOfScore + addScore);
 	}
+}
+
+void Second_Graph::LearningProcess(vector<State_node*>* state, int winner) {
+
+	AdjustWeight(state) ;
+	Evaluating(state) ;
+	// if the game was draw, then we don't give any scores.
+	if (winner == DRAW)
+		return;
+	BackPropagation(state, winner); 
 }
 
 void Adjcency_grpah::AddMoveableChild(State_node *now_state) {

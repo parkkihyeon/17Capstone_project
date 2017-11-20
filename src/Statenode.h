@@ -7,14 +7,14 @@
 #include <fstream>
 
 #include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp> // ����ȭ vector�� ����ϱ� ����
-#include <boost/serialization/deque.hpp> // ����ȭ stack�� ����ϱ� ����
-#include <boost/serialization/stack.hpp> // ����ȭ stack�� ����ϱ� ����
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/deque.hpp>
+#include <boost/serialization/stack.hpp> 
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/utility.hpp>
 
-#include <boost/archive/binary_iarchive.hpp> // ���̳ʸ� ���·� �Է��ϱ� ����
-#include <boost/archive/binary_oarchive.hpp> // ���̳ʸ� ���·� �Է��ϱ� ����
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp> 
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/throw_exception.hpp>
@@ -25,6 +25,8 @@
 #define PIECE_NUM 8 
 #define INIT_WEIGHT 1
 #define NUM_OF_PIECE 14
+#define PHO_MIDDLE_VALUE 5
+#define PHO_BOTTOM_VALUE 2
 
 using namespace std;
 
@@ -45,7 +47,6 @@ enum {
 	CHA_VALUE = 13, 
 	KING_VALUE = 100
 };
-enum {PHO_MIDDLE_VALUE = 5, PHO_BOTTOM_VALUE = 2};
 
 class stateCondition
 {
@@ -85,9 +86,8 @@ private:
 	int numofHan;
 	int numofCho;
 	int travel_count;
-	int state_number; //  state ��ȣ�� ����.
+	int state_number; 
 
-	// ��
 	vector<double> *han_weight ;
 	vector<double> *cho_weight ;
 	double score;
@@ -120,10 +120,8 @@ public:
 	State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]);
 	State_node();
 
-	// state�� ���¸� ����Ѵ�.
 	void Print_State();
 
-	//node�� �ڽ��� ����.
 	void Addlist_Child(State_node *add_state);
 	void Connect_Parent(State_node *parent_state);
 	void Set_numUnit(int cho, int han);
@@ -132,8 +130,6 @@ public:
 	void Init();
 	void TravelCountPlus();
 	void SetState_number(int setnum);
-	void Print_weight(int idx);
-	// overeading (?)
 	void SetHan_weight(vector<double> *h_weight);
 	void SetCho_weight(vector<double> *c_weight);
 	void SetScore(double score_);
@@ -143,7 +139,6 @@ public:
 
 	const bool operator==(State_node *node);
 
-	// n��° �ڽ��� return
 	State_node* NthCheck_Childnode(int n);
 	State_node* NthCheck_Parentnode(int n);
 	stateCondition* GetTurn();
