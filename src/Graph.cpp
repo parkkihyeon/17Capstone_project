@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define TEXT_NAME "Final.txt"
+#define TEXT_NAME "Final2.txt"
 
 //Make Binary file with Graph Serialization
 void SaveGraphData(Adjcency_grpah *i, const char *fileName) {
@@ -31,9 +31,10 @@ Adjcency_grpah LoadGraphData(const char *fileName) {
 	return g;
 }
 
-void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state)
+void Node2StateNode(vector<Play*> *play, vector<State_node*> *state, int now_state)
 {
-	for (int j = 0; j < play->at(now_state)->game.size(); j++) {
+	int gameSize = play->at(now_state)->game.size() ;
+	for (int j = 0; j < gameSize ; j++) {
 		node * node_t = play->at(now_state)->game.at(j);
 		State_node* now_state = new State_node(node_t->returnState());
 		now_state->Set_numUnit(node_t->getNumOfCho(), node_t->getNumOfHan());
@@ -48,7 +49,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 	cout << "BF GR PLAY SIZE: " << play->size() << endl;
 	for (int i = 0; i < play->size(); i++) {
 		vector<State_node*>*history = new vector<State_node*>();
-		Play_to_Statenode(play, history, i);
+		Node2StateNode(play, history, i);
 		g->Insert(history);
 		state->push_back(history);
 		if(i % 1000 == 0)
@@ -60,7 +61,7 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*>* state) {
 	for (int i = 0; i < play->size(); i++) {
 		g2->Getgraph()->Second_insert(state->at(i));
-		g2->Value_process(state->at(i), play->at(i)->GetWinner());
+		g2->LearningProcess(state->at(i), play->at(i)->GetWinner());
 	}
 	cout << "Graph Generated_2" << endl;
 }
@@ -185,7 +186,7 @@ void SetSocket(Adjcency_grpah *graph) {
 					State_node *select_state = new State_node();
 					State_node *now_state = SetState_fromServer(board, 0);
 
-					inthe_graph = graph->Is_In_The_List_State(now_state);
+					inthe_graph = graph->IsHaveStateInHash(now_state);
 					if (inthe_graph == NULL) {
 						MinMax(game_state, now_state, host);
 						pos = GetStatePos(game_state, now_state);
