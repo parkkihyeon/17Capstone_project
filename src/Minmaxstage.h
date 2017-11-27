@@ -2,10 +2,6 @@
 //#define _MINMAXSTAGE_H_
 #ifndef _STAGE_
 #define _STAGE_
-/*
-해당 클래스는  MICROSOFT FOUNDATION CLASS LIBRARY : Jangki 에서 CJKStage Class를 차용하여 제작하였습니다.
-This class was created by borrowing CJKStage Class from MICROSOFT FOUNDATION CLASS LIBRARY: Jangki.
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
