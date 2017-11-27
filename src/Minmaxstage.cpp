@@ -183,25 +183,28 @@ void Minmaxstage::ClearList()
 
 void Minmaxstage::AddNextStageEffectively(Minmaxstage *pNewStage)
 {
-    //fprintf(fp1, "%s", "AddNextStageEffectively()\n");
-    //printf("AddNextStageEffectively()\n");
-    int nNewScore = pNewStage->Evaluate();
+        int nNewScore = pNewStage->Evaluate();
     
-    ///////////////////////////////////////////////////////
-    // Nodes which are placed in same level must be sorted
-    // to make Alpha-Beta algorithm effeciently.
-    // When it's in Max turn, it must be sorted ascendently
-    // in case of Min,Decendently.
-    if (m_bAmIMax)
-    {
         if (m_pFirst)
         {
             Minmaxstage *pNode = m_pFirst;
-            do
+            if (m_bAmIMax)
             {
-                if (nNewScore >= pNode->m_nScore) break;
-                pNode = pNode->m_pNext;
-            } while (pNode != NULL);
+                do
+                {
+                    if (nNewScore >= pNode->m_nScore) break;
+                    pNode = pNode->m_pNext;
+                } while (pNode != NULL);
+            }
+            else
+            {
+                do
+                {
+                    if (nNewScore <= pNode->m_nScore) break;
+                    pNode = pNode->m_pNext;
+                } while (pNode != NULL);
+            }
+            
             if (pNode == NULL)
             {
                 m_pLast->m_pNext = pNewStage;
@@ -233,48 +236,7 @@ void Minmaxstage::AddNextStageEffectively(Minmaxstage *pNewStage)
             pNewStage->m_pNext = NULL;
         }
     }
-    else
-    {
-        if (m_pFirst)
-        {
-            Minmaxstage *pNode = m_pFirst;
-            do
-            {
-                if (nNewScore <= pNode->m_nScore) break;
-                pNode = pNode->m_pNext;
-            } while (pNode != NULL);
-            if (pNode == NULL)
-            {
-                m_pLast->m_pNext = pNewStage;
-                pNewStage->m_pPrev = m_pLast;
-                pNewStage->m_pNext = NULL;
-                m_pLast = pNewStage;
-                
-            }
-            else
-            {
-                Minmaxstage * pTmp = pNode->m_pPrev;
-                pNode->m_pPrev = pNewStage;
-                pNewStage->m_pNext = pNode;
-                pNewStage->m_pPrev = pTmp;
-                if (pTmp)
-                {
-                    pTmp->m_pNext = pNewStage;
-                }
-                else
-                {
-                    m_pFirst = pNewStage;
-                }
-            }
-        }
-        else
-        {
-            m_pFirst = pNewStage;
-            m_pLast = pNewStage;
-            pNewStage->m_pPrev = NULL;
-            pNewStage->m_pNext = NULL;
-        }
-    }
+   
     ++m_nNodeCount;
 }
 
