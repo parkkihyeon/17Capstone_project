@@ -7,23 +7,24 @@
 #include <iostream>
 #include <cstdlib>
 #include <memory.h>
-using namespace std;
-//#include "Statenode.h"
+
+
+
 #define WIDTH_SIZE            10
 #define DF_PANEL_WIDTH        9
 #define DF_PANEL_HEIGHT        10
-
 #define DF_SCORE_JANG        500000
 #define DF_SCORE_SA            10000
 #define DF_SCORE_JOL        5000
 #define DF_SCORE_PO            25000
-
 #define DF_SCORE_CHA        32000
 #define DF_SCORE_MA            15000
 #define DF_SCORE_SANG        9000
-
 #define DF_INFINITY            9999999
 
+
+using namespace std;
+//#include "Statenode.h"
 
 enum MOVERESULT { MR_HANDEAD, MR_CHODEAD, MR_UNMOVED, MR_MOVED };
 
