@@ -147,12 +147,8 @@ void Minmaxstage::Initialize()
 // Check whether piece can pass the place located
 bool Minmaxstage::IsPassable(int nX, int nY)
 {
-    //fprintf(fp1, "%s", "IsPassable()\n");
-    //printf( "IsPassable()\n");
-    if (nX < 0) return false;
-    if (nY < 0) return false;
-    if (nX >= DF_PANEL_WIDTH) return false;
-    if (nY >= DF_PANEL_HEIGHT) return false;
+  if (nToX < 0 ||nToY < 0 ) return false;
+  if (nToX >= DF_PANEL_WIDTH ||nToY >= DF_PANEL_HEIGHT) return false;
     
     if (m_enPanel[nY][nX] == PS_NOTHING)
         return true;
@@ -244,12 +240,8 @@ void Minmaxstage::AddNextStageEffectively(Minmaxstage *pNewStage)
 // Add possible movable location to the list
 bool Minmaxstage::TryToAddMovableXY(int nFromX, int nFromY, int nToX, int nToY)
 {
-    //fprintf(fp1, "%s", "TryAddMovableXY()\n");
-    //printf( "TryAddMovableXY()\n");
-    if (nToX < 0) return false;
-    if (nToY < 0) return false;
-    if (nToX >= DF_PANEL_WIDTH) return false;
-    if (nToY >= DF_PANEL_HEIGHT) return false;
+    if (nToX < 0 ||nToY < 0 ) return false;
+    if (nToX >= DF_PANEL_WIDTH ||nToY >= DF_PANEL_HEIGHT) return false;
     
     // Impossible to move to a location where other piece of
     // same team exist.
@@ -630,31 +622,28 @@ void Minmaxstage::GetMovableCha(int nFromX, int nFromY)
 
 void Minmaxstage::GetMovableMa(int nFromX, int nFromY)
 {
-    //fprintf(fp1, "%s", "GetMovableMa()\n");
-    // Left Upper
     if (IsPassable(nFromX, nFromY - 1))
+    {
         TryToAddMovableXY(nFromX, nFromY, nFromX - 1, nFromY - 2);
-    // Right Upper
-    if (IsPassable(nFromX, nFromY - 1))
         TryToAddMovableXY(nFromX, nFromY, nFromX + 1, nFromY - 2);
+    }
     // Left under
     if (IsPassable(nFromX, nFromY + 1))
+    {
         TryToAddMovableXY(nFromX, nFromY, nFromX - 1, nFromY + 2);
-    // Right under
-    if (IsPassable(nFromX, nFromY + 1))
         TryToAddMovableXY(nFromX, nFromY, nFromX + 1, nFromY + 2);
-    // Left Upper
+    }
     if (IsPassable(nFromX - 1, nFromY))
+    {
         TryToAddMovableXY(nFromX, nFromY, nFromX - 2, nFromY - 1);
-    // Left under
-    if (IsPassable(nFromX - 1, nFromY))
         TryToAddMovableXY(nFromX, nFromY, nFromX - 2, nFromY + 1);
+    }
     // Right upper
     if (IsPassable(nFromX + 1, nFromY))
+    {
         TryToAddMovableXY(nFromX, nFromY, nFromX + 2, nFromY - 1);
-    // right under
-    if (IsPassable(nFromX + 1, nFromY))
         TryToAddMovableXY(nFromX, nFromY, nFromX + 2, nFromY + 1);
+    }
 }
 
 void Minmaxstage::GetMovableSang(int nFromX, int nFromY)
@@ -872,10 +861,8 @@ int Minmaxstage::Evaluate()
 
 bool Minmaxstage::MovePiece(int nFromX, int nFromY, int nToX, int nToY)
 {
-    if (nFromX < 0 || nFromX >= DF_PANEL_WIDTH) return false;
-    if (nFromY < 0 || nFromY >= DF_PANEL_HEIGHT) return false;
-    if (nToX < 0 || nToX >= DF_PANEL_WIDTH) return false;
-    if (nToY < 0 || nToY >= DF_PANEL_HEIGHT) return false;
+    if (nToX < 0 ||nToY < 0 ) return false;
+    if (nToX >= DF_PANEL_WIDTH ||nToY >= DF_PANEL_HEIGHT) return false;
     
     m_enPanel[nToY][nToX] = m_enPanel[nFromY][nFromX];
     m_enPanel[nFromY][nFromX] = PS_NOTHING;
