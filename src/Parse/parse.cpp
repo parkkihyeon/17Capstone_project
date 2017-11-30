@@ -1,5 +1,5 @@
 #include "parse.h"
-#include "File_divide.h"
+#include "readFile.h"
 
 char* HorseSequence[4] = { "¸¶»ó¸¶»ó", "¸¶»ó»ó¸¶", "»ó¸¶¸¶»ó", "»ó¸¶»ó¸¶" };
 char* Chinese_character[14] = {"õ¢ğï", "ùÓÜ²", "õ¢Ø©", "ùÓØ©", "õ¢øĞ","ùÓøĞ", "õ¢ó³", "ùÓó³", "õ¢ßÚ","ùÓßÚ", "õ¢ŞÍ", "ùÓŞÍ", "õ¢íâ", "ùÓíâ"} ;
