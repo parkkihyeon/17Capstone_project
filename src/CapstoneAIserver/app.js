@@ -6,18 +6,26 @@ var cluster = require('cluster');
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
 var os = require('os');
-var redis = require('socket.io-redis');
+var Redis = require('redis');
+var redis = Redis.createClient(6379, 'localhost');
+// var redis = require('socket.io-redis'); //특정 event에 대해서 현재 접속해 있는 모든 클라이언트에게 보낼 수 있도록 도와주는 redis
 
 var clients = [];
 
 function client_connection(data) {
-  var game_id = (Math.random()+1).toString(36).slice(2, 18);
-  var client_info = new Object();
-  client_info.socket_id = data.id;
-  client_info.game_id = game_id;
-  clients.push(client_info);
+  clients.push(data.id);
+  redis.hmset()
+  return data.id;;
+}
 
-  return game_id;
+function client_disconnection(socket) {
+  for (var i = 0; i < clients.length; i++) {
+    var client = clients[i];
+    if (client.id == socket.id) {
+      client.splice(i, 1);
+      break;
+    }
+  }
 }
 
 function print_clients(cluster) {
@@ -30,7 +38,6 @@ function print_clients(cluster) {
   }
 }
 
-
 //-----Connection Between Unity & Graph Module-----
 
 if (cluster.isMaster) {
@@ -40,7 +47,7 @@ if (cluster.isMaster) {
   });
 
   cluster.on('online', function (worker) {
-    console.log('created worker id : ' + worker.process.pid);
+    // console.log('created worker id : ' + worker.process.pid);
   });
 
   //if worker dead
@@ -61,18 +68,60 @@ else {
   var net_server = net.createServer();
 
   io_server.listen(6110, function() {
-    console.log('Socket IO server listening on port 6110');
+    // console.log('Socket IO server listening on port 6110');
+    console.log('PID [' + cluster.worker.process.pid + '] ' +
+    'Socket.IO Server');
   });
   net_server.listen(6120, function() {
-    console.log('NET server listening on port 6120');
+    // console.log('NET server listening on port 6120');
   })
 
-  io.adapter(redis({
-    host:'localhost',
-    port:6379
-  }));
+  redis.on('subscribe', function(channel, data) {
+    console.log("client subscribe channel " + channel );
+  });
+  redis.on("message", function (channel, message) {
+    console.log("client message channel " + channel + ": " + message);
+  });
+  redis.subscribe('client-connection');
+  redis.publish('client-connection');
 
-  // TCP server connection access
+  io.on('connection', function(socket) {
+    console.log('worker id : ' + cluster.worker.id + 
+      ", worker pid: " + cluster.worker.process.pid + 
+      ' New Client Connected ID : ' + socket.id);
+
+    socket.emit('Initialize', client_connection(socket));
+    //받은 클라이언트 아이디를 모든 node가 공유할 수 있는 배열에 저장한다.
+    //Request일 때는 socket.id와 데이터를 쌍으로 만들어 모두가 공유하는 큐에 넣고 모듈로 일을 넘기고 기다린다.
+    //Response에 socket.id를 기반으로 다시 데이터를 송신한다.
+
+    socket.on('test', function(data) {
+      console.log(cluster.worker.process.pid);
+      io.emit('test-back', clients);
+    });
+
+    socket.on('Order', function(data) {
+      console.log(data);
+      var parsed_data = JSON.parse(data);
+      // net_server.write('order|' + parsed_data.order.toString());
+    });
+
+    socket.on('Request', function(data) {
+      console.log(data);
+      var parsed_data = JSON.parse(data);
+      // net_server.write(parsed_data.Host.toString() + '|' + 
+      //   parsed_data.Board.toString());
+    });
+
+    socket.on('Disconnect', function() {
+      console.log("Client Disconnect");
+      //remove client from user database
+      client_disconnection(socket);
+      socket.disconnect();
+    });
+  });
+
+    // TCP server connection access
   net_server.on('connection', function(socket) {
     console.log('New Module Connected (ID : ' + socket.id + ')');
 
@@ -93,45 +142,6 @@ else {
   net_server.on('error', function(err){
       console.log('error'+err.message);
   })
-
-
-
-  io.on('connection', function(socket) {
-    console.log('New Client Connected (ID : ' + socket.id + ')');
-    console.log('worker id : ' + cluster.worker.id + 
-      ", worker pid: " + cluster.worker.process.pid);
-
-    socket.emit('Initialize', client_connection(socket));
-
-    socket.on('Order', function(data) {
-      console.log(data);
-      var parsed_data = JSON.parse(data);
-      // net_server.write('order|' + parsed_data.order.toString());
-    });
-
-    socket.on('Request', function(data) {
-      console.log(data);
-      var parsed_data = JSON.parse(data);
-      // net_server.write(parsed_data.Host.toString() + '|' + 
-      //   parsed_data.Board.toString());
-    });
-
-    socket.on('Disconnect', function() {
-      console.log("Client Disconnect");
-
-      //remove client from user database
-      for (var i = 0; i < clients.length; i++) {
-        var client = clients[i];
-        if (client.id == socket.id) {
-          client.splice(i, 1);
-          break;
-        }
-      }
-
-      socket.disconnect();
-    });
-
-  });
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
