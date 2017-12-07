@@ -8,34 +8,21 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 var os = require('os');
 var Redis = require('redis');
 var redis = Redis.createClient(6379, 'localhost');
-// var redis = require('socket.io-redis'); //특정 event에 대해서 현재 접속해 있는 모든 클라이언트에게 보낼 수 있도록 도와주는 redis
 
-var clients = [];
+var clients = redis.multi();
 
 function client_connection(data) {
-  clients.push(data.id);
-  redis.hmset()
+  clients.rpush("users", data.id);
+  clients.exec(function(err, res) {
+    if(err) throw err;
+  })
   return data.id;;
 }
 
-function client_disconnection(socket) {
-  for (var i = 0; i < clients.length; i++) {
-    var client = clients[i];
-    if (client.id == socket.id) {
-      client.splice(i, 1);
-      break;
-    }
-  }
-}
-
-function print_clients(cluster) {
-  if (!(cluster.isMaster)) {
-    console.log('worker id : ' + cluster.worker.process.id);
-    console.log('current worker clients : ');
-    for(var idx in clients) {
-      console.log(clients[idx]);
-    }
-  }
+function client_disconnection(data) {
+  redis.lrem('users', 0, data.id, function(err, res) {
+    if (err) throw err
+  });
 }
 
 //-----Connection Between Unity & Graph Module-----
@@ -82,8 +69,6 @@ else {
   redis.on("message", function (channel, message) {
     console.log("client message channel " + channel + ": " + message);
   });
-  redis.subscribe('client-connection');
-  redis.publish('client-connection');
 
   io.on('connection', function(socket) {
     console.log('worker id : ' + cluster.worker.id + 
@@ -97,20 +82,23 @@ else {
 
     socket.on('test', function(data) {
       console.log(cluster.worker.process.pid);
-      io.emit('test-back', clients);
+      redis.lrange('users', 0, -1, function (error, clients) {
+      if (error) throw error
+        clients.forEach(function (client) { console.log(client); });
+      });
     });
 
     socket.on('Order', function(data) {
       console.log(data);
       var parsed_data = JSON.parse(data);
-      // net_server.write('order|' + parsed_data.order.toString());
+      net_server.write('order|' + parsed_data.order.toString());
     });
 
     socket.on('Request', function(data) {
       console.log(data);
       var parsed_data = JSON.parse(data);
-      // net_server.write(parsed_data.Host.toString() + '|' + 
-      //   parsed_data.Board.toString());
+      net_server.write(parsed_data.Host.toString() + '|' + 
+        parsed_data.Board.toString());
     });
 
     socket.on('Disconnect', function() {
