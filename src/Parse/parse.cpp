@@ -1,13 +1,12 @@
 #include "parse.h"
 #include "readFile.h"
 
-char* HorseSequence[4] = { "¸¶»ó¸¶»ó", "¸¶»ó»ó¸¶", "»ó¸¶¸¶»ó", "»ó¸¶»ó¸¶" };
-char* Chinese_character[14] = {"õ¢ğï", "ùÓÜ²", "õ¢Ø©", "ùÓØ©", "õ¢øĞ","ùÓøĞ", "õ¢ó³", "ùÓó³", "õ¢ßÚ","ùÓßÚ", "õ¢ŞÍ", "ùÓŞÍ", "õ¢íâ", "ùÓíâ"} ;
-char* Chinese_character_one[8] = {"ğï", "Ü²", "Ø©", "øĞ", "ó³", "ßÚ", "ŞÍ", "íâ" } ;
-char* Korean_character[8] = { "Á¹", "º´", "¸¶", "Æ÷","Â÷", "»ó", "»ç","Àå"} ;
-char to_English[7] = {'J', 'H','P', 'C', 'X', 'S', 'K'} ;
+static char* HorseSequence[4] = { "¸¶»ó¸¶»ó", "¸¶»ó»ó¸¶", "»ó¸¶¸¶»ó", "»ó¸¶»ó¸¶" };
+static char* Chinese_character[14] = {"õ¢ğï", "ùÓÜ²", "õ¢Ø©", "ùÓØ©", "õ¢øĞ","ùÓøĞ", "õ¢ó³", "ùÓó³", "õ¢ßÚ","ùÓßÚ", "õ¢ŞÍ", "ùÓŞÍ", "õ¢íâ", "ùÓíâ"} ;
+static char* Chinese_character_one[8] = {"ğï", "Ü²", "Ø©", "øĞ", "ó³", "ßÚ", "ŞÍ", "íâ" } ;
+static char* Korean_character[8] = { "Á¹", "º´", "¸¶", "Æ÷","Â÷", "»ó", "»ç","Àå"} ;
+static char to_English[7] = {'J', 'H','P', 'C', 'X', 'S', 'K'} ;
 int sequence_num = 0 ;
-int sp = 0 ;
 
 void Upper2lower_case(char *ch)
 {
@@ -44,7 +43,6 @@ Unit::Unit(char *str)
 	string gibo_str(str) ;
 	// 78Á¹79¸¶Àå±º 
 	// pos1/pos2/pos3/pos4
-	int pos_1 = 0 ;
 	int pos_2 = 2 ;
 	int pos_3 = 4 ;
 	int pos_4 = 6 ;
@@ -125,11 +123,9 @@ char Korean_to_English(string str)
 	return 'O' ;
 }
 
-bool IsDigit(char *str)
+bool IsDigit(char c)
 {
-	for (int i = 0; i < strlen(str); i++){
-		if (str[i] < '0' || str[i] >'9') return false;
-	}
+	if (c < '0' || c >'9') return false;
 	return true;
 }
 
@@ -154,68 +150,149 @@ char Convert_Chinese_to_English_one(string str)
 	}
 	return 'O' ;
 }
-// Á¸³ª °³ÄÚµå .
-void Parser()
-{
-	while(1)
-	{
-		sequence_num = 0 ;
-		char *num_of_data = new char[100] ;
-		itoa(sp++,num_of_data, DECIMAL) ;
-		strcat(num_of_data, TEXT_FORM) ;
 
-		if(sp % 100 == 0 ) cout << "¼ø¹ø : " << sp << endl ;
+int Parser::getNextTextFile(int &sp){
+	char numOfData[_MAX_PATH] ;
 
-		int left_braket = 0 ;
-		ifstream stream(num_of_data);
-		if(stream.fail()) {
-			cerr << "open filed " << endl ;
-			break ;
+	strcpy(numOfData, "");
+	itoa(sp++,numOfData, DECIMAL) ;
+	strcat(numOfData, TEXT_FORM) ;
+	if(sp % 100 == 0 ) cout << "¼ø¹ø : " << sp << endl ;
+	stream.open(numOfData) ;
+	if(stream.fail()) {
+		cerr << "open filed " << endl ;
+		exit(1) ;
+	}
+	ostream << numOfData << endl ;
+	return GIBO_OPEN_SUCCESS ;
+}
+
+void Parser::writeResult(){
+	char line[MIN];
+	for(int i=0 ; i < numOfRow ; i++){
+		strcpy(line, allString[i].c_str()) ;
+		if(strstr(line, "°á°ú")){
+			if(strstr(line, "ÃÊ") || strstr(line,  "ùÓ"))
+				ostream << CHO_PLAY << endl ;
+			else if (strstr(line, "ÇÑ") || strstr(line, "õ¢"))
+				ostream << HAN_PLAY << endl ;
+			else
+				ostream << -1 << endl ;
 		}
+	}
+}
 
-		ofstream ostream("parse.txt", ios::app);
-		ostream << num_of_data << endl ;
+bool Parser::writePosition(){
+	int isPosition = 0 ;
+	char line[MIN];
 
-		bool Start_Game = false;
-		char *temp = new char[MIN];
+	for(int i=0 ; i < numOfRow ; i++){
+		strcpy(line, allString[i].c_str()) ;
 
-		while (!stream.eof())
-		{
-			char *token = new char[MIN];
-			stream.getline(temp, MIN);
-			strtok(temp, TOKEN);
-			if(temp[0] == '[') left_braket++ ;
-
-			if (!strcmp(temp, "[´ë±¹°á°ú"))
-			{
-				if(left_braket == 11)
-				{
-					token = strtok(NULL, TOKEN);
-					if (!strcmp(token, "ÇÑ") || !strcmp(token, "õ¢")) ostream << 1 << endl;
-					else if (!strcmp(token, "ÃÊ") || !strcmp(token, "ùÓ")) ostream << 0 << endl;
-					else ostream << -1 << endl ;
-					Start_Game = true;
-					continue ;
+		if(strstr(line, "Â÷¸²")){
+			for(int i=0; i < 4 ; i++){
+				if (strstr(line, HorseSequence[i])) {
+					ostream << i << endl;
+					isPosition++ ;
+					break ;
 				}
-				else break ;
 			}
+		}
+		if(isPosition == 2 ) return true ;
+	}
+	return false ;
+}
 
-			while (token = strtok(NULL, TOKEN))
-			{
-				if (!strcmp(token, HorseSequence[0])) ostream << 0 << endl;
-				else if (!strcmp(token, HorseSequence[1])) ostream << 1 << endl;
-				else if (!strcmp(token, HorseSequence[2])) ostream << 2 << endl;
-				else if (!strcmp(token, HorseSequence[3])) ostream << 3 << endl;
+void Parser::initAllString() {
+	for(int i=0; i< numOfRow; i++){
+		allString[i] = "" ;
+	}
+}
 
-				if(Start_Game && !IsDigit(token) && strlen(token) >= MIN_LENGTH )
+bool Parser::checkGibo(){
+	char temp[MIN] ;
+	numOfRow = 0 ;
+	int leftBraket = 0 ;
+
+	bool check1 = false  ;
+	bool check2 = false ;
+
+	while(!stream.eof()){
+		stream.getline(temp, MIN) ;
+		if( !strcmp(temp, "")) continue ;
+
+		if(strstr(temp,"Â÷¸²")) check1 = true ;
+		if(strstr(temp,"°á°ú")) check2 = true ;
+		allString[numOfRow++] = temp ;
+		if(temp[0] == '[') leftBraket++ ;
+
+	}
+	stream.close() ;
+
+	if(check1 && check2 && leftBraket == 11) return true  ;
+	else return false ;
+}
+
+void Parser::writeHistory(){
+	char line[MIN];
+	char *token = new char[MIN];
+
+	for(int i=0 ; i < numOfRow ; i++){
+		strcpy(line, allString[i].c_str()) ;
+		if(!strcmp(line,"")) continue ;
+
+		if(IsDigit(line[0])){
+			strtok(line, TOKEN) ;
+			while(token = strtok(NULL, TOKEN)){
+				if(strlen(token) >= MIN_LENGTH)
 					Unit t(token) ;
 			}
-			free(token) ;
 		}
-		ostream << endl  ;
-		stream.close() ;
-		ostream.close() ;
-		free(temp) ;
 	}
-
+	free(token) ;
 }
+
+
+Parser::Parser() {
+	int sp = 0 ;
+	ostream.open("parse.txt", ios::app);
+
+	while(true)
+	{
+		getNextTextFile(sp) ;
+		if(checkGibo()){
+			writePosition() ;
+			writeResult() ;
+			writeHistory() ;
+		}
+
+		initAllString() ;
+		ostream << "\n" ;
+	}
+	ostream.close() ;
+}
+
+void Parser::doing() {}
+void KoreanParser::doing() {
+
+} 
+void Chinese::doing() {} 
+void Chinese2::doing()  {}
+
+ParserFactory::ParserFactory(){} 
+Parser* ParserFactory::createParser(int name) {
+	return FactoryMethod(name) ;
+}
+
+
+SuperParserFactory::SuperParserFactory(){} 
+
+Parser* SuperParserFactory::FactoryMethod(int name) {
+	switch(name){
+	case 1: return new KoreanParser ;
+	case 2: return new Chinese ;
+	case 3: return new Chinese2 ;
+	default : break ;
+	}
+}
+

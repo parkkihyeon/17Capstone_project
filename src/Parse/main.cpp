@@ -16,7 +16,11 @@
 int main()
 {
 	readFile();
-    Parser();
+	/*
+	ParserFactory *pf = new SuperParserFactory() ;
+	Parser *p = pf->createParser(1) ;*/
+	Parser *p = new KoreanParser() ;
+
     return 0;
 }
 

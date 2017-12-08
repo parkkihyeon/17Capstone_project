@@ -1,6 +1,6 @@
 #include "readFile.h"
 
-#define FILE_PATH "아마고수기보\\"
+#define FILE_PATH "gibo\\"
 #define FILE_MAXLEN 256
 
 int start_page = 0 ;
@@ -81,24 +81,25 @@ void vaildCheckGiBO(ifstream &stream, bool &braket_, char *File_name) {
 	stream.close() ;
 }
 
-void devideDoc(intptr_t hFile, _finddatai64_t c_file, char *fileName) {
+int devideDoc(intptr_t hFile, _finddatai64_t c_file, char *fileName) {
 	bool braket_ = false ;
 	char File_name[FILE_MAXLEN];
 
 	ifstream stream(fileName) ;
 	if(stream.fail()) {
 		cerr << "oepn failed " << endl ;
-		exit(1) ;
+		return GIBO_OPEN_ERROR ;
 	}
 	getNextPageName(File_name) ;
 	vaildCheckGiBO(stream, braket_, File_name) ;
+	return GIBO_OPEN_SUCCESS ;
 }
 
 void readFile()
 {
 	_finddatai64_t c_file;
 	intptr_t hFile;
-
+	cout << PATH << endl ;
 	// 기보 파일을 모두 읽음.
 	if ( (hFile = _findfirsti64(PATH, &c_file)) == -1L ) {
 		switch (errno) {
@@ -111,11 +112,12 @@ void readFile()
 	else {
 		printf("-- 파일 목록 --\n");
 		do {
+			cout << c_file.name << endl ;
 			char fileName[FILE_MAXLEN] ;
 			strcpy(fileName, FILE_PATH );
 			strcat(fileName, c_file.name );
 			printf("%s\n", fileName);
-			devideDoc(hFile, c_file, fileName) ;
+			if(devideDoc(hFile, c_file, fileName) == GIBO_OPEN_ERROR) return ;
 		} while(_findnexti64(hFile, &c_file) == 0);
 	}
 	_findclose(hFile); // _findfirsti64(), _findnexti64()에 사용된 메모리를 반환
