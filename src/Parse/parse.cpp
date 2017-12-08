@@ -1,12 +1,11 @@
 #include "parse.h"
 #include "readFile.h"
 
-static char* HorseSequence[4] = { "마상마상", "마상상마", "상마마상", "상마상마" };
 static char* Chinese_character[14] = {"楚卒", "漢兵", "楚馬", "漢馬", "楚包","漢包", "楚車", "漢車", "楚象","漢象", "楚士", "漢士", "楚將", "漢將"} ;
 static char* Chinese_character_one[8] = {"卒", "兵", "馬", "包", "車", "象", "士", "將" } ;
 static char* Korean_character[8] = { "졸", "병", "마", "포","차", "상", "사","장"} ;
 static char to_English[7] = {'J', 'H','P', 'C', 'X', 'S', 'K'} ;
-int sequence_num = 0 ;
+
 
 void Upper2lower_case(char *ch)
 {
@@ -20,95 +19,6 @@ bool Is_uppercase(char ch)
 	else return false ;
 }
 
-void Unit::Printing()
-{
-	ofstream ostream("parse.txt", ios::app) ;
-	if(sequence_num%2==0) {
-		Upper2lower_case(&name) ; // 아스키 코드값. 대문자를 소문자로!
-	}
-	else {
-		if( Is_uppercase(kill_unit) )
-			Upper2lower_case(&kill_unit) ;
-	}
-
-	if(take_rest) ostream << sequence_num++%2  << " 0" << " 0" << endl ;
-	else ostream << sequence_num++%2 << " " << pre << " " << post <<" " << name
-		<<" " << kill_unit << " " << general <<endl ;
-	take_rest = false ;
-	ostream.close() ;
-}
-
-Unit::Unit(char *str)
-{
-	string gibo_str(str) ;
-	// 78졸79마장군 
-	// pos1/pos2/pos3/pos4
-	int pos_2 = 2 ;
-	int pos_3 = 4 ;
-	int pos_4 = 6 ;
-	int killonly = KILLONLY ;
-	int jang = JANG ;
-	int killandjang = KILLANDJANG ;
-	int gibo_len = gibo_str.length() ;
-
-	pre = atoi(gibo_str.substr(0,2).c_str()) ;
-	general = false ;
-	take_rest = false ;
-	kill_unit = '0' ;
-
-	if(!strcmp(str, TAKE_REST))
-		take_rest = true ;
-
-	// 기보가 한글
-	else if(Korean_to_English(gibo_str.substr(2,2)) != 'O'){
-		name = Korean_to_English(gibo_str.substr(2,2)) ;
-		post = atoi(gibo_str.substr(4,2).c_str()) ;
-
-		// 다른 돌을 먹었을 경우
-		if( gibo_len == killonly )
-			kill_unit = Korean_to_English(gibo_str.substr(pos_4,2)) ;
-
-		// 장군이 된 경우
-		else if( gibo_len == jang )
-			general = true ;
-
-		// 다른 돌을 먹으면서 장군이 된 경우
-		else if( gibo_len == killandjang )
-		{
-			kill_unit = Korean_to_English(gibo_str.substr(pos_4,2)) ;
-			general = true ;
-		}
-	}
-	else {// 기보가 한자일 경우.
-		// 기보가 두글자 한자인 경우.
-		if(Convert_Chinese_to_English(gibo_str.substr(pos_2,4)) != 'O' ){
-			name = Convert_Chinese_to_English(gibo_str.substr(pos_2,4)) ;
-			killonly += 2 ;
-			jang += 2 ;
-			killandjang += 2 ;
-			pos_3 += 2 ;
-			pos_4 += 2 ;
-		}
-		else name = Convert_Chinese_to_English_one(gibo_str.substr(pos_2,2)) ;
-		post = atoi(gibo_str.substr(pos_3,2).c_str()) ;
-
-		// 다른 돌을 먹었을 경우
-		if( gibo_len == killonly )
-			kill_unit = Convert_Chinese_to_English_one(gibo_str.substr(pos_4,2)) ;
-
-		// 장군이 된 경우
-		else if( gibo_len == jang )
-			general = true ;
-
-		// 다른 돌을 먹으면서 장군이 된 경우
-		else if( gibo_len == killandjang )
-		{
-			kill_unit = Convert_Chinese_to_English_one(gibo_str.substr(pos_4,2)) ;
-			general = true ;
-		}
-	}
-	Printing() ;
-}
 
 char Korean_to_English(string str)
 {
@@ -120,7 +30,7 @@ char Korean_to_English(string str)
 				return to_English[i-1] ;
 		}
 	}
-	return 'O' ;
+	return NOT_METHOD ;
 }
 
 bool IsDigit(char c)
@@ -135,7 +45,7 @@ char Convert_Chinese_to_English(string str)
 		if( !strcmp(Chinese_character[i], str.c_str()) )
 			return to_English[i/2] ;
 	}
-	return 'O' ;
+	return NOT_METHOD ;
 }
 
 char Convert_Chinese_to_English_one(string str)
@@ -148,151 +58,6 @@ char Convert_Chinese_to_English_one(string str)
 				return to_English[i-1] ;
 		}
 	}
-	return 'O' ;
-}
-
-int Parser::getNextTextFile(int &sp){
-	char numOfData[_MAX_PATH] ;
-
-	strcpy(numOfData, "");
-	itoa(sp++,numOfData, DECIMAL) ;
-	strcat(numOfData, TEXT_FORM) ;
-	if(sp % 100 == 0 ) cout << "순번 : " << sp << endl ;
-	stream.open(numOfData) ;
-	if(stream.fail()) {
-		cerr << "open filed " << endl ;
-		exit(1) ;
-	}
-	ostream << numOfData << endl ;
-	return GIBO_OPEN_SUCCESS ;
-}
-
-void Parser::writeResult(){
-	char line[MIN];
-	for(int i=0 ; i < numOfRow ; i++){
-		strcpy(line, allString[i].c_str()) ;
-		if(strstr(line, "결과")){
-			if(strstr(line, "초") || strstr(line,  "漢"))
-				ostream << CHO_PLAY << endl ;
-			else if (strstr(line, "한") || strstr(line, "楚"))
-				ostream << HAN_PLAY << endl ;
-			else
-				ostream << -1 << endl ;
-		}
-	}
-}
-
-bool Parser::writePosition(){
-	int isPosition = 0 ;
-	char line[MIN];
-
-	for(int i=0 ; i < numOfRow ; i++){
-		strcpy(line, allString[i].c_str()) ;
-
-		if(strstr(line, "차림")){
-			for(int i=0; i < 4 ; i++){
-				if (strstr(line, HorseSequence[i])) {
-					ostream << i << endl;
-					isPosition++ ;
-					break ;
-				}
-			}
-		}
-		if(isPosition == 2 ) return true ;
-	}
-	return false ;
-}
-
-void Parser::initAllString() {
-	for(int i=0; i< numOfRow; i++){
-		allString[i] = "" ;
-	}
-}
-
-bool Parser::checkGibo(){
-	char temp[MIN] ;
-	numOfRow = 0 ;
-	int leftBraket = 0 ;
-
-	bool check1 = false  ;
-	bool check2 = false ;
-
-	while(!stream.eof()){
-		stream.getline(temp, MIN) ;
-		if( !strcmp(temp, "")) continue ;
-
-		if(strstr(temp,"차림")) check1 = true ;
-		if(strstr(temp,"결과")) check2 = true ;
-		allString[numOfRow++] = temp ;
-		if(temp[0] == '[') leftBraket++ ;
-
-	}
-	stream.close() ;
-
-	if(check1 && check2 && leftBraket == 11) return true  ;
-	else return false ;
-}
-
-void Parser::writeHistory(){
-	char line[MIN];
-	char *token = new char[MIN];
-
-	for(int i=0 ; i < numOfRow ; i++){
-		strcpy(line, allString[i].c_str()) ;
-		if(!strcmp(line,"")) continue ;
-
-		if(IsDigit(line[0])){
-			strtok(line, TOKEN) ;
-			while(token = strtok(NULL, TOKEN)){
-				if(strlen(token) >= MIN_LENGTH)
-					Unit t(token) ;
-			}
-		}
-	}
-	free(token) ;
-}
-
-
-Parser::Parser() {
-	int sp = 0 ;
-	ostream.open("parse.txt", ios::app);
-
-	while(true)
-	{
-		getNextTextFile(sp) ;
-		if(checkGibo()){
-			writePosition() ;
-			writeResult() ;
-			writeHistory() ;
-		}
-
-		initAllString() ;
-		ostream << "\n" ;
-	}
-	ostream.close() ;
-}
-
-void Parser::doing() {}
-void KoreanParser::doing() {
-
-} 
-void Chinese::doing() {} 
-void Chinese2::doing()  {}
-
-ParserFactory::ParserFactory(){} 
-Parser* ParserFactory::createParser(int name) {
-	return FactoryMethod(name) ;
-}
-
-
-SuperParserFactory::SuperParserFactory(){} 
-
-Parser* SuperParserFactory::FactoryMethod(int name) {
-	switch(name){
-	case 1: return new KoreanParser ;
-	case 2: return new Chinese ;
-	case 3: return new Chinese2 ;
-	default : break ;
-	}
+	return NOT_METHOD ;
 }
 

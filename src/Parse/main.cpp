@@ -12,14 +12,13 @@
 
 #include "readFile.h"
 #include "parse.h"
+#include "factoryPattern.h"
 
 int main()
 {
-	readFile();
-	/*
-	ParserFactory *pf = new SuperParserFactory() ;
-	Parser *p = pf->createParser(1) ;*/
-	Parser *p = new KoreanParser() ;
+	//readFile();
+	Parser *p = new tempParser() ;
+	p->startParsing() ;
 
     return 0;
 }
