@@ -6,17 +6,15 @@
 class ParserFactory {
 public :
 	ParserFactory() ;
-	Parser* createParser(char *line) ;
+	Parser* createParser(char *line, Parser* parser) ;
 protected:
-	virtual Parser* FactoryMethod(char *line) = 0 ;
+	virtual Parser* FactoryMethod(char *line, Parser* parser) = 0 ;
 };
 
 class SuperParserFactory : public ParserFactory{
-private:
-
 public:
 	SuperParserFactory() ;
-	Parser* FactoryMethod(char *line) ;
+	Parser* FactoryMethod(char *line, Parser* parser) ;
 
 };
 

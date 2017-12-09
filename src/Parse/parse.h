@@ -14,7 +14,7 @@
 #define JANG 10
 #define KILLANDJANG 12
 #define TOKEN ".]\" ["
-#define TAKE_REST "í•œìˆ˜ì‰¼"
+#define TAKE_REST "ÇÑ¼ö½°"
 #define FORMAL_GIBO_FORM 11
 #define NOT_METHOD 'O'
 
@@ -22,10 +22,10 @@ enum {CHO_PLAY , HAN_PLAY } ;
 
 using namespace std;
 
-// í˜„ ì‹œì  í”Œë ˆì´ì–´ì˜ í•œ ìˆ˜ì— ëŒ€í•œ ì •ë³´ë¥¼ ë‹´ì•„ ë†“ì€ ê²ƒì´ë‹¤.
-// preëŠ” ì „ ìœ„ì¹˜, postëŠ” í›„ ìœ„ì¹˜,
-// nameì€ ë§ì˜ ì¢…ë¥˜, kill_unitì€ ì£½ì¸ ë§
-// generalì€ ì¥êµ° ì—¬ë¶€, take_restëŠ” í•œìˆ˜ ì‰¼ì˜ ì—¬ë¶€ì´ë‹¤.
+// Çö ½ÃÁ¡ ÇÃ·¹ÀÌ¾îÀÇ ÇÑ ¼ö¿¡ ´ëÇÑ Á¤º¸¸¦ ´ã¾Æ ³õÀº °ÍÀÌ´Ù.
+// pre´Â Àü À§Ä¡, post´Â ÈÄ À§Ä¡,
+// nameÀº ¸»ÀÇ Á¾·ù, kill_unitÀº Á×ÀÎ ¸»
+// generalÀº Àå±º ¿©ºÎ, take_rest´Â ÇÑ¼ö ½°ÀÇ ¿©ºÎÀÌ´Ù.
 typedef struct _Unit {
 	int pre, post ;
 	char name, kill_unit ;
@@ -33,13 +33,8 @@ typedef struct _Unit {
 } Unit ;
 
 
-bool IsDigit(char c); // ìˆ«ìì¸ì§€ ì—¬ë¶€ë¥¼ í™•ì¸
-void Parsing();
+bool IsDigit(char c); // ¼ıÀÚÀÎÁö ¿©ºÎ¸¦ È®ÀÎ
 void Upper2lower_case(char *ch) ;
 bool Is_uppercase(char ch) ;
-char Korean_to_English(string str) ; // ìœ ë‹›ì˜ ì´ë¦„ì„ ì˜ì–´ë¡œ
-char Convert_Chinese_to_English(string str); //
-char Convert_Chinese_to_English_one(string str);
-
 
 #endif

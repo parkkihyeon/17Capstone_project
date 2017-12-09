@@ -1,6 +1,11 @@
 #include "factoryPattern.h"
 
-static char* HorseSequence[NUM_OF_SANGCHALIM_POSITION] = { "마상마상", "마상상마", "상마마상", "상마상마" };
+char* Parser::HorseSequence[NUM_OF_SANGCHALIM_POSITION] = { "마상마상", "마상상마", "상마마상", "상마상마" }; 
+char* Parser::Chinese_character[NUM_OF_CHINESE2_POSITION] = {"楚卒", "漢兵", "楚馬", "漢馬", "楚包","漢包", "楚車", "漢車", "楚象","漢象", "楚士", "漢士", "楚將", "漢將"} ;
+char* Parser::Chinese_character_one[NUM_OF_CHINESE_POSITION] = {"卒", "兵", "馬", "包", "車", "象", "士", "將" } ;
+char* Parser::Korean_character[NUM_OF_KOREAN_POSITION] ={ "졸", "병", "마", "포","차", "상", "사","장"} ;
+char Parser::to_English[NUM_OF_UNIT] = {'J', 'H','P', 'C', 'X', 'S', 'K'} ;
+
 int sequence_num = 0 ;
 ofstream outputStream ;
 ifstream inputStream ;
@@ -123,7 +128,8 @@ void Parser::writeHistory(){
 			// 따라서, 일반적인 팩토리 패턴과 다르게 미리 어떤 파서를 사용할 지 알 수 없다.
 			// 중간 해석 결과 그 결과를 바탕으로 어떤 파서를 만들지 팩토리에서 생성한다.
 			ParserFactory *pf = new SuperParserFactory() ;
-			Parser *p = pf->createParser(line) ;
+			Parser *p = pf->createParser(line, this) ;
+			if(p == NULL) return ;
 
 			// 기존 파서에서 사용되었던 필요한 변수를 전달하고
 			p->initVariable(numOfRow, parsingStartNumber, allString) ;
@@ -141,9 +147,9 @@ void Parser::writeHistory(){
 void Parser::startParsing(){
 	int sp = 0 ;
 	outputStream.open("parse.txt", ios::app);
-
 	while(true)	{
 		getNextTextFile(sp) ; 
+		cout << sp << endl ;
 		if(checkGibo()){
 			writePosition() ;
 			writeResult() ;
@@ -161,7 +167,6 @@ Parser::Parser() {
 	nameStartPosition = nameLen = INIT_TO_ZERO ;
 	postStartPosition = postLen = INIT_TO_ZERO ;
 	killStartPosition = killLen = INIT_TO_ZERO ;
-	nameOfParser = killOfParser = NULL ;
 	addLen = 0 ;
 }
 
@@ -177,6 +182,7 @@ void Parser::initUnitState(){
 
 // 팩토리 패턴에 의해 새로 생긴 파서에 기존에 필요한 변수의 내용을 전달한다.
 void Parser::initVariable(int nRow, int startN, string all[_MAX_PATH]){
+
 	this->numOfRow = nRow ;
 	this->parsingStartNumber = startN ;
 	for(int i=0; i<nRow ; i++)
@@ -192,17 +198,17 @@ void Parser::initVariable(int nRow, int startN, string all[_MAX_PATH]){
 // ~~~Position, ~~~Len 같은 경우 모두 파싱 언어와 방법에 따라 다르므로 변수로 두어 하위클래스(KoreanParser, Chinese ...)에 따라 다르게 값을 설정하였다.
 void Parser::readAMove(string giboToken){
 	int checkGiboType = giboToken.length() ;
-	unitState.name = nameOfParser(giboToken.substr(nameStartPosition,nameLen)) ;
+	unitState.name = ConvertNameToEnglish(giboToken.substr(nameStartPosition,nameLen)) ;
 	unitState.post = atoi(giboToken.substr(postStartPosition,postLen).c_str()) ;
 
 	switch(checkGiboType - addLen){
 	case JUSTMOVE : return ;
 	case KILLONLY :
-		unitState.kill_unit = killOfParser(giboToken.substr(killStartPosition,killLen)) ; return ;
+		unitState.kill_unit = ConvertKilleeToEnglish(giboToken.substr(killStartPosition,killLen)) ; return ;
 	case JANG :
 		unitState.general = true ; return ;
 	case KILLANDJANG :
-		unitState.kill_unit = killOfParser(giboToken.substr(killStartPosition,killLen)) ;
+		unitState.kill_unit = ConvertKilleeToEnglish(giboToken.substr(killStartPosition,killLen)) ;
 		unitState.general = true ; return ;
 	default :
 		cerr << "READ MOVE ERROR" << endl ; return ;
@@ -224,7 +230,6 @@ void Parser::parsingHistory() {
 				int checkGiboType = giboToken.length() ;
 
 				if(strcmp(token, TAKE_REST)){
-					defineUnit(giboToken) ;
 					readAMove(giboToken) ;
 				}
 				else // 한수 쉼인 경우 정보를 파싱하지 않아도 된다.
@@ -237,33 +242,20 @@ void Parser::parsingHistory() {
 	}
 }
 
-// 파서에 따라 포지션과 적용해야할 함수가 달라지므로 필요한 포지션과 파싱함수를 함수포인터로 전달받게 된다.
-void KoreanParser::defineUnit(string giboToken) {
-	// 78졸79마장군 
-	nameStartPosition = 2 ;
-	nameLen = postLen = killLen = PARSE_SHORT_LEN ;
-	postStartPosition = 4 ;
-	killStartPosition = 6 ;
-	nameOfParser = killOfParser = Korean_to_English ;
+int Parser::distinctParser(string token){
+	static Parser * koreanParser = new KoreanParser() ;
+	static Parser * chineseParser = new ChineseParser() ;
+	static Parser * chinese2Parser = new Chinese2Parser() ;
 
-} 
-
-void ChineseParser::defineUnit(string giboToken) {
-	nameStartPosition = 2 ;
-	nameLen = postLen = killLen = PARSE_SHORT_LEN ;
-	postStartPosition = 4 ;
-	killStartPosition = 6 ;
-	nameOfParser = killOfParser = Convert_Chinese_to_English_one ;
-} 
-
-void Chinese2Parser::defineUnit(string giboToken)  {
-	nameStartPosition = 2 ;
-	nameLen = PARSE_LONG_LEN ;
-	postLen = killLen = PARSE_SHORT_LEN ;
-	postStartPosition = 6 ;
-	killStartPosition = 8 ;
-	nameOfParser = Convert_Chinese_to_English ;
-	killOfParser = Convert_Chinese_to_English_one ;
-	addLen = 2 ;
+	if(koreanParser->ConvertNameToEnglish(token.substr(koreanParser->nameStartPosition, koreanParser->nameLen)) != NOT_METHOD )
+		return KOREAN_PARSER ;
+	else if (chineseParser->ConvertNameToEnglish(token.substr(chineseParser->nameStartPosition, chineseParser->nameLen)) != NOT_METHOD) 
+		return CHINESE_PARSER ;
+	else if (chinese2Parser->ConvertNameToEnglish(token.substr(chinese2Parser->nameStartPosition, chinese2Parser->nameLen)) != NOT_METHOD) 
+		return CHINESE_2_PARSER ;
+	else if ( !token.compare(TAKE_REST))
+		return REST_TIME ;
+	else {
+		return ERROR_PARSER ;
+	}
 }
-void tempParser::defineUnit(string giboToken)  {}

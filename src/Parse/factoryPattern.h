@@ -3,5 +3,9 @@
 
 #include "factory.h"
 #include "Parser.h"
+#include "Chinese2Parser.h"
+#include "ChineseParser.h"
+#include "KoreanParser.h"
+#include "tempParser.h"
 
 #endif
