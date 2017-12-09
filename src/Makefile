@@ -2,7 +2,7 @@
 
 CC = g++
 TARGET = _PreGraphModule
-OBJECTS = main.o Adjcency_grpah.o Graph.o node.o play.o Statenode.o Moveable.o Minmax.o SelectAlgorithm.o
+OBJECTS = main.o Adjcency_grpah.o Graph.o node.o play.o Statenode.o Moveable.o Minmaxstage.o SelectAlgorithm.o
 
 CPPFLAGS = -I/usr/local/lib
 LDFLAGS = -L/usr/local/lib -std=c++11 -g
@@ -35,10 +35,10 @@ Statenode.o : Statenode.h
 Moveable.o : Moveable.h
 	$(CC) -c Moveable.cpp
 
-Minmax.o : Minmax.h
-	$(CC) -c Minmax.cpp
+Minmaxstage.o : Minmaxstage.h
+	$(CC) -c Minmaxstage.cpp
 
-SelectAlgorithm.o : SelectAlgorithm.h Minmax.h
+SelectAlgorithm.o : SelectAlgorithm.h Minmaxstage.h
 	$(CC) -c SelectAlgorithm.cpp
 	
 clean :
