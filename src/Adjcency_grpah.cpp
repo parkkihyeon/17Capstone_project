@@ -403,7 +403,9 @@ void Adjcency_grpah::AddMoveableChild(State_node *now_state) {
 	for (itCur = it_pair.first; itCur != it_pair.second; itCur++) {
 		candidate_state = itCur->second;
 		// ¹«ºê¾îºí?Ì °¡´ÉÇÏ´Ù¸é, ?Ú½Ä³ëµå¿Í °°?º°Ô ¾ø´ÂÁö È®?ÎÈÄ¿¡ ?Ú½Ä?¸·Î.
-		if (moveable(now_state->GetState(), candidate_state->GetState(), host)) {
+
+		Moveable move(now_state->GetState(), candidate_state->GetState(), host);
+		if (startMoveable(move)) {
 			for (int i = 0; i < getNextsize ; i++) {
 				if (!Diff_State(now_state->Getnext()->at(i), candidate_state))
 					break;

@@ -1,282 +1,227 @@
-#include"Moveable.h"
+#include "Moveable.h"
 
 Pos::Pos() {
-	x = -1;
-	y = -1;
+    x = -1;
+    y = -1;
 }
 Pos::Pos(int _x, int _y) {
-	x = _x;
-	y = _y;
+    x = _x;
+    y = _y;
 }
 bool Pos::operator== (Pos& p) {
-	return x == p.x && y == p.y;
+    return x == p.x && y == p.y;
 };
 bool Pos::operator!= (Pos& p){
-	return !operator==(p);
+    return !operator==(p);
 };
 bool Pos::isValidation(){
-	if (x > 10)
-		return false;
-	if (x < 1)
-		return false;
-	if (y > 9)
-		return false;
-	if (y < 1)
-		return false;
-
-	return true;
+    if (x > 10)
+        return false;
+    if (x < 1)
+        return false;
+    if (y > 9)
+        return false;
+    if (y < 1)
+        return false;
+    
+    return true;
+}
+void Pos::operator=(Pos& p)
+{
+    x = p.x ;
+    y = p.y ;
+}
+void Moveable::operator=(Moveable& opr)
+{
+    for(int i = 0 ; i < 11 ; i++) for(int j = 0 ; j < 10 ; j++) board[i][j] = opr.board[i][j];
+    cur = opr.cur;
+    dest = opr.dest;
+    host = opr.host;
+    
 }
 
-bool getTeam(char piece)
+bool Moveable::isExistTeam(char piece)
 {
     return piece >= 97 ? true : false;
     //대문자일 경우
 }
 
-
-
-
-
-bool isInCastle(Pos cur , Pos dest)  // 목적지와 출발지가 같은 궁성 내부일 경우를 검사한다.
+bool Moveable::getTeam(char piece)
 {
-    int nx = cur.x;
-    int ny = cur.y;
-    int dx = dest.x;
-    int dy = dest.y;
-    if((nx >3 && nx <7) && (dx >3 && dx <7 ))
+    return piece >= 97 ? true : false;
+    //대문자일 경우
+}
+
+Moveable::Moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host)
+{
+    int cnt = 0;
+    Pos prr[2];
+
+    //if (host == CHO_PLAY);
+    
+    for (int i = 1; i < HEIGHT_SIZE; i++)
     {
-        if((((dy > 0 && dy < 4))&&((ny > 0 && ny < 4)))|| ((ny > 7 && ny < 11))&&((dy > 7 && dy < 11))) return true;
+        for (int j = 1; j < WIDTH_SIZE; j++)
+        {
+            if (board[i][j] == c_board[i][j])
+                continue;
+            else
+            { //TODO 예외처리하기
+               // if (cnt == 2) return false;
+                prr[cnt].y = i, prr[cnt].x = j;
+                cnt++;
+            }
+        }
     }
+    if (c_board[prr[0].y][prr[0].x] == '-')
+    {
+        cur.x = prr[0].x;
+        cur.y = prr[0].y;
+        dest.x = prr[1].x;
+        dest.y = prr[1].y;
+        
+    }
+    else
+    {
+        cur.x = prr[1].x;
+        cur.y = prr[1].y;
+        dest.x = prr[0].x;
+        dest.y = prr[0].y;
+        
+    }
+    for(int i = 0 ; i < 11 ; i ++) for(int j = 0 ; j < 10 ; j++) this->board[i][j] = board[i][j];
+    
+    this->host = host;
+    
+    //TODO try catch사용해서 예외 처리하기
+   /* if (host == CHO_PLAY)
+    {
+        if (board[cur.y][cur.x] < 'A' || board[cur.y][cur.x] >'Z')
+            
+    }
+    else
+    {
+        if (board[cur.y][cur.x] < 'a' || board[cur.y][cur.x] >'z')
+            return false;
+        
+    }*/
+    
+}
+Moveable::Moveable(char board[][WIDTH_SIZE])
+{
+     for(int i = 0 ; i < 11 ; i ++) for(int j = 0 ; j < 10 ; j++) this->board[i][j] = board[i][j];
+}
+
+char Moveable::getPiece()
+{
+    return board[cur.y][cur.x];
+}
+
+
+bool startMoveable(Moveable obj)
+{
+    Moveable *JKPiece;
+    switch (obj.getPiece())
+    {
+        case 'j': case 'J':
+            JKPiece = new MoveableJol(obj.board , obj.cur , obj.dest, obj.host);
+            break;
+        case 'h': case 'H':
+            JKPiece = new MoveableMa(obj.board , obj.cur , obj.dest, obj.host);
+            break;
+        case 'p': case 'P':
+            JKPiece = new MoveablePo(obj.board , obj.cur , obj.dest, obj.host);
+            break;
+        case 'x': case 'X':
+           JKPiece = new MoveableSang(obj.board , obj.cur , obj.dest, obj.host);
+            break;
+        case 'c': case 'C':
+            JKPiece = new MoveableCha(obj.board , obj.cur , obj.dest, obj.host);
+            break;
+        case 's': case 'S': case 'k': case 'K':
+           JKPiece = new MoveableGungAndSa(obj.board , obj.cur , obj.dest, obj.host);
+            break;
+        default:
+            break;
+    }
+    
+    return JKPiece->isMoveable();
+}
+
+
+/*****************isMoveable구현 ********************/
+
+
+bool Moveable::isMoveable()
+{
+    return false;
+}
+
+bool MoveableJol::isMoveable()
+{
+    cout << " JOL isMoveable" <<endl;
+    
+    if (!isExistTeam(board[cur.y][cur.x])) return false;
+    int ny = cur.y - dest.y;
+    int nx = cur.x - dest.x;
+    
+    if (board[cur.y][cur.x] > 'a' && ny < 0)return false;
+    else if(board[cur.y][cur.x] < 'a' && ny > 0) return false;
+    
+    if(MaskingInCastle::isInCastle())
+    {
+        
+        MaskingInCastle::determineMasking();
+        int x = dest.x -4 ;
+        int y = dest.y ;
+        y = y > 3 ? y -8 : y - 1;
+        if(mask[y][x] == 1) return true;
+        else return false;
+        
+    }
+    if(ny > 1 || nx > 1 || abs(ny)+abs(nx) != 1) return false;
+    if (cur.x - 1 == dest.x || cur.x + 1 == dest.x) return true;
+    if (abs(ny) != 1) return false;
+    
+    
+    
     return false;
     
-}
-void maskingEightWay(int mask[][3] , Pos cur)
-{
-    int nx = cur.x -4 ;
-    int ny = cur.y ;
-    ny = ny > 3 ? ny -8 : ny - 1;
     
-    if(ny - 1 > -1 ) mask[ny-1][nx] = 1;
-    if(ny + 1 < 3 ) mask[ny+1][nx] = 1;
-    if(nx - 1 > -1) mask[ny][nx-1]  = 1;
-    if(nx + 1 < 3 ) mask[ny][nx+1] = 1;
     
-    if(ny - 1 > -1 && nx - 1 > -1) mask[ny-1][nx-1] = 1;
-    if(ny - 1 > -1 && nx + 1 < 3) mask[ny-1][nx+1] = 1;
-    if(ny + 1 < 3 && nx - 1 > -1) mask[ny+1][nx-1] = 1;
-    if(ny + 1 < 3 && nx + 1 < 3) mask[ny+1][nx+1] = 1;
+    return false;
 }
-void maskingFourWay(int mask[][3] , Pos cur)
-{
-    int nx = cur.x -4 ;
-    int ny = cur.y ;
-    ny = ny > 3 ? ny -8 : ny - 1;
-    
-    if(ny - 1 > -1 ) mask[ny-1][nx] = 1;
-    if(ny + 1 < 3 ) mask[ny+1][nx] = 1;
-    if(nx - 1 > -1) mask[ny][nx-1]  = 1;
-    if(nx + 1 < 3 ) mask[ny][nx+1] = 1;
-}
-
-void maskingTwoStep(int mask[][3] , Pos cur)
-{
-    int nx = cur.x -4 ;
-    int ny = cur.y ;
-    ny = ny > 3 ? ny -8 : ny - 1;
-    if(nx -2 > -1) mask[ny][nx-2] = 1;
-    if(ny -2 > -1) mask[ny-2][nx] = 1;
-    if(nx +2 < 3) mask[ny][nx+2] = 1;
-    if(ny +2 < 3) mask[ny+2][nx] = 1;
-    if(ny +2 <3 && nx +2 <3) mask[ny+2][nx+2] = 1;
-    if(ny +2 <3 && nx -2 >-1) mask[ny+2][nx-2] = 1;
-    if(ny -2 > -1 && nx +2 <3) mask[ny-2][nx+2] = 1;
-    if(ny-2 > -1 && nx -2 > -1) mask[ny-2][nx-2] = 1;
-    
-}
-
-
-void determineMasking(Pos cur , Pos dest , int mask[][3] , char piece)
+bool MoveableGungAndSa::isMoveable()
 {
     
-    int nx = cur.x % 7;
-    int ny = cur.y % 7;
-    for(int i = 0 ; i < 3 ; i ++) for(int j = 0 ; j < 3 ; j ++) mask[i][j] = 0;
-    if(piece == 'S' || piece == 's' || piece == 'K' || piece == 'k' || piece =='J' || piece =='j')
-    {
-        if((ny ==2 && nx == 5) || (((ny == 1 || ny == 3) &&(nx ==4 || nx == 6)))) maskingEightWay(mask , cur);
-        else maskingFourWay(mask,cur);
-    }
-    if(piece =='P' || piece == 'p')
-    {
-        maskingTwoStep(mask,cur);
-    }
-    if(piece == 'C' || piece == 'c')
-    {
-        if((ny ==1 && nx == 5) || ((ny == 1 || ny == 3) &&(nx ==4 || nx == 6))) maskingEightWay(mask , cur);
-        else maskingFourWay(mask,cur);
-        maskingTwoStep(mask,cur);
-    }
+    cout << "GungAndSa isMoveable"<<endl;
     
-}
-
-
-
-
-void save_moveable_board(vector<Board> &boardPush , char board[][WIDTH_SIZE] , int turn){
-	// char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
-	char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
-	Board tmpObj;
-	if(turn == CHO_PLAY){
-		for(int i = 1 ; i < HEIGHT_SIZE ; i ++){
-			for(int j = 1 ; j < WIDTH_SIZE ; j++){
-				if(board[i][j] > 'A' && board[i][j] < 'Z'){
-					for(int y = 1 ;  y < HEIGHT_SIZE; y++){
-						for(int x = 1 ; x < WIDTH_SIZE; x++){
-							if(board[y][x] > 'A' && board[y][x] < 'Z'){
-							}else{
-								memcpy(tmp_board , board , sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
-								tmp_board[i][j] = '-';
-								tmp_board[y][x] = board[i][j];
-								if(moveable(board , tmp_board, false)){
-									tmpObj.setBoard(tmp_board);
-									boardPush.push_back(tmpObj);
-								}
-							}
-						
-						}
-					}
-				
-				
-				
-				}
-
-			}
-			
-		}
-	}
-	else{ // HAN_PLAY
-        for(int i = 1 ; i < HEIGHT_SIZE ; i ++){
-            for(int j = 1 ; j < WIDTH_SIZE ; j++){
-                if(board[i][j] > 'a' && board[i][j] < 'z'){
-                    for(int y = 1 ;  y < HEIGHT_SIZE; y++){
-                        for(int x = 1 ; x < WIDTH_SIZE; x++){
-                            if(board[y][x] > 'a' && board[y][x] < 'z'){
-                            }else{
-                                memcpy(tmp_board , board , sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
-                                tmp_board[i][j] = '-';
-                                tmp_board[y][x] = board[i][j];
-                                if(moveable(board , tmp_board, false)){
-                                    tmpObj.setBoard(tmp_board);
-                                    boardPush.push_back(tmpObj);
-                                }
-                            }
-                            
-                        }
-                    }
-                }
-                
-            }
-            
-        }
-
-	
-	
-	
-	}
-	//std::cout << "SAVE COMPLETE " << std::endl;
-}
-
-
-bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool host) {
-
-	int cnt = 0;
-	Pos prr[2];
-	Pos from;
-	Pos to;
-
-	//if (host == CHO_PLAY);
-
-	for (int i = 1; i < HEIGHT_SIZE; i++) {
-		for (int j = 1; j < WIDTH_SIZE; j++) {
-			if (board[i][j] == c_board[i][j])
-				continue;
-			else {
-				if (cnt == 2) return false;
-				prr[cnt].y = i, prr[cnt].x = j;
-				cnt++;
-			}
-		}
-	}
-	if (c_board[prr[0].y][prr[0].x] == '-') {
-		from.x = prr[0].x;
-		from.y = prr[0].y;
-		to.x = prr[1].x;
-		to.y = prr[1].y;
-
-	}//������� �������� �����Ѵ�.
-	else {
-		from.x = prr[1].x;
-		from.y = prr[1].y;
-		to.x = prr[0].x;
-		to.y = prr[0].y;
-
-	}
-	if (host == CHO_PLAY) {
-		//�빮�ڸ�
-		if (board[from.y][from.x] < 'A' || board[from.y][from.x] >'Z')
-			return false;
-	}
-	else {
-		//�ҹ��ڸ�
-		if (board[from.y][from.x] < 'a' || board[from.y][from.x] >'z')
-			return false;
-
-	}
-	
-		switch (board[from.y][from.x])
-		{
-		case 'j': case 'J':
-			return moveAbleJol(from, to, board);
-		case 'h': case 'H':
-			return moveAbleMa(from, to, board);
-		case 'p': case 'P':
-			return moveAblePo(from, to, board);
-		case 'x': case 'X':
-			return moveAbleSang(from, to, board);
-		case 'c': case 'C':
-			return moveAbleCha(from, to, board);
-		case 's': case 'S': case 'k': case 'K':
-			return moveAbleGungAndSa(from, to, board);
-		default:
-			break;
-		}
-	return false;
-
-
-}
-
-
-
-bool isExistTeam(Pos cur, Pos dest ,char board[][WIDTH_SIZE]) {
-	char _a = board[cur.y][cur.x];
-	char _b = board[dest.y][dest.x];
-	if ((_a >= 97 && _a <= 122) && (_b >= 97 && _b <= 122))
-		return false;
-	if ((_a >= 65 && _a <= 90) && (_b >= 65 && _b <= 90))
-		return false;
-
-	return true;
-}//�������� �������� �����ϸ� �� �� ����.
-
- //Moveable Piece
-bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
-    if (!isExistTeam(cur, dest , board))
-        return false;
+    if (!isExistTeam(Moveable::getPiece())) return false;
     
-    if(isInCastle(cur,dest))
+    if(isInCastle())
     {
         int mask[3][3];
-        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
+        determineMasking();
+        int nx = dest.x -4 ;
+        int ny = dest.y ;
+        ny = ny > 3 ? ny -8 : ny - 1;
+        if(mask[ny][nx] == 1) return true;
+        else return false;
+    }
+    
+    return false;
+}
+bool MoveableCha::isMoveable()
+{
+    cout << "Cha isMovable"<<endl;
+    
+    if (!isExistTeam(Moveable::getPiece()))
+        return false;
+    
+    if(isInCastle())
+    {
+        int mask[3][3];
+        determineMasking();
         int nx = dest.x -4 ;
         int ny = dest.y ;
         ny = ny > 3 ? ny -8 : ny - 1;
@@ -322,89 +267,20 @@ bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
         }
     }
     return true;
-    
-} // cha
 
-
-bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE])
+}
+bool MoveablePo::isMoveable()
 {
-    if (!isExistTeam(cur, dest , board)) return false;
-    
-    if(isInCastle(cur,dest))
-    {
-        int mask[3][3];
-        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
-        int nx = dest.x -4 ;
-        int ny = dest.y ;
-        ny = ny > 3 ? ny -8 : ny - 1;
-        if(mask[ny][nx] == 1) return true;
-        else return false;
-    }
-    return false;
-    
-} // gung
-bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
-    
-    if (!isExistTeam(cur, dest, board)) return false;
-    int ny = cur.y - dest.y;
-    int nx = cur.x - dest.x;
-    
-    if (board[cur.y][cur.x] > 'a' && ny < 0)return false;
-    else if(board[cur.y][cur.x] < 'a' && ny > 0) return false;
-    
-    if(isInCastle(cur,dest))
-    {
-        int mask[3][3];
-        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
-        int x = dest.x -4 ;
-        int y = dest.y ;
-        y = y > 3 ? y -8 : y - 1;
-        if(mask[y][x] == 1) return true;
-        else return false;
-        
-    }
-    if(ny > 1 || nx > 1 || abs(ny)+abs(nx) != 1) return false;
-    if (cur.x - 1 == dest.x || cur.x + 1 == dest.x) return true;
-    if (abs(ny) != 1) return false;
-    return false;
-    
-} // jol
-bool moveAbleMa(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
-
-	if (!isExistTeam(cur, dest , board))
-		return false;
-
-	int nx = cur.x - dest.x;
-	int ny = cur.y - dest.y;
-
-	if (nx == 2 && abs(ny) == 1 && board[cur.y][cur.x - 1] == '-') {
-		return true;
-	}
-	else if (nx == -2 && abs(ny) == 1 && board[cur.y][cur.x + 1] == '-') {
-		return true;
-	}
-	else if (ny == 2 && abs(nx) == 1 && board[cur.y - 1][cur.x] == '-') {
-		return true;
-	}
-	else if (ny == -2 && abs(nx) == 1 && board[cur.y + 1][cur.x] == '-') {
-		return true;
-	}
-	return false;
-
-
-} // ma
-bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
-    
-    if (!isExistTeam(cur, dest , board))
+    if (!isExistTeam(Moveable::getPiece()))
         return false;
     
     if (board[dest.y][dest.x] == 'p' || board[dest.y][dest.x] == 'P')
         return false;
     
-    if(isInCastle(cur,dest))
+    if(isInCastle())
     {
         int mask[3][3];
-        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
+        determineMasking();
         int nx = dest.x -4 ;
         int ny = dest.y ;
         ny = ny > 3 ? ny -8 : ny - 1;
@@ -468,43 +344,151 @@ bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
         return true;
     else
         return false;
-} // po
+    
+}
 
 
-bool moveAbleSang(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
+bool MoveableSang::isMoveable()
+{
+    if (!isExistTeam(Moveable::getPiece()))
+        return false;
+    int nx = cur.x - dest.x;
+    int ny = cur.y - dest.y;
+    
+    if (nx == 3 && ny == 2 && board[cur.y][cur.x - 1] == '-' && board[cur.y - 1][cur.x - 2] == '-') {
+        return true;
+    }
+    else if (nx == 3 && ny == -2 && board[cur.y][cur.x - 1] == '-' && board[cur.y + 1][cur.x - 2] == '-') {
+        return true;
+    }
+    else if (nx == -3 && ny == 2 && board[cur.y][cur.x + 1] == '-' && board[cur.y - 1][cur.x + 2] == '-') {
+        return true;
+    }
+    else if (nx == -3 && ny == -2 && board[cur.y][cur.x + 1] == '-' && board[cur.y + 1][cur.x + 2] == '-') {
+        return true;
+    }
+    else if (ny == 3 && nx == -2 && board[cur.y - 1][cur.x] == '-' && board[cur.y - 2][cur.x + 1] == '-') {
+        return true;
+    }
+    else if (ny == 3 && nx == 2 && board[cur.y - 1][cur.x] == '-' && board[cur.y - 2][cur.x - 1] == '-') {
+        return true;
+    }
+    else if (ny == -3 && nx == 2 && board[cur.y + 1][cur.x] == '-' && board[cur.y + 2][cur.x - 1] == '-') {
+        return true;
+    }
+    else if (ny == -3 && nx == -2 && board[cur.y + 1][cur.x] == '-' && board[cur.y + 2][cur.x + 1] == '-') {
+        return true;
+    }
+    return false;
 
-	if (!isExistTeam(cur, dest , board))
-		return false;
-	int nx = cur.x - dest.x;
-	int ny = cur.y - dest.y;
+}
+bool MoveableMa::isMoveable()
+{
+    
+    if (!isExistTeam(Moveable::getPiece()))
+        return false;
+    
+    int nx = cur.x - dest.x;
+    int ny = cur.y - dest.y;
+    
+    if (nx == 2 && abs(ny) == 1 && board[cur.y][cur.x - 1] == '-') {
+        return true;
+    }
+    else if (nx == -2 && abs(ny) == 1 && board[cur.y][cur.x + 1] == '-') {
+        return true;
+    }
+    else if (ny == 2 && abs(nx) == 1 && board[cur.y - 1][cur.x] == '-') {
+        return true;
+    }
+    else if (ny == -2 && abs(nx) == 1 && board[cur.y + 1][cur.x] == '-') {
+        return true;
+    }
+    return false;
+}
 
-	if (nx == 3 && ny == 2 && board[cur.y][cur.x - 1] == '-' && board[cur.y - 1][cur.x - 2] == '-') {
-		return true;
-	}
-	else if (nx == 3 && ny == -2 && board[cur.y][cur.x - 1] == '-' && board[cur.y + 1][cur.x - 2] == '-') {
-		return true;
-	}
-	else if (nx == -3 && ny == 2 && board[cur.y][cur.x + 1] == '-' && board[cur.y - 1][cur.x + 2] == '-') {
-		return true;
-	}
-	else if (nx == -3 && ny == -2 && board[cur.y][cur.x + 1] == '-' && board[cur.y + 1][cur.x + 2] == '-') {
-		return true;
-	}
-	else if (ny == 3 && nx == -2 && board[cur.y - 1][cur.x] == '-' && board[cur.y - 2][cur.x + 1] == '-') {
-		return true;
-	}
-	else if (ny == 3 && nx == 2 && board[cur.y - 1][cur.x] == '-' && board[cur.y - 2][cur.x - 1] == '-') {
-		return true;
-	}
-	else if (ny == -3 && nx == 2 && board[cur.y + 1][cur.x] == '-' && board[cur.y + 2][cur.x - 1] == '-') {
-		return true;
-	}
-	else if (ny == -3 && nx == -2 && board[cur.y + 1][cur.x] == '-' && board[cur.y + 2][cur.x + 1] == '-') {
-		return true;
-	}
-	return false;
+/********************MaskingInCastle **************************/
 
-} //sang
+bool MaskingInCastle::isInCastle()
+{
+    int nx = cur.x;
+    int ny = cur.y;
+    int dx = dest.x;
+    int dy = dest.y;
+    if((nx >3 && nx <7) && (dx >3 && dx <7 ))
+    {
+        if((((dy > 0 && dy < 4))&&((ny > 0 && ny < 4)))|| ((ny > 7 && ny < 11))&&((dy > 7 && dy < 11))) return true;
+    }
+    return false;
+}
+
+void MaskingInCastle::determineMasking()
+{
+    
+    char piece = Moveable::getPiece();
+    int nx = cur.x % 7;
+    int ny = cur.y % 7;
+    for(int i = 0 ; i < 3 ; i ++) for(int j = 0 ; j < 3 ; j ++) mask[i][j] = 0;
+    if(piece == 'S' || piece == 's' || piece == 'K' || piece == 'k' || piece =='J' || piece =='j')
+    {
+        if((ny ==2 && nx == 5) || (((ny == 1 || ny == 3) &&(nx ==4 || nx == 6)))) maskingEightWay();
+        else maskingFourWay();
+    }
+    if(piece =='P' || piece == 'p')
+    {
+        maskingTwoStep();
+    }
+    if(piece == 'C' || piece == 'c')
+    {
+        if((ny ==1 && nx == 5) || ((ny == 1 || ny == 3) &&(nx ==4 || nx == 6))) maskingEightWay();
+        else maskingFourWay();
+        maskingTwoStep();
+    }
+}
+
+void MaskingInCastle::maskingTwoStep()
+{
+    int nx = cur.x -4 ;
+    int ny = cur.y ;
+    ny = ny > 3 ? ny -8 : ny - 1;
+    if(nx -2 > -1) mask[ny][nx-2] = 1;
+    if(ny -2 > -1) mask[ny-2][nx] = 1;
+    if(nx +2 < 3) mask[ny][nx+2] = 1;
+    if(ny +2 < 3) mask[ny+2][nx] = 1;
+    if(ny +2 <3 && nx +2 <3) mask[ny+2][nx+2] = 1;
+    if(ny +2 <3 && nx -2 >-1) mask[ny+2][nx-2] = 1;
+    if(ny -2 > -1 && nx +2 <3) mask[ny-2][nx+2] = 1;
+    if(ny-2 > -1 && nx -2 > -1) mask[ny-2][nx-2] = 1;
+}
+
+void MaskingInCastle::maskingFourWay()
+{
+    int nx = cur.x -4 ;
+    int ny = cur.y ;
+    ny = ny > 3 ? ny -8 : ny - 1;
+    
+    if(ny - 1 > -1 ) mask[ny-1][nx] = 1;
+    if(ny + 1 < 3 ) mask[ny+1][nx] = 1;
+    if(nx - 1 > -1) mask[ny][nx-1]  = 1;
+    if(nx + 1 < 3 ) mask[ny][nx+1] = 1;
+}
+
+
+void MaskingInCastle::maskingEightWay()
+{
+    int nx = cur.x -4 ;
+    int ny = cur.y ;
+    ny = ny > 3 ? ny -8 : ny - 1;
+    
+    if(ny - 1 > -1 ) mask[ny-1][nx] = 1;
+    if(ny + 1 < 3 ) mask[ny+1][nx] = 1;
+    if(nx - 1 > -1) mask[ny][nx-1]  = 1;
+    if(nx + 1 < 3 ) mask[ny][nx+1] = 1;
+    
+    if(ny - 1 > -1 && nx - 1 > -1) mask[ny-1][nx-1] = 1;
+    if(ny - 1 > -1 && nx + 1 < 3) mask[ny-1][nx+1] = 1;
+    if(ny + 1 < 3 && nx - 1 > -1) mask[ny+1][nx-1] = 1;
+    if(ny + 1 < 3 && nx + 1 < 3) mask[ny+1][nx+1] = 1;
+}
 
 
 
