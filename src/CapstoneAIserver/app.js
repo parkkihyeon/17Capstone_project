@@ -10,20 +10,53 @@ var Redis = require('redis');
 var redis = Redis.createClient(6379, 'localhost');
 
 var clients = redis.multi();
+var modules = [];
+
+var order_identifier = 'order';
+var board_identifier = 'board';
+
+var tmp;
 
 function client_connection(data) {
-  clients.rpush("users", data.id);
-  clients.exec(function(err, res) {
-    if(err) throw err;
-  })
-  return data.id;;
+  redis.rpush("users", data.id, function(err, res) {
+    if (err) throw err;
+  });
+  return data.id;
 }
 
 function client_disconnection(data) {
   redis.lrem('users', 0, data.id, function(err, res) {
-    if (err) throw err
+    if (err) throw err;
   });
 }
+
+function parse_fomula(data) {
+  var parsed = data.toString().split(' ');
+  var identifier = parsed[0];
+  var socket_id = parsed[1];
+
+  if(identifier == order_identifier) {
+    var order = parsed[2];
+
+    return {
+      identifier : order_identifier,
+      socket_id : socket_id, 
+      order : order
+    };
+  }
+  else {
+    var prev_pos = parsed[2];
+    var next_pos = parsed[3];
+
+    return {
+      identifier : board_identifier,
+      socket_id : socket_id, 
+      prev_pos : prev_pos, 
+      next_pos : next_pos
+    };
+  }
+}
+
 
 //-----Connection Between Unity & Graph Module-----
 
@@ -56,11 +89,11 @@ else {
 
   io_server.listen(6110, function() {
     // console.log('Socket IO server listening on port 6110');
-    console.log('PID [' + cluster.worker.process.pid + '] ' +
-    'Socket.IO Server');
+    // console.log('PID [' + cluster.worker.process.pid + '] ' + 'Socket.IO Server');
   });
   net_server.listen(6120, function() {
     // console.log('NET server listening on port 6120');
+    // console.log('PID [' + cluster.worker.process.pid + '] ' + 'NET Server');
   })
 
   redis.on('subscribe', function(channel, data) {
@@ -83,22 +116,28 @@ else {
     socket.on('test', function(data) {
       console.log(cluster.worker.process.pid);
       redis.lrange('users', 0, -1, function (error, clients) {
-      if (error) throw error
-        clients.forEach(function (client) { console.log(client); });
+        if (error) throw error
+        clients.forEach(function (client) { 
+          console.log(client);
+        });
       });
     });
 
     socket.on('Order', function(data) {
-      console.log(data);
+      // console.log(data);
       var parsed_data = JSON.parse(data);
-      net_server.write('order|' + parsed_data.order.toString());
+      var fomula = order_identifier + ' ' + socket.id + ' ' + parsed_data.order.toString();
+      // net_server.write(fomula);
+      tmp.write(fomula); // correction needed
     });
 
     socket.on('Request', function(data) {
-      console.log(data);
+      // console.log(data);
       var parsed_data = JSON.parse(data);
-      net_server.write(parsed_data.Host.toString() + '|' + 
-        parsed_data.Board.toString());
+      var fomula = board_identifier + ' ' + socket.id + ' ' +
+      parsed_data.Host.toString() + ' ' + parsed_data.Board.toString();
+      // net_server.write(fomula);
+      tmp.write(fomula); // correction needed
     });
 
     socket.on('Disconnect', function() {
@@ -111,14 +150,32 @@ else {
 
     // TCP server connection access
   net_server.on('connection', function(socket) {
-    console.log('New Module Connected (ID : ' + socket.id + ')');
+    tmp = socket;
+    console.log('New Module Connected (ID : ' + socket.remoteAddress + ':' + socket.remotePort + ')');
+    modules.push(socket);
 
     socket.on('data', function(data) {
-      console.log(data);
+      console.log("from graph: " + data);
+      response = parse_fomula(data);
+
+      if (response.identifier == board_identifier) {
+
+        io.to(response.socket_id).emit('Response', response.prev_pos + ' ' + response.next_pos);
+      }
+
+      else if (response.identifier == order_identifier) {
+        io.to(response.socket_id).emit('AI_Order', response.order); 
+      }
     });
+
     socket.on('end', function() {
       console.log(socket.id + ' Module Disconnect');
+      var index = modules.indexOf(socket);
+      if(index != -1) {
+        modules.splice(index, 1);
+      }
     });
+
   });
 
   // TCP server connection end
