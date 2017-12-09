@@ -19,13 +19,13 @@ Parser* SuperParserFactory::FactoryMethod(char *line) {
 		if(strlen(token) >= MIN_LENGTH){
 			string gibo_str(token) ;
 			if(Korean_to_English(gibo_str.substr(2,2)) != NOT_METHOD){
-				return new KoreanParser ;
+				return new KoreanParser() ;
 			}
 			else {
 				if(Convert_Chinese_to_English(gibo_str.substr(2,4)) != NOT_METHOD )
-					return new Chinese2 ;
+					return new Chinese2() ;
 				else
-					return new Chinese ;
+					return new Chinese() ;
 			}
 		}
 

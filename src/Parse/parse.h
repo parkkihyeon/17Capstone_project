@@ -8,6 +8,7 @@
 #include <direct.h>
 #include "readFile.h"
 
+#define JUSTMOVE 6
 #define MIN_LENGTH 6
 #define KILLONLY 8
 #define JANG 10
@@ -22,7 +23,6 @@ enum {CHO_PLAY , HAN_PLAY } ;
 using namespace std;
 
 // РЏДж
-
 typedef struct _Unit {
 	int pre, post ;
 	char name, kill_unit ;
