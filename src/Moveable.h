@@ -7,6 +7,9 @@
 #include "Graph.h"
 using namespace std;
 
+
+
+
 typedef char (*STATE)[WIDTH_SIZE];
 
 class Board{
@@ -19,6 +22,7 @@ class Board{
 					board[i][j] = '-';
 				}
 			}
+            
 		}
 		void setBoard(char _board[][WIDTH_SIZE]){
 			for(int i = 0 ; i< 11 ; i ++)
@@ -41,6 +45,13 @@ public:
 	bool isValidation();
 };
 
+bool isInCastle(Pos cur , Pos dest) ;
+void determineMasking(Pos cur , Pos dest , int mask[][3] , char piece);
+void maskingTwoStep(int mask[][3] , Pos cur);
+void maskingFourWay(int mask[][3] , Pos cur);
+void maskingEightWay(int mask[][3] , Pos cur);
+
+
 void save_moveable_board(vector<Board> &boardPush , char board[][WIDTH_SIZE], int turn);
 bool moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE], bool host);
 bool isExistTeam(Pos cur, Pos dest, char board[][WIDTH_SIZE]);
@@ -50,5 +61,5 @@ bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]);
 bool moveAbleMa(Pos cur, Pos dest, char board[][WIDTH_SIZE]);
 bool moveAblePo(Pos cur, Pos dest, char board[][WIDTH_SIZE]);
 bool moveAbleSang(Pos cur, Pos dest, char board[][WIDTH_SIZE]);
-
+bool getTeam(char piece);
 #endif

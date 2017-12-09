@@ -147,8 +147,8 @@ void Minmaxstage::Initialize()
 // Check whether piece can pass the place located
 bool Minmaxstage::IsPassable(int nX, int nY)
 {
-  if (nToX < 0 ||nToY < 0 ) return false;
-  if (nToX >= DF_PANEL_WIDTH ||nToY >= DF_PANEL_HEIGHT) return false;
+  if (nX < 0 ||nY < 0 ) return false;
+  if (nX >= DF_PANEL_WIDTH ||nY >= DF_PANEL_HEIGHT) return false;
     
     if (m_enPanel[nY][nX] == PS_NOTHING)
         return true;
@@ -231,7 +231,6 @@ void Minmaxstage::AddNextStageEffectively(Minmaxstage *pNewStage)
             pNewStage->m_pPrev = NULL;
             pNewStage->m_pNext = NULL;
         }
-    }
    
     ++m_nNodeCount;
 }

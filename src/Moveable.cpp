@@ -11,10 +11,10 @@ Pos::Pos(int _x, int _y) {
 bool Pos::operator== (Pos& p) {
 	return x == p.x && y == p.y;
 };
-bool Pos::operator!= (Pos& p) {
+bool Pos::operator!= (Pos& p){
 	return !operator==(p);
 };
-bool Pos::isValidation() {
+bool Pos::isValidation(){
 	if (x > 10)
 		return false;
 	if (x < 1)
@@ -26,6 +26,101 @@ bool Pos::isValidation() {
 
 	return true;
 }
+
+bool getTeam(char piece)
+{
+    return piece >= 97 ? true : false;
+    //대문자일 경우
+}
+
+
+
+
+
+bool isInCastle(Pos cur , Pos dest)  // 목적지와 출발지가 같은 궁성 내부일 경우를 검사한다.
+{
+    int nx = cur.x;
+    int ny = cur.y;
+    int dx = dest.x;
+    int dy = dest.y;
+    if((nx >3 && nx <7) && (dx >3 && dx <7 ))
+    {
+        if((((dy > 0 && dy < 4))&&((ny > 0 && ny < 4)))|| ((ny > 7 && ny < 11))&&((dy > 7 && dy < 11))) return true;
+    }
+    return false;
+    
+}
+void maskingEightWay(int mask[][3] , Pos cur)
+{
+    int nx = cur.x -4 ;
+    int ny = cur.y ;
+    ny = ny > 3 ? ny -8 : ny - 1;
+    
+    if(ny - 1 > -1 ) mask[ny-1][nx] = 1;
+    if(ny + 1 < 3 ) mask[ny+1][nx] = 1;
+    if(nx - 1 > -1) mask[ny][nx-1]  = 1;
+    if(nx + 1 < 3 ) mask[ny][nx+1] = 1;
+    
+    if(ny - 1 > -1 && nx - 1 > -1) mask[ny-1][nx-1] = 1;
+    if(ny - 1 > -1 && nx + 1 < 3) mask[ny-1][nx+1] = 1;
+    if(ny + 1 < 3 && nx - 1 > -1) mask[ny+1][nx-1] = 1;
+    if(ny + 1 < 3 && nx + 1 < 3) mask[ny+1][nx+1] = 1;
+}
+void maskingFourWay(int mask[][3] , Pos cur)
+{
+    int nx = cur.x -4 ;
+    int ny = cur.y ;
+    ny = ny > 3 ? ny -8 : ny - 1;
+    
+    if(ny - 1 > -1 ) mask[ny-1][nx] = 1;
+    if(ny + 1 < 3 ) mask[ny+1][nx] = 1;
+    if(nx - 1 > -1) mask[ny][nx-1]  = 1;
+    if(nx + 1 < 3 ) mask[ny][nx+1] = 1;
+}
+
+void maskingTwoStep(int mask[][3] , Pos cur)
+{
+    int nx = cur.x -4 ;
+    int ny = cur.y ;
+    ny = ny > 3 ? ny -8 : ny - 1;
+    if(nx -2 > -1) mask[ny][nx-2] = 1;
+    if(ny -2 > -1) mask[ny-2][nx] = 1;
+    if(nx +2 < 3) mask[ny][nx+2] = 1;
+    if(ny +2 < 3) mask[ny+2][nx] = 1;
+    if(ny +2 <3 && nx +2 <3) mask[ny+2][nx+2] = 1;
+    if(ny +2 <3 && nx -2 >-1) mask[ny+2][nx-2] = 1;
+    if(ny -2 > -1 && nx +2 <3) mask[ny-2][nx+2] = 1;
+    if(ny-2 > -1 && nx -2 > -1) mask[ny-2][nx-2] = 1;
+    
+}
+
+
+void determineMasking(Pos cur , Pos dest , int mask[][3] , char piece)
+{
+    
+    int nx = cur.x % 7;
+    int ny = cur.y % 7;
+    for(int i = 0 ; i < 3 ; i ++) for(int j = 0 ; j < 3 ; j ++) mask[i][j] = 0;
+    if(piece == 'S' || piece == 's' || piece == 'K' || piece == 'k' || piece =='J' || piece =='j')
+    {
+        if((ny ==2 && nx == 5) || (((ny == 1 || ny == 3) &&(nx ==4 || nx == 6)))) maskingEightWay(mask , cur);
+        else maskingFourWay(mask,cur);
+    }
+    if(piece =='P' || piece == 'p')
+    {
+        maskingTwoStep(mask,cur);
+    }
+    if(piece == 'C' || piece == 'c')
+    {
+        if((ny ==1 && nx == 5) || ((ny == 1 || ny == 3) &&(nx ==4 || nx == 6))) maskingEightWay(mask , cur);
+        else maskingFourWay(mask,cur);
+        maskingTwoStep(mask,cur);
+    }
+    
+}
+
+
+
 
 void save_moveable_board(vector<Board> &boardPush , char board[][WIDTH_SIZE] , int turn){
 	// char tmp_board[HEIGHT_SIZE][WIDTH_SIZE];
@@ -78,9 +173,6 @@ void save_moveable_board(vector<Board> &boardPush , char board[][WIDTH_SIZE] , i
                             
                         }
                     }
-                    
-                    
-                    
                 }
                 
             }
@@ -177,371 +269,105 @@ bool isExistTeam(Pos cur, Pos dest ,char board[][WIDTH_SIZE]) {
 }//�������� �������� �����ϸ� �� �� ����.
 
  //Moveable Piece
- //Moveable Piece
 bool moveAbleCha(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
-	if (!isExistTeam(cur, dest , board))
-		return false;
-
-	if (cur.y == 2 && cur.x == 5) {
-		if (dest.y == 1 && dest.x == 4 || cur.y == 1 && cur.x == 6 || cur.y == 3 && cur.x == 4 || cur.y == 3 && cur.x == 6)
-			return true;
-	} // �߾�
-	if (cur.y == 1 && cur.x == 4) {
-		if (dest.y == 2 && dest.x == 5) return true;
-		if (dest.y == 3 && dest.x == 6) {
-			if (board[2][5] == '-') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 1 && cur.x == 6) {
-		if (dest.y == 2 && dest.x == 5) return true;
-		if (dest.y == 3 && dest.x == 4) {
-			if (board[2][5] == '-') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 3 && cur.x == 4) {
-		if (dest.y == 2 && dest.x == 5) return true;
-		if (dest.y == 1 && dest.x == 6) {
-			if (board[2][5] == '-') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 3 && cur.x == 6) {
-		if (dest.y == 2 && dest.x == 5) return true;
-		if (dest.y == 1 && dest.x == 4) {
-			if (board[2][5] == '-') return true;
-			else return false;
-		}
-	}
-
-
-	if (cur.y == 9 && cur.x == 5) {
-		if (dest.y == 8 && dest.x == 4 || cur.y == 8 && cur.x == 6 || cur.y == 10 && cur.x == 4 || cur.y == 10 && cur.x == 6)
-			return true;
-	} // �߾�
-	if (cur.y == 8 && cur.x == 4) {
-		if (dest.y == 9 && dest.x == 5) return true;
-		if (dest.y == 10 && dest.x == 6) {
-			if (board[9][5] == '-') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 8 && cur.x == 6) {
-		if (dest.y == 9 && dest.x == 5) return true;
-		if (dest.y == 10 && dest.x == 4) {
-			if (board[9][5] == '-') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 10 && cur.x == 4) {
-		if (dest.y == 9 && dest.x == 5) return true;
-		if (dest.y == 8 && dest.x == 6) {
-			if (board[9][5] == '-') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 10 && cur.x == 6) {
-		if (dest.y == 9 && dest.x == 5) return true;
-		if (dest.y == 8 && dest.x == 4) {
-			if (board[9][5] == '-') return true;
-			else return false;
-		}
-	}
-
-
-	int nx, ny;
-	nx = cur.x - dest.x;
-	ny = cur.y - dest.y;
-	if(nx != 0 && ny != 0)
-		return false;
-	if (nx == 0) { // move forward y
-		if (ny > 0) { // move up
-			for (int i = dest.y + 1; i < cur.y; i++)
-				if (board[i][cur.x] != '-')
-					return false;
-		}
-		else { // move down
-			for (int i = cur.y + 1; i < dest.y; i++)
-				if (board[i][cur.x] != '-')
-					return false;
-		}
-	}
-	else { // move forward x
-		if (nx > 0) { //move left
-			for (int i = dest.x + 1; i < cur.x; i++)
-				if (board[cur.y][i] != '-')
-					return false;
-		}
-		else { //move right
-			for (int i = cur.x + 1; i < dest.x; i++)
-				if (board[cur.y][i] != '-')
-					return false;
-
-		}
-	}
-	return true;
-
+    if (!isExistTeam(cur, dest , board))
+        return false;
+    
+    if(isInCastle(cur,dest))
+    {
+        int mask[3][3];
+        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
+        int nx = dest.x -4 ;
+        int ny = dest.y ;
+        ny = ny > 3 ? ny -8 : ny - 1;
+        for(int i = 0 ; i < 3 ; i ++ )
+        {
+            for(int j = 0 ; j < 3 ; j++) cout <<mask[i][j]<< " ";
+            cout << endl;
+        }
+        
+        
+        if(mask[ny][nx] == 1) return true;
+        else return false;
+        
+    }
+    
+    int nx = cur.x - dest.x;
+    int ny = cur.y - dest.y;
+    if(nx != 0 && ny != 0)
+        return false;
+    if (nx == 0) { // move forward y
+        if (ny > 0) { // move up
+            for (int i = dest.y + 1; i < cur.y; i++)
+                if (board[i][cur.x] != '-')
+                    return false;
+        }
+        else { // move down
+            for (int i = cur.y + 1; i < dest.y; i++)
+                if (board[i][cur.x] != '-')
+                    return false;
+        }
+    }
+    else { // move forward x
+        if (nx > 0) { //move left
+            for (int i = dest.x + 1; i < cur.x; i++)
+                if (board[cur.y][i] != '-')
+                    return false;
+        }
+        else { //move right
+            for (int i = cur.x + 1; i < dest.x; i++)
+                if (board[cur.y][i] != '-')
+                    return false;
+            
+        }
+    }
+    return true;
+    
 } // cha
-bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {// �Ѱ� �ʸ� ��������� �Ѵ�.
-	if (!isExistTeam(cur, dest , board))
-		return false;
-
-	int px = cur.x - dest.x;
-	int py = cur.y - dest.y;
 
 
-	if (board[cur.y][cur.x] >= 97) { // �� �����̴�.
-		if ((dest.y == 10 && (dest.x >= 4 && dest.x <= 6)) ||
-			(dest.y == 9 && (dest.x >= 4 && dest.x <= 6)) ||
-			(dest.y == 8 && (dest.x >= 4 && dest.x <= 6))) {
-			if (cur.y == 10 && cur.x == 4) {
-				if (dest.y == 9 && dest.x == 4)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 10 && dest.x == 5)
-					return true;
-			}
-			if (cur.y == 10 && cur.x == 5) {
-				if (dest.y == 10 && dest.x == 4)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 10 && dest.x == 6)
-					return true;
-
-			}
-			if (cur.y == 10 && cur.x == 6) {
-				if (dest.y == 10 && dest.x == 5)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 9 && dest.x == 6)
-					return true;
-
-			}
-			if (cur.y == 9 && cur.x == 4) {
-				if (dest.y == 8 && dest.x == 4)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 10 && dest.x == 4)
-					return true;
-
-			}
-			if (cur.y == 9 && cur.x == 5) {
-				if (dest.y == 10 && dest.x == 4)
-					return true;
-				if (dest.y == 10 && dest.x == 5)
-					return true;
-				if (dest.y == 10 && dest.x == 6)
-					return true;
-				if (dest.y == 9 && dest.x == 4)
-					return true;
-				if (dest.y == 9 && dest.x == 6)
-					return true;
-				if (dest.y == 8 && dest.x == 4)
-					return true;
-				if (dest.y == 8 && dest.x == 5)
-					return true;
-				if (dest.y == 8 && dest.x == 6)
-					return true;
-
-			}
-			if (cur.y == 9 && cur.x == 6) {
-				if (dest.y == 8 && dest.x == 6)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 10 && dest.x == 6)
-					return true;
-			}
-			if (cur.y == 8 && cur.x == 4) {
-				if (dest.y == 8 && dest.x == 5)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 9 && dest.x == 4)
-					return true;
-
-			}
-			if (cur.y == 8 && cur.x == 5) {
-				if (dest.y == 8 && dest.x == 4)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 8 && dest.x == 6)
-					return true;
-			}
-			if (cur.y == 8 && cur.x == 6) {
-				if (dest.y == 8 && dest.x == 5)
-					return true;
-				if (dest.y == 9 && dest.x == 5)
-					return true;
-				if (dest.y == 9 && dest.x == 6)
-					return true;
-
-			}
-		}
-
-
-	}
-	else { //�� �����̴�.
-		if ((dest.y == 1 && (dest.x >= 4 && dest.x <= 6)) ||
-			(dest.y == 2 && (dest.x >= 4 && dest.x <= 6)) ||
-			(dest.y == 3 && (dest.x >= 4 && dest.x <= 6))) {
-			if (cur.y == 1 && cur.x == 4) {
-				if (dest.y == 2 && dest.x == 4)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 1 && dest.x == 5)
-					return true;
-			}
-			if (cur.y == 1 && cur.x == 5) {
-				if (dest.y == 1 && dest.x == 4)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 1 && dest.x == 6)
-					return true;
-
-			}
-			if (cur.y == 1 && cur.x == 6) {
-				if (dest.y == 1 && dest.x == 5)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 2 && dest.x == 6)
-					return true;
-
-			}
-			if (cur.y == 2 && cur.x == 4) {
-				if (dest.y == 3 && dest.x == 4)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 1 && dest.x == 4)
-					return true;
-
-			}
-			if (cur.y == 2 && cur.x == 5) {
-				if (dest.y == 1 && dest.x == 4)
-					return true;
-				if (dest.y == 1 && dest.x == 5)
-					return true;
-				if (dest.y == 1 && dest.x == 6)
-					return true;
-				if (dest.y == 2 && dest.x == 4)
-					return true;
-				if (dest.y == 2 && dest.x == 6)
-					return true;
-				if (dest.y == 3 && dest.x == 4)
-					return true;
-				if (dest.y == 3 && dest.x == 5)
-					return true;
-				if (dest.y == 3 && dest.x == 6)
-					return true;
-
-			}
-			if (cur.y == 2 && cur.x == 6) {
-				if (dest.y == 3 && dest.x == 6)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 1 && dest.x == 6)
-					return true;
-			}
-			if (cur.y == 3 && cur.x == 4) {
-				if (dest.y == 3 && dest.x == 5)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 2 && dest.x == 4)
-					return true;
-
-			}
-			if (cur.y == 3 && cur.x == 5) {
-				if (dest.y == 3 && dest.x == 4)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 3 && dest.x == 6)
-					return true;
-			}
-			if (cur.y == 3 && cur.x == 6) {
-				if (dest.y == 3 && dest.x == 5)
-					return true;
-				if (dest.y == 2 && dest.x == 5)
-					return true;
-				if (dest.y == 2 && dest.x == 6)
-					return true;
-
-			}
-		}
-	}
-
-	return false;
-
-} // gun
+bool moveAbleGungAndSa(Pos cur, Pos dest , char board[][WIDTH_SIZE])
+{
+    if (!isExistTeam(cur, dest , board)) return false;
+    
+    if(isInCastle(cur,dest))
+    {
+        int mask[3][3];
+        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
+        int nx = dest.x -4 ;
+        int ny = dest.y ;
+        ny = ny > 3 ? ny -8 : ny - 1;
+        if(mask[ny][nx] == 1) return true;
+        else return false;
+    }
+    return false;
+    
+} // gung
 bool moveAbleJol(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
-
-	if (!isExistTeam(cur, dest, board))
-		return false;
-
-	if (cur.y == 2 && cur.x == 5) {
-		if (dest.y == 1 && dest.x == 4 || cur.y == 1 && cur.x == 6)
-			return true;
-	} // �߾�
-	if (cur.y == 3 && cur.x == 4) {
-		if (dest.y == 2 && dest.x == 5) return true;
-	}
-	if (cur.y == 3 && cur.x == 6) {
-		if (dest.y == 2 && dest.x == 5) return true;
-	}
-
-
-	if (cur.y == 9 && cur.x == 5) {
-		if (cur.y == 10 && cur.x == 4 || cur.y == 10 && cur.x == 6)
-			return true;
-	} // �߾�
-	if (cur.y == 8 && cur.x == 4) {
-		if (dest.y == 9 && dest.x == 5) return true;
-	}
-	if (cur.y == 8 && cur.x == 6) {
-		if (dest.y == 9 && dest.x == 5) return true;
-	}//�밢�� ó�� ! 
-	 //////////////////////////////////////////////////////////////////////////////////////
-
-	int ny = cur.y - dest.y;
-	int nx = cur.x - dest.x;
-
-	if(ny >=2 || nx >=2)
-		return false;
-	if(abs(ny)+abs(nx) >1)
-		return false;
-	if (cur.x - 1 == dest.x || cur.x + 1 == dest.x){
-		if (ny == 0){
-			return true;
-		}
-	}
-	if (board[cur.y][cur.x] >= 97) {//�� �����̴�.
-		if (ny < 0){
-			return false;
-		}
-	}
-	else { // �������̴�.
-		if (ny > 0){
-			return false;
-		}
-	}
-	if (abs(ny) != 1)
-		return false;
-
-	
-	return true;
-
+    
+    if (!isExistTeam(cur, dest, board)) return false;
+    int ny = cur.y - dest.y;
+    int nx = cur.x - dest.x;
+    
+    if (board[cur.y][cur.x] > 'a' && ny < 0)return false;
+    else if(board[cur.y][cur.x] < 'a' && ny > 0) return false;
+    
+    if(isInCastle(cur,dest))
+    {
+        int mask[3][3];
+        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
+        int x = dest.x -4 ;
+        int y = dest.y ;
+        y = y > 3 ? y -8 : y - 1;
+        if(mask[y][x] == 1) return true;
+        else return false;
+        
+    }
+    if(ny > 1 || nx > 1 || abs(ny)+abs(nx) != 1) return false;
+    if (cur.x - 1 == dest.x || cur.x + 1 == dest.x) return true;
+    if (abs(ny) != 1) return false;
+    return false;
+    
 } // jol
 bool moveAbleMa(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
 
@@ -568,121 +394,83 @@ bool moveAbleMa(Pos cur, Pos dest, char board[][WIDTH_SIZE]) {
 
 } // ma
 bool moveAblePo(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
-
-	if (!isExistTeam(cur, dest , board))
-		return false;
-
-	if (board[dest.y][dest.x] == 'p' || board[dest.y][dest.x] == 'P') //�������� ���� ������ �� �� ����.
-		return false;
-
-	if (cur.y == 1 && cur.x == 4) {
-		if (dest.y == 3 && dest.x == 6) {
-			if (board[2][5] != '-' && board[2][5] != 'p' && board[2][5] != 'P') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 1 && cur.x == 6) {
-		if (dest.y == 3 && dest.x == 4) {
-			if (board[2][5] != '-' && board[2][5] != 'p' && board[2][5] != 'P') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 3 && cur.x == 4) {
-		if (dest.y == 1 && dest.x == 6) {
-			if (board[2][5] != '-' && board[2][5] != 'p' && board[2][5] != 'P') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 3 && cur.x == 6) {
-		if (dest.y == 1 && dest.x == 4) {
-			if (board[2][5] != '-' && board[2][5] != 'p' && board[2][5] != 'P') return true;
-			else return false;
-		}
-	}
-
-	if (cur.y == 8 && cur.x == 4) {
-
-		if (dest.y == 10 && dest.x == 6) {
-			if (board[9][5] == '-' &&  board[9][5] != 'p' && board[9][5] != 'P') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 8 && cur.x == 6) {
-
-		if (dest.y == 10 && dest.x == 4) {
-			if (board[9][5] == '-' &&  board[9][5] != 'p' && board[9][5] != 'P') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 10 && cur.x == 4) {
-
-		if (dest.y == 8 && dest.x == 6) {
-			if (board[9][5] == '-' &&  board[9][5] != 'p' && board[9][5] != 'P') return true;
-			else return false;
-		}
-	}
-	if (cur.y == 10 && cur.x == 6) {
-
-		if (dest.y == 8 && dest.x == 4) {
-			if (board[9][5] == '-' &&  board[9][5] != 'p' && board[9][5] != 'P') return true;
-			else return false;
-		}
-	}
-
-
-
-	int nx, ny;
-	nx = cur.x - dest.x;
-	ny = cur.y - dest.y;
-
-	if(nx != 0 && ny != 0)
-		return false;
-
-	int piece_count = 0;
-
-	if (nx == 0) {
-		if (ny > 0) {
-			for (int i = cur.y - 1; i > dest.y; i--) {
-				if (board[i][cur.x] != '-')
-					piece_count++;
-				if (board[i][cur.x] == 'p' || board[i][cur.x] == 'P')
-					return false;
-
-			}
-		}
-		else {
-			for (int i = cur.y + 1; i < dest.y; i++) {
-				if (board[i][cur.x] != '-')
-					piece_count++;
-				if (board[i][cur.x] == 'p' || board[i][cur.x] == 'P')
-					return false;
-			}
-		}
-	}
-	else {
-		if (nx > 0) {
-			for (int i = cur.x - 1; i > dest.x; i--) {
-				if (board[cur.y][i] != '-') //���� ��� ���� 1�������� �ľ��Ѵ�.
-					piece_count++;
-				if (board[cur.y][i] == 'p' || board[cur.y][i] == 'P') //���� ��� ���� ������ ���� ���Ѵ�.
-					return false;
-			}
-		}
-		else { //move forward up
-			for (int i = cur.x + 1; i < dest.x; i++) {
-				if (board[cur.y][i] != '-')
-					piece_count++;
-				if (board[cur.y][i] == 'p' || board[cur.y][i] == 'P')
-					return false;
-			}
-
-		}
-	}
-	if (piece_count == 1) //���������� ���� �ϳ��� �����ؾ� �� �� �ִ�.
-		return true;
-	else
-		return false;
+    
+    if (!isExistTeam(cur, dest , board))
+        return false;
+    
+    if (board[dest.y][dest.x] == 'p' || board[dest.y][dest.x] == 'P')
+        return false;
+    
+    if(isInCastle(cur,dest))
+    {
+        int mask[3][3];
+        determineMasking(cur,dest,mask,board[cur.y][cur.x]);
+        int nx = dest.x -4 ;
+        int ny = dest.y ;
+        ny = ny > 3 ? ny -8 : ny - 1;
+        
+        int avgx = (cur.x + dest.x) / 2;
+        int avgy = (cur.y + dest.y) / 2;
+        //출발지와 목적지 사이에 빈칸또는 포가없으면 이동이 가능하다.
+        if(mask[ny][nx] == 1 && (board[avgy][avgx] != '-' && board[avgy][avgx] != 'p' && board[avgy][avgx] != 'P')) return true;
+        else return false;
+        
+    }
+    
+    int nx, ny;
+    nx = cur.x - dest.x;
+    ny = cur.y - dest.y;
+    
+    if(nx != 0 && ny != 0)
+        return false;
+    
+    int piece_count = 0;
+    
+    if (nx == 0) {
+        if (ny > 0) {
+            for (int i = cur.y - 1; i > dest.y; i--) {
+                if (board[i][cur.x] != '-')
+                    piece_count++;
+                if (board[i][cur.x] == 'p' || board[i][cur.x] == 'P')
+                    return false;
+                
+            }
+        }
+        else {
+            for (int i = cur.y + 1; i < dest.y; i++) {
+                if (board[i][cur.x] != '-')
+                    piece_count++;
+                if (board[i][cur.x] == 'p' || board[i][cur.x] == 'P')
+                    return false;
+            }
+        }
+    }
+    else {
+        if (nx > 0) {
+            for (int i = cur.x - 1; i > dest.x; i--) {
+                if (board[cur.y][i] != '-')
+                    piece_count++;
+                if (board[cur.y][i] == 'p' || board[cur.y][i] == 'P')
+                    return false;
+            }
+        }
+        else { //move forward up
+            for (int i = cur.x + 1; i < dest.x; i++) {
+                if (board[cur.y][i] != '-')
+                    piece_count++;
+                if (board[cur.y][i] == 'p' || board[cur.y][i] == 'P')
+                    return false;
+            }
+            
+        }
+    }
+    if (piece_count == 1)
+        return true;
+    else
+        return false;
 } // po
+
+
 bool moveAbleSang(Pos cur, Pos dest , char board[][WIDTH_SIZE]) {
 
 	if (!isExistTeam(cur, dest , board))
