@@ -5,7 +5,7 @@ int main()
 {
 	clock_t start_t = clock();
 
-	vector<vector<State_node*>*> *state = new vector<vector<State_node*>*>();
+	vector<vector<stateNode*>*> *state = new vector<vector<stateNode*>*>();
 	vector<Play*> *LoadPlay = new vector<Play*>();
 	vector<Play*> *play = new vector<Play*>();
 	Adjcency_grpah *g = new Adjcency_grpah();
