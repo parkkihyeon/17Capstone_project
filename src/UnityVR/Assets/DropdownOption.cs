@@ -5,13 +5,11 @@ using UnityEngine;
 
 public class DropdownOption : MonoBehaviour {
 
-	//List<string> ChoHan = new List<string> (){"임시", "초", "한"};
-	//List<string> othercharim = new List<string> (){ "마상마상", "마상상마", "상마마상", "상마상마" };
-	List<string> Mycharim = new List<string> (){ "마상마상", "마상상마", "상마마상", "상마상마" };
+	List<string> charim = new List<string> (){ "마상마상", "마상상마", "상마마상", "상마상마" };
 
-	public Dropdown My;
+	public Dropdown myCharim;
 	//public Dropdown Other;
-	public Dropdown GameOver;
+	public Dropdown gameOver;
 	//public Dropdown GameOver_other;
 
 	//public Text selectedName;
@@ -29,19 +27,15 @@ public class DropdownOption : MonoBehaviour {
 		GameManager.Instance.MyCharim = index;
 	}
 
-	//public void GameOver_Other_Index(int index){
-	//	GameManager.Instance.MyCharim = index;
-	//}
-
 	void Start () {
 		PopulateList();
 	}
 
 	public void PopulateList(){
 		Debug.Log ("test");
-		My.AddOptions (Mycharim);
+		myCharim.AddOptions (charim);
 		//Other.AddOptions (othercharim);
-		GameOver.AddOptions (Mycharim);
+		gameOver.AddOptions (charim);
 		//GameOver_other.AddOptions (Mycharim);
 	}
 

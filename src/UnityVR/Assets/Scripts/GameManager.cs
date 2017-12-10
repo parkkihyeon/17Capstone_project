@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 			board [0] [7] = '2';
 			break;
 		}
-		/*
+		/*  게임 테스트를위한 switch
 		switch (OtherCharim) {
 		case 0:
 			//마상마상
@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviour
 		OverPopup.gameObject.SetActive (true);
 	}
 
-	public void exit(){
+	public void Exit(){
 		ConnectServer.Instance.Close ();
 	}
 
@@ -307,12 +307,9 @@ public class GameManager : MonoBehaviour
 		}
 
 		// 게임이 시작한 상태, 움직이는 말이 없는 경우, 터치할 수 있는 상태인 경우, 내 턴인 경우, 마우스(터치)가 클릭된 상태이면
-		//if (StartGame && !Moving && !DontTouch && CurTurn == MyTeam && flag) 
 		if (StartGame && !Moving && !DontTouch && CurTurn == MyTeam && (Input.GetMouseButtonDown(0)))
 		{
-			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 			//레이케스트저장하기확인해서꼭해야함
-			//Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // 마우스(터치)를 기준으로 레이캐스트를 생성한다.
 			Ray ray = new Ray(cameraContriller.centerEyeAnchor.position, cameraContriller.centerEyeAnchor.forward);
 
 			bool click = false;
@@ -364,54 +361,30 @@ public class GameManager : MonoBehaviour
 
 					if (ClikedSoldier == hit[i].collider.GetComponent<Board>().Player) // 선택한 병사가 있는 위치의 Board를 클릭했으면 병사 선택을 취소해준다.
 					{
-						//Debug.Log("cancel click");
+						
 					}
 					else // 클릭한 병사가 아닌 이동할 위치의 Board를 클릭한 경우
 					{
-
-						//int from = (ClikedSoldier.PosY * 9) + ClikedSoldier.PosX; // X,Y 좌표를 이용해 현재 지점의 offset 값을 구한다.
-						//int to = (hit[i].collider.GetComponent<Board>().PosY * 9) + hit[i].collider.GetComponent<Board>().PosX; // X,Y 좌표를 이용해 이동할 지점의 offset 값을 구한다.
-
 						FromY = ClikedSoldier.PosY;
 						FromX = ClikedSoldier.PosX;
 
 						ToY = hit [i].collider.GetComponent<Board> ().PosY;
 						ToX = hit [i].collider.GetComponent<Board> ().PosX;
 
-						//tempSoldier = ClikedSoldier;
-
-						//ConnectServer.Instance.SendUnitBoard (ClikedSoldier.PosY, ClikedSoldier.PosX, hit [i].collider.GetComponent<Board> ().PosY, hit [i].collider.GetComponent<Board> ().PosX);
 						MovePlayer(ClikedSoldier.PosY, ClikedSoldier.PosX, hit[i].collider.GetComponent<Board>().PosY, hit[i].collider.GetComponent<Board>().PosX);
-						//ConnectServer.Instance.SendMovePlayer(from, to); // 서버로 현재 위치와 이동할 위치를 보낸다.
 						Moving = true; // 병사이 이동중임을 나타낸다.
 					}
-
-					//CheckJang ();
 
 					ClikedSoldier = null; // 클릭된 병사를 초기화한다.
 					ShowRoot(false); // 이동 가능한 루트를 모두 비활성화시킨다.
 				}
 			}
 			flag = false;
-			/*if (check) {
-				//장군입니다. 팝업으로 알려주기
-
-				Popup ("장군입니다.");
-
-				check = false;
-			}*/
 		}
 	}
 
 	public void MovePlayer(int FromY, int FromX, int ToY, int ToX) // 실제로 병사를 이동시켜주는 함수
 	{
-		//int x = from % 9, y = from / 9; // offset값을 좌표로 변환한다.
-		//if (FromY >= 0 && FromX >= 0 && ToY >= 0 && ToX >= 0) {
-
-		//ConnectServer.Instance.FromY = 0;
-		//ConnectServer.Instance.FromX = 0;
-		//ConnectServer.Instance.ToY = 0;
-		//ConnectServer.Instance.ToX = 0;
 
 		tempSoldier = Cell [FromY] [FromX].Player;
 
@@ -424,7 +397,6 @@ public class GameManager : MonoBehaviour
 		Cell [FromY] [FromX].Player = null; // 현재 위치에 있는 병사가 다른 위치로 이동할 것이므로 현재 위치의 오브젝트를 초기화해준다.
 		Cell [FromY] [FromX].Type = SoldierType.NONE; // 현재 위치의 병사 타입도 NONE으로 초기화
 		Moving = true;
-		//}
 
 	}
 
@@ -434,15 +406,11 @@ public class GameManager : MonoBehaviour
 		Moving = false;
 		myAutoCam.gameObject.SetActive (false);
 
-		//Invoke ("", 5.0f);
-
-		//StartCoroutine (Wait(2.5f));
 
 		Debug.Log ("MOVE END");
 
 		CheckJang ();
 
-		//ConnectServer.flag = true;
 
 		if (IsGameOver) {
 			OverGame.SetActive (true);
@@ -461,11 +429,6 @@ public class GameManager : MonoBehaviour
 			Status.SetActive (true);
 		}
 	}
-
-	//IEnumerator Wait(float waitTime){
-	//	yield return new WaitForSeconds (waitTime);
-	//}
-
 
 	public SoldierType GetType(int x, int y) // 해당 좌표의 병사 타입을 얻어온다.
 	{
@@ -902,9 +865,8 @@ public class GameManager : MonoBehaviour
 		}
 	}
 	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	void CheckJang() // 선택된 캐릭터가 이동할 수 있는 위치를 표시해준다. 파라미터로 움직인 병사 받아오기, 클릭된 병사가 아닌 움직인 병사를 확인해야 한다.
+	void CheckJang() // 움직인말이 장군인지 판단
 	{
-
 		Debug.Log ("check START");
 
 		if (tempSoldier != null) { // 선택한 병사가 있는지 확인
@@ -1174,14 +1136,10 @@ public class GameManager : MonoBehaviour
 							CheckCell (x + 3, y + 2);
 					}
 				}
-
-				Debug.Log ("TEST OUT SANG");
 			}
 		}
-		//@@@@@@@@@@@@@@@@@@@@@@
-		//장군입니다. 팝업으로 알려주기
+
 		if (check) {
-			//장군입니다. 팝업으로 알려주기
 			check = false;
 			Popup ("장군입니다.");
 		}
@@ -1202,19 +1160,8 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		Debug.Log ("CHECK END CHECKCELL");
-		//return;
 	}
-	/*
-	void CheckPointTexture(int x, int y)
-	{
-		if (x >= 0 && x < 9 && y >= 0 && y < 10)
-		{
-			if (Cell[y][x].Type == SoldierType.왕)
-			{
-				check = true;
-				return;
-			}
-		}
-	}
-	*/
+
+
+
 }

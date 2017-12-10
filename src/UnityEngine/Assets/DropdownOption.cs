@@ -16,7 +16,7 @@ public class DropdownOption : MonoBehaviour {
 
 	//public Text selectedName;
 
-	public void myIndex(int index){
+	public void MyIndex(int index){
 		//ConnectServer.Instance.Charim = index;
 		GameManager.Instance.MyCharim = index;
 	}
@@ -24,7 +24,7 @@ public class DropdownOption : MonoBehaviour {
 	//	GameManager.Instance.OtherCharim = index;
 	//}
 
-	public void gameOverMyIndex(int index){
+	public void GameOverMyIndex(int index){
 		GameManager.Instance.MyCharim = index;
 	}
 

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class controllTouch : MonoBehaviour {
+public class ControllTouch : MonoBehaviour {
 
-	public void setDontTouch(){
+	public void SetDontTouch(){
 		GameManager.Instance.DontTouch = true;
 	}
 
-	public void setTouchAble(){
+	public void SetTouchAble(){
 		GameManager.Instance.DontTouch = false;
 	}
 }
