@@ -15,6 +15,8 @@
 #include <boost/archive/binary_oarchive.hpp> // ¹ÙÀÌ³Ê¸® ÇüÅÂ·Î ÀÔ·ÂÇÏ±â À§ÇØ
 
 #include <boost/serialization/nvp.hpp>
+#include <boost/algorithm/string.hpp>
+
 
 #include <iostream>
 #include <cstring>
@@ -33,6 +35,12 @@
 #define INITIALIZE -2
 #define ORDERBIT -4
 
+#define IDENTIFIER 0
+#define SOCKET_IDX 1
+#define ORDER_IDX 2
+#define HOST_IDX 2
+#define BOARD_IDX 3
+
 void Insert_Gibo(vector<Play*> *play);
 void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state);
 void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node*>*>* state);
@@ -40,8 +48,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<Stat
 void SaveGraphData(Adjcency_grpah *i, const char *fileName);
 Adjcency_grpah LoadGraphData(const char *fileName);
 void SetSocket(Adjcency_grpah *graph);
-void GetBoard(char* parsedData, char (&board)[HEIGHT_SIZE][WIDTH_SIZE]);
-pair<int, int> CheckType(char* msg);
 pair<int, int> GetStatePos(State_node *nextState, State_node *prevState);
-bool isOrderBit(int _bit);
-int OrderSelect(int _userOrder);
+bool isOrder(std::vector<std::string> stream);
+int order_selection(std::vector<std::string> stream);
+void Get_Board(std::vector<std::string> stream, char(&board)[HEIGHT_SIZE][WIDTH_SIZE]);

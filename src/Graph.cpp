@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define TEXT_NAME "Final.txt"
+#define TEXT_NAME "history-5000.txt"
 
 //Make Binary file with Graph Serialization
 void SaveGraphData(Adjcency_grpah *i, const char *fileName) {
@@ -81,7 +81,7 @@ void Insert_Gibo(vector<Play*> *play)
 	}
 }
 void SetSocket(Adjcency_grpah *graph) {
-	int host = INITIALIZE;
+int host = INITIALIZE;
 	int bytesread;
 	int fd_max; //maximum file descriptor number
 	int _socket; //waiting socket
@@ -90,15 +90,16 @@ void SetSocket(Adjcency_grpah *graph) {
 	fd_set master; //master file descriptor
 	fd_set temps; //temp file destriptor
 
-	char sendMSG[BUFSIZ]; //buffer for client data
-	char receiveMSG[BUFSIZ];
+	char send_message[BUFSIZ]; //buffer for client data
+	char receive_message[BUFSIZ];
 	char tempsBUF[BUFSIZ];
-	char certifiData[BUFSIZ];
+	char input_stream[BUFSIZ];
 	char board[HEIGHT_SIZE][WIDTH_SIZE];
 
 	char *token;
-	char *IP = "203.246.112.146";
+	char *IP = "localhost";
 	char *Port = "6120";
+	char *socket_id;
 
 	struct hostent *_host;
 	struct sockaddr_in  _server; //server's address
@@ -135,15 +136,11 @@ void SetSocket(Adjcency_grpah *graph) {
 	//ADD THE LISTENR TO THE READS SET
 	FD_SET(_socket, &master); // =set 1 index 3
 
-							  //KEEP TRACK OF THE BIGGEST FILE DESCRIPTOR
+	//KEEP TRACK OF THE BIGGEST FILE DESCRIPTOR
 	fd_max = _socket;
 
-	memset((void*)sendMSG, 0, sizeof(sendMSG));
-	memset((void*)receiveMSG, 0, sizeof(receiveMSG));
-
-	int count = 1;
-
-	std::cout << "Graph Module Generated" << std::endl;
+	memset((void*)send_message, 0, sizeof(send_message));
+	memset((void*)receive_message, 0, sizeof(receive_message));
 
 	while (true) {
 		temps = master;
@@ -155,31 +152,29 @@ void SetSocket(Adjcency_grpah *graph) {
 		}
 
 		if (FD_ISSET(_socket, &temps)) {
-			if ((bytesread = read(_socket, receiveMSG, sizeof(receiveMSG)))) {
-				std::cout << "Data Received Number: " << count++ << std::endl;
+			if ((bytesread = read(_socket, receive_message, sizeof(receive_message)))) {
 
-				receiveMSG[bytesread] = '\0';
-				memcpy((void*)certifiData, (void *)receiveMSG, strlen(receiveMSG));
-				//std::cout << receiveMSG << std::endl;
-				std::cout << "=================================================================================" << std::endl;
+				receive_message[bytesread] = '\0';
+				memcpy((void*)input_stream, (void *)receive_message, strlen(receive_message));
 
 				//CHECK RECEIVED DATA IS ORDER DATA OR BOARD DATA
-				pair<int, int> checkBit = CheckType(certifiData);
+				std::vector<std::string> stream;
+				boost::split(stream, receive_message, boost::is_any_of(" "));
 
-				//IF CHECKBIT == -4 -> ORDER BIT
-				if (isOrderBit(checkBit.first)) {
-					int order = OrderSelect(checkBit.second);
-					sprintf(sendMSG, "ORDER|%d", order);
-					write(_socket, sendMSG, strlen(sendMSG));
-					cout << "POS-1: " << checkBit.first << " " << "POS-2: " << checkBit.second << endl;
+				//Node 서버로부터 받은 값이 상차림일 경우
+				if(isOrder(stream)) {
+					//stream format = "order socket.id order_data"
+					int order = order_selection(stream);
+					sprintf(send_message, "order %s %d", stream[SOCKET_IDX].c_str(), order);
+					write(_socket, send_message, strlen(send_message));
 				}
-				// IF CHECKBIT != -4 -> BOARD DATA
+				//Node 서버로부터 받은 값이 판의 정보일 경우
 				else {
-					host = checkBit.first;
-					GetBoard(receiveMSG, board);
+					//stream format = "board socket.id host board_data"
+					host = std::stoi(stream[HOST_IDX]);
+					Get_Board(stream, board);
 
-					// FIND IN GRAPH WITH DATA(host, board)
-					pair<int, int> pos;
+					pair<int, int> next_pos;
 					State_node *game_state = new State_node();
 					State_node *inthe_graph = new State_node();
 					State_node *select_state = new State_node();
@@ -188,27 +183,27 @@ void SetSocket(Adjcency_grpah *graph) {
 					inthe_graph = graph->Is_In_The_List_State(now_state);
 					if (inthe_graph == NULL) {
 						MinMax(game_state, now_state, host);
-						pos = GetStatePos(game_state, now_state);
+						next_pos = GetStatePos(game_state, now_state);
 					}
 					else {
 						select_state = SelectState(inthe_graph);
 						if (select_state) {
 							select_state->Print_State();
 							game_state->SetState(select_state->GetState());
-							pos = GetStatePos(game_state, now_state);
+							next_pos = GetStatePos(game_state, now_state);
 						}
 						else {
 							MinMax(game_state, now_state, host);
-							pos = GetStatePos(game_state, now_state);
+							next_pos = GetStatePos(game_state, now_state);
 						}
 					}
-
-					sprintf(sendMSG, "BORAD|%d %d", pos.first, pos.second);
-					write(_socket, sendMSG, strlen(sendMSG));
+					sprintf(send_message, "board %s %d %d", stream[SOCKET_IDX].c_str(), next_pos.first, next_pos.second);
+					write(_socket, send_message, strlen(send_message));
 				}
 
-				memset((void*)sendMSG, NULL, sizeof(sendMSG));
-				memset((void*)receiveMSG, NULL, sizeof(receiveMSG));
+				stream.clear();
+				memset((void*)send_message, NULL, sizeof(send_message));
+				memset((void*)receive_message, NULL, sizeof(receive_message));
 				memset((void*)board, NULL, sizeof(char) * HEIGHT_SIZE * WIDTH_SIZE);
 			}
 			if (bytesread == -1) {
@@ -216,41 +211,6 @@ void SetSocket(Adjcency_grpah *graph) {
 				close(_socket);
 				exit(1);
 			}
-		}
-	}
-}
-pair<int, int> CheckType(char* _received) {
-	char *token;
-	pair<int, int> order;
-	token = strtok(_received, "|");
-	if (strcmp(token, "order") == 0) {
-		token = strtok(NULL, "|");
-		order.first = ORDERBIT;
-		order.second = atoi(token);
-		return order;
-	}
-	else {
-		order.first = atoi(token);
-		order.second = -100;
-		return order;
-	}
-}
-bool isOrderBit(int _bit) {
-	if (_bit == ORDERBIT) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-void GetBoard(char* parsedData, char(&board)[HEIGHT_SIZE][WIDTH_SIZE]) {
-	char *token;
-	token = strtok(parsedData, "|");
-
-	for (int i = 0; i < HEIGHT_SIZE; i++) {
-		for (int j = 0; j < WIDTH_SIZE; j++) {
-			token = strtok(NULL, ",");
-			board[i][j] = token[0];
 		}
 	}
 }
@@ -278,8 +238,29 @@ pair<int, int> GetStatePos(State_node *nextState, State_node *prevState) {
 	cout << "POS-1: " << pos.first << " " << "POS-2: " << pos.second << endl;
 	return pos;
 }
-int OrderSelect(int _userOrder) {
-    switch (_userOrder) {
+bool isOrder(std::vector<std::string> stream) {
+	if (stream[IDENTIFIER] == "order") {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+void Get_Board(std::vector<std::string> stream, char(&board)[HEIGHT_SIZE][WIDTH_SIZE]) {
+
+	std::vector<std::string> stream_board;
+	boost::split(stream_board, stream[BOARD_IDX], boost::is_any_of(","));
+
+	int idx = 0;
+	for (int row = 0; row < HEIGHT_SIZE; row++) {
+		for (int col = 0; col < WIDTH_SIZE; col++) {
+			board[row][col] = *stream_board[idx++].c_str();
+		}
+	}
+}
+
+int order_selection(std::vector<std::string> stream) {
+    switch (std::stoi(stream[ORDER_IDX])) {
         case 0:
             return 0;
         case 1:

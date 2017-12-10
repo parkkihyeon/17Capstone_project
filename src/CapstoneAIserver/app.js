@@ -7,6 +7,9 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 
 var os = require('os');
 var Redis = require('redis');
+var RedisServer = require('redis-server');
+var rserver = new RedisServer(6379);
+rserver.open((err) => { if (err) throw err; });
 var redis = Redis.createClient(6379, 'localhost');
 
 var clients = redis.multi();
@@ -18,7 +21,7 @@ var board_identifier = 'board';
 var tmp;
 
 function client_connection(data) {
-  redis.rpush("users", data.id, function(err, res) {
+  redis.rpush('users', data.id, function(err, res) {
     if (err) throw err;
   });
   return data.id;
@@ -28,6 +31,27 @@ function client_disconnection(data) {
   redis.lrem('users', 0, data.id, function(err, res) {
     if (err) throw err;
   });
+}
+
+function module_connection(data) {
+  redis.rpush('modules', data.name, function(err, res) {
+    if (err) throw err;
+    redis.set(data.name, 0);
+  });
+  modules.push(data);
+}
+
+function module_disconnection(data) {
+  var idx = moudles.indexOf(data.name);
+  modules.splice(idx, 1);
+
+  redis.lrem('modules', 0, data.name, function(err, res) {
+    if (err) throw err; 
+  });
+}
+
+function find_unused_module(data) {
+  return null;
 }
 
 function parse_fomula(data) {
@@ -73,11 +97,12 @@ if (cluster.isMaster) {
   //if worker dead
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker exit : ' + worker.id);
+    if (code == 200) { cluster.fork(); }
+  });
 
-    if (code == 200) {
-      cluster.fork();
-    }
-
+  // before start service, clean all databases
+  redis.flushall( function (err, res) {
+    console.log(res); // will be true if successfull
   });
 }
 else {
@@ -128,6 +153,8 @@ else {
       var parsed_data = JSON.parse(data);
       var fomula = order_identifier + ' ' + socket.id + ' ' + parsed_data.order.toString();
       // net_server.write(fomula);
+
+      //redis에서 module를 활성화 상태로 표시
       tmp.write(fomula); // correction needed
     });
 
@@ -137,6 +164,7 @@ else {
       var fomula = board_identifier + ' ' + socket.id + ' ' +
       parsed_data.Host.toString() + ' ' + parsed_data.Board.toString();
       // net_server.write(fomula);
+
       tmp.write(fomula); // correction needed
     });
 
@@ -148,18 +176,20 @@ else {
     });
   });
 
+  //worker queue에는 module, socket_id 형식으로 저장 할 예정.
+
     // TCP server connection access
   net_server.on('connection', function(socket) {
     tmp = socket;
     console.log('New Module Connected (ID : ' + socket.remoteAddress + ':' + socket.remotePort + ')');
-    modules.push(socket);
+    socket.name = (Math.random()+1).toString(36).slice(2, 18);
+    module_connection(socket);
 
     socket.on('data', function(data) {
       console.log("from graph: " + data);
       response = parse_fomula(data);
 
       if (response.identifier == board_identifier) {
-
         io.to(response.socket_id).emit('Response', response.prev_pos + ' ' + response.next_pos);
       }
 
@@ -169,13 +199,10 @@ else {
     });
 
     socket.on('end', function() {
-      console.log(socket.id + ' Module Disconnect');
+      console.log(socket.remoteAddress + ':' + socket.remotePort + ' Module Disconnect');
+      module_disconnection(socket);
       var index = modules.indexOf(socket);
-      if(index != -1) {
-        modules.splice(index, 1);
-      }
     });
-
   });
 
   // TCP server connection end
