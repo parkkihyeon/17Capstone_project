@@ -27,6 +27,10 @@
 #define NUM_OF_PIECE 14
 #define PHO_MIDDLE_VALUE 5
 #define PHO_BOTTOM_VALUE 2
+#define EARLY_GAME 22 
+#define MIDDLE_GAME 13
+#define rowStartNum 1
+#define colStartNum 1
 
 using namespace std;
 
@@ -47,6 +51,26 @@ enum {
 	CHA_VALUE = 13, 
 	KING_VALUE = 100
 };
+
+namespace choPiece{
+	static const char CHA = 'c' ;
+	static const char PHO = 'p' ;
+	static const char HORSE = 'h' ;
+	static const char SANG = 'x' ;
+	static const char SA = 's' ;
+	static const char JOL = 'j' ;
+	static const char KING = 'k' ;
+}
+
+namespace hanPiece {
+	static const char CHA = 'C' ;
+	static const char PHO = 'P' ;
+	static const char HORSE = 'H' ;
+	static const char SANG = 'X' ;
+	static const char SA = 'S' ;
+	static const char JOL = 'J' ;
+	static const char KING = 'K' ;
+}
 
 class stateCondition
 {
@@ -79,7 +103,7 @@ public:
 };
 
 
-class State_node
+class stateNode
 {
 private:
 	int state_ordernum; 
@@ -88,14 +112,14 @@ private:
 	int travel_count;
 	int state_number; 
 
-	vector<double> *han_weight ;
-	vector<double> *cho_weight ;
+	vector<double> *hanWeight ;
+	vector<double> *choWeight ;
 	double score;
 	char State[HEIGHT_SIZE][WIDTH_SIZE];
 
 	stateCondition *this_turn;
-	vector<State_node*>* next;
-	vector<State_node*>* prev;
+	vector<stateNode*>* next;
+	vector<stateNode*>* prev;
 	pair_key sumofKeyPosition;
 
 	friend class boost::serialization::access;
@@ -106,8 +130,8 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(numofCho);
 		ar & BOOST_SERIALIZATION_NVP(numofHan);
 		ar & BOOST_SERIALIZATION_NVP(travel_count);
-		ar & BOOST_SERIALIZATION_NVP(han_weight);
-		ar & BOOST_SERIALIZATION_NVP(cho_weight);
+		ar & BOOST_SERIALIZATION_NVP(hanWeight);
+		ar & BOOST_SERIALIZATION_NVP(choWeight);
 		ar & BOOST_SERIALIZATION_NVP(score);
 		ar & BOOST_SERIALIZATION_NVP(State);
 		ar & BOOST_SERIALIZATION_NVP(sumofKeyPosition);
@@ -117,13 +141,13 @@ private:
 	}
 public:
 
-	State_node(char data[HEIGHT_SIZE][WIDTH_SIZE]);
-	State_node();
+	stateNode(char data[HEIGHT_SIZE][WIDTH_SIZE]);
+	stateNode();
 
 	void Print_State();
 
-	void Addlist_Child(State_node *add_state);
-	void Connect_Parent(State_node *parent_state);
+	void Addlist_Child(stateNode *add_state);
+	void Connect_Parent(stateNode *parent_state);
 	void Set_numUnit(int cho, int han);
 	void Set_Stateorder(int data);
 	void SetHorse_position(pair_key s);
@@ -137,10 +161,10 @@ public:
 	void setNumOfPiece(int *piece) ;
 	void evaluateBoard();
 
-	const bool operator==(State_node *node);
+	const bool operator==(stateNode *node);
 
-	State_node* NthCheck_Childnode(int n);
-	State_node* NthCheck_Parentnode(int n);
+	stateNode* NthCheck_Childnode(int n);
+	stateNode* NthCheck_Parentnode(int n);
 	stateCondition* GetTurn();
 	STATE GetState();
 
@@ -155,8 +179,8 @@ public:
 	vector<double>* Get_choweight();
 	double GetScore();
 
-	vector<State_node*> *GetNext();
-	vector<State_node*> *GetPrev();
+	vector<stateNode*> *GetNext();
+	vector<stateNode*> *GetPrev();
 	pair_key GetPieceOfKey();
 
 	void SetState(char state_[HEIGHT_SIZE][WIDTH_SIZE]);

@@ -6,11 +6,11 @@
 #define MIN -2100000000
 enum { CHO, HAN };
 
-State_node* SetState_fromServer(char state[HEIGHT_SIZE][WIDTH_SIZE], bool host);
-State_node* SelectState(State_node *now_state);
+stateNode* SetState_fromServer(char state[HEIGHT_SIZE][WIDTH_SIZE], bool host);
+stateNode* SelectState(stateNode *now_state);
 void SelectMove(Adjcency_grpah *g);
-void MinMax(State_node *game_state, State_node* now_state, bool host);
-bool MoveableMinMax(State_node *game_state, State_node *now_state, Adjcency_grpah *g, bool host) ;
+void MinMax(stateNode *game_state, stateNode* now_state, bool host);
+bool MoveableMinMax(stateNode *game_state, stateNode *now_state, Adjcency_grpah *g, bool host) ;
 void Swap(char &a, char &b);
 void PlaceSelect(char state[HEIGHT_SIZE][WIDTH_SIZE]);
 #endif
