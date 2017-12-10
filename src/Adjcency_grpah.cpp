@@ -1,7 +1,7 @@
 #include "Adjcency_grpah.h"
 #include "Moveable.h"
 
-movableHash *moveableHash[NUMUNIT][NUMUNIT];
+movableHash *moveableHash[NUM_OF_TEAM_PIECE][NUM_OF_TEAM_PIECE];
 
 int pow(int var, int exp) {
 	int ans = 1;
@@ -13,8 +13,8 @@ int pow(int var, int exp) {
 
 // init hash table
 void Adjcency_grpah::initMovableHash() {
-	for (int i = 0; i < NUMUNIT; i++) {
-		for (int j = 0; j < NUMUNIT; j++) {
+	for (int i = 0; i < NUM_OF_TEAM_PIECE; i++) {
+		for (int j = 0; j < NUM_OF_TEAM_PIECE; j++) {
 			moveableHash[i][j] = new movableHash();
 		}
 	}
@@ -33,12 +33,12 @@ int Adjcency_grpah::convertKeyhash(int key, int key_index) {
 	return key;
 }
 
-string Adjcency_grpah::getMovableKey(stateNode* now_state) {
+string Adjcency_grpah::getMovableKey(stateNode* nowState) {
 	string stringKey = "" ;
 	int numofPiece[NUM_OF_PIECE] = {0} ;
-	now_state->setNumOfPiece(numofPiece);
+	nowState->setNumOfPiece(numofPiece);
 
-	for(int i=0; i < 7; i++){
+	for(int i=0; i < NUM_OF_PIECE/2; i++){
 		numofPiece[i] += numofPiece[i+7] ;
 	}
 	
@@ -48,14 +48,14 @@ string Adjcency_grpah::getMovableKey(stateNode* now_state) {
 	stringKey.append(to_string(numofPiece[SANG])) ;
 	stringKey.append(to_string(numofPiece[SA])) ;
 	stringKey.append(to_string(numofPiece[JOL])) ;
-	stringKey.append(to_string(now_state->GetTurn()->Gethost())) ;
+	stringKey.append(to_string(nowState->GetTurn()->Gethost())) ;
 	return  stringKey;
 }
 // movable hash table.
-void Adjcency_grpah::insertMovableHash(stateNode* now_state) {
-	int cho = now_state->Getcho();
-	int han = now_state->Gethan();
-	moveableHash[cho][han]->insert(movableHash::value_type(getMovableKey(now_state), now_state));
+void Adjcency_grpah::insertMovableHash(stateNode* nowState) {
+	int cho = nowState->Getcho();
+	int han = nowState->Gethan();
+	moveableHash[cho][han]->insert(movableHash::value_type(getMovableKey(nowState), nowState));
 }
 
 Adjcency_grpah::Adjcency_grpah() {
@@ -69,7 +69,7 @@ Adjcency_grpah::Adjcency_grpah() {
 	root->Set_numUnit(0, 0);
 	statenode_num = 0;
 	initHashtable();
-	PushList_Hashtable(root);
+	pushToHashtable(root);
 	root->SetState_number(0);
 	initMovableHash();
 }
@@ -78,25 +78,25 @@ Adjcency_grpah::Adjcency_grpah(const Adjcency_grpah &graph) {
 	root = graph.root;
 	initHashtable();
 	statenode_num = graph.statenode_num;
-	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
+	memcpy(hashstate_list, graph.hashstate_list, sizeof(hash_4d*) * NUM_OF_TEAM_PIECE * NUM_OF_TEAM_PIECE);
 }
 //Save Serialize¸
 Adjcency_grpah::Adjcency_grpah(Adjcency_grpah *graph) {
 	root = graph->root;
 	initHashtable();
 	statenode_num = graph->statenode_num;
-	memcpy(hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT);
+	memcpy(hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUM_OF_TEAM_PIECE * NUM_OF_TEAM_PIECE);
 }
 void Adjcency_grpah::initHashtable () {
-	for (int i = 0; i < NUMUNIT; i++) {
-		for (int j = 0; j < NUMUNIT; j++) {
+	for (int i = 0; i < NUM_OF_TEAM_PIECE; i++) {
+		for (int j = 0; j < NUM_OF_TEAM_PIECE; j++) {
 			hashstate_list[i][j] = new hash_4d();
 		}
 	}
 }
 
 // insert state node in hash table
-void Adjcency_grpah::PushList_Hashtable(stateNode* state) {
+void Adjcency_grpah::pushToHashtable(stateNode* state) {
 	int cho = state->Getcho();
 	int han = state->Gethan();
 	int key[4] ;
@@ -106,47 +106,45 @@ void Adjcency_grpah::PushList_Hashtable(stateNode* state) {
 
 // graph generalized
 void Adjcency_grpah::Insert(vector<stateNode*>*  state) {
-	stateNode *now_state = root;
+	stateNode *nowState = root;
 
 	for (int index = 0; index < state->size(); index++) {
 		stateNode* add_state = state->at(index);
+		int childnode = IsHaveChildnode(nowState, add_state);
 
-		int childnode = IsHaveChildnode(now_state, add_state);
-
-		if (childnode >= 0) {
-			now_state = now_state->NthCheck_Childnode(childnode);
-		}
+		if (childnode >= 0) 
+			nowState = nowState->NthCheck_Childnode(childnode);
 		else {
 			stateNode* check_node = IsHaveStateInHash(add_state);
 			if (check_node) {
-				now_state->Addlist_Child(check_node);
-				check_node->Connect_Parent(now_state);
-				now_state = check_node;
+				nowState->Addlist_Child(check_node);
+				check_node->Connect_Parent(nowState);
+				nowState = check_node;
 			}
 			else {
-				PushList_Hashtable(add_state);
+				pushToHashtable(add_state);
 				insertMovableHash(add_state);
 				add_state->SetState_number(++statenode_num);
-				now_state->Addlist_Child(add_state);
-				add_state->Connect_Parent(now_state);
-				add_state->Set_Stateorder(now_state->GetNext()->size());
-				now_state = add_state;
+				nowState->Addlist_Child(add_state);
+				add_state->Connect_Parent(nowState);
+				add_state->Set_Stateorder(nowState->GetNext()->size());
+				nowState = add_state;
 			}
 		}
-		state_stack.push(now_state);
-		now_state->TravelCountPlus();
+		state_stack.push(nowState);
+		nowState->TravelCountPlus();
 	}
 }
 // second Insert process
 void Adjcency_grpah::secondInsert(vector<stateNode*>*  state) {
-	stateNode *now_state = root;
+	stateNode *nowState = root;
 
 	for (int index = 0; index < state->size(); index++) {
 		stateNode* add_state = state->at(index);
 
-		int childnode = IsHaveChildnode(now_state, add_state);
-		now_state = now_state->NthCheck_Childnode(childnode);
-		state->at(index) = now_state;
+		int childnode = IsHaveChildnode(nowState, add_state);
+		nowState = nowState->NthCheck_Childnode(childnode);
+		state->at(index) = nowState;
 	}
 }
 // set up key value
@@ -209,7 +207,7 @@ bool Adjcency_grpah::Diff_State(stateNode *stateA, stateNode *stateB) {
 }
 
 const bool Adjcency_grpah::operator==(Adjcency_grpah *graph) {
-	if (memcmp(this->hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUMUNIT * NUMUNIT)) {
+	if (memcmp(this->hashstate_list, graph->hashstate_list, sizeof(hash_4d*) * NUM_OF_TEAM_PIECE * NUM_OF_TEAM_PIECE)) {
 		return false;
 	}
 	else if (!(this->root->operator==(graph->GetRoot()))) {
@@ -222,38 +220,38 @@ const bool Adjcency_grpah::operator==(Adjcency_grpah *graph) {
 Second_Graph::Second_Graph(Adjcency_grpah *g) {
 	original_g = new Adjcency_grpah(g);
 }
-
+// I think it is better than devide function under 20 line.
 void Second_Graph::adjustWeight(vector<stateNode*>* state){
 
-	stateNode *now_state,*prev_state,*prev2_state,*next2_state ;
+	stateNode *nowState,*prevState,*prev2State ;
 	stateCondition *nowTurn = new stateCondition() ;
 
-	char actor_prev, actor, killed ;
+	char previousActor, nowActor, killed ;
 	bool preHost, checkmate, host;
-	int prevActor;
+	int prevActorIdx;
 
 	for (int i = 1; i < state->size(); i++) {
-		now_state = state->at(i);		
-		nowTurn = now_state->GetTurn() ;
+		nowState = state->at(i);		
+		nowTurn = nowState->GetTurn() ;
 
-		prev_state = GetPrevState(state, i);
-		prev2_state = GetPrevState(state, i - 1);
+		prevState = getPrevState(state, i);
+		prev2State = getPrevState(state, i - 1);
 
-		actor = nowTurn->GetActor();
+		nowActor = nowTurn->GetActor();
 		host = (bool)nowTurn->Gethost();
 
-		actor_prev = prev_state->GetTurn()->GetActor();
-		preHost = prev_state->GetTurn()->Gethost();
+		previousActor = prevState->GetTurn()->GetActor();
+		preHost = prevState->GetTurn()->Gethost();
 
-		if (actor_prev != FIRST_PIECE)
-			prevActor = idxOfPiece(actor_prev);
+		if (previousActor != FIRST_PIECE)
+			prevActorIdx = idxOfPiece(previousActor);
 
-		if (actor == REST_PIECE) {
-			if (actor_prev != FIRST_PIECE)
-				prev_state->WeightCalculate(prevActor, RESTER_EVAL, preHost);
+		if (nowActor == REST_PIECE) {
+			if (previousActor != FIRST_PIECE)
+				prevState->WeightCalculate(prevActorIdx, RESTER_EVAL, preHost);
 		}
 		else {// killed and checkmate
-			int nowActor = idxOfPiece(actor);
+			int nowActorIdx = idxOfPiece(nowActor);
 			int sumOfPrevEval = MOVING_EVAL;
 			int sumOfPrev2Eval = 0;
 			if (nowTurn->GetKilled() != '0') {
@@ -265,10 +263,10 @@ void Second_Graph::adjustWeight(vector<stateNode*>* state){
 				sumOfPrev2Eval += CHECKMATEE_EVAL ;
 			}
 
-			prev_state->WeightCalculate(nowActor, sumOfPrevEval, host);
+			prevState->WeightCalculate(nowActorIdx, sumOfPrevEval, host);
 
-			if(prev2_state)
-				prev2_state->WeightCalculate(prevActor, sumOfPrev2Eval, !host);
+			if(prev2State)
+				prev2State->WeightCalculate(prevActorIdx, sumOfPrev2Eval, !host);
 
 		}
 
@@ -291,7 +289,7 @@ void Second_Graph::backPropagation(vector<stateNode*>* state, int winner){
 	for (int i = reward_start; i >= 1; i--) {
 		nowState = state->at(i);
 		host = nowState->GetTurn()->Gethost();
-		next2State = GetNextState(state, i + 1);
+		next2State = getNextState(state, i + 1);
 		sumOfScore = nowState->GetScore() ;
 		addScore = next2State->GetScore() * LEARNING_RATE ;
 
@@ -311,38 +309,28 @@ void Second_Graph::learnProcess(vector<stateNode*>* state, int winner) {
 		return;
 	backPropagation(state, winner); 
 }
-
-void Adjcency_grpah::AddMoveableChild(stateNode *now_state) {
-	int cho = now_state->Getcho();
-	int han = now_state->Gethan();
-	string stringKey = getMovableKey(now_state);
-
-	int getNextsize = now_state->SizeofNext();
+// Add child nodes that are not currently registered in the state but are movable on the graph to the child list
+void Adjcency_grpah::AddMoveableChild(stateNode *nowState) {
+	int cho = nowState->Getcho();
+	int han = nowState->Gethan();
+	string stringKey = getMovableKey(nowState);
+	int getNextsize = nowState->SizeofNext();
 	int lengthOfKey = stringKey.length()-1 ;
-
-
-	if (stringKey.at(lengthOfKey) == '0') {
-		stringKey.at(lengthOfKey) = '1' ;
-	}
-	else
-		stringKey.at(lengthOfKey) = '0' ;	
-
-	bool host = now_state->GetTurn()->Gethost();
-	movableHash *m = moveableHash[cho][han];
+	bool host = nowState->GetTurn()->Gethost();
+	// when now turn is CHO, than next turn is Han. our goal is next state. So when this turn is CHO, next must be CHO
+	// It is not perfect function.
+	stringKey.at(lengthOfKey) = (stringKey.at(lengthOfKey) == CHO_KEY ? HAN_KEY : CHO_KEY) ;
 	movableHash::iterator itCur;
-	stateNode *candidate_state;
-	pair<movableHash::iterator, movableHash::iterator> it_pair;
-	it_pair = m->equal_range(stringKey);
+	pair<movableHash::iterator, movableHash::iterator> it_pair = moveableHash[cho][han]->equal_range(stringKey);
 
 	for (itCur = it_pair.first; itCur != it_pair.second; itCur++) {
-		candidate_state = itCur->second;
+		stateNode *candidate_state = itCur->second;
 
-		if (moveable(now_state->GetState(), candidate_state->GetState(), host)) {
+		if (moveable(nowState->GetState(), candidate_state->GetState(), host)) {
 			for (int i = 0; i < getNextsize ; i++) {
-				if (!Diff_State(now_state->GetNext()->at(i), candidate_state))
-					break;
+				if (!Diff_State(nowState->GetNext()->at(i), candidate_state)) break;
 				else if (i == getNextsize - 1)
-					now_state->Addlist_Child(candidate_state);
+					nowState->Addlist_Child(candidate_state);
 			}
 		}
 	}
@@ -350,19 +338,19 @@ void Adjcency_grpah::AddMoveableChild(stateNode *now_state) {
 }
 
 void Adjcency_grpah::movableByBFS(int *bfs_check){
-	stateNode *now_state;
+	stateNode *nowState;
 	queue<stateNode*> *q = new queue<stateNode*>();
 	q->push(root);
 	while (!q->empty()) {
-			now_state = q->front(); q->pop();
-			if (now_state != root)
-				AddMoveableChild(now_state);
+			nowState = q->front(); q->pop();
+			if (nowState != root)
+				AddMoveableChild(nowState);
 
-			for (int i = 0; i < now_state->SizeofNext(); i++) {
-				int bfsCheckingidx = now_state->NthCheck_Childnode(i)->GetState_number() ;
+			for (int i = 0; i < nowState->SizeofNext(); i++) {
+				int bfsCheckingidx = nowState->NthCheck_Childnode(i)->GetState_number() ;
 				if (bfs_check[bfsCheckingidx] != -1) {
 					bfs_check[bfsCheckingidx] = -1;
-					q->push(now_state->NthCheck_Childnode(i));
+					q->push(nowState->NthCheck_Childnode(i));
 				}
 			}
 	}
@@ -388,13 +376,13 @@ Adjcency_grpah * Second_Graph::Getgraph() {
 	return original_g;
 }
 
-stateNode* Second_Graph::GetPrevState(vector<stateNode*>*  state, int index) {
+stateNode* Second_Graph::getPrevState(vector<stateNode*>*  state, int index) {
 	if (index >= 1)
 		return state->at(index - 1);
 	return NULL;
 }
 
-stateNode* Second_Graph::GetNextState(vector<stateNode*>*  state, int index) {
+stateNode* Second_Graph::getNextState(vector<stateNode*>*  state, int index) {
 	if (index <= state->size() - 2)
 		return state->at(index + 1);
 	return NULL;
@@ -421,7 +409,6 @@ int Second_Graph::idxOfPiece(char piece) {
 		return NONE;
 	default:
 		cerr << "idxOfPiece error" << endl;
-		cerr << piece << "<- ¹®Á¦" << endl;
 		return ERROR_CODE;
 	}
 }

@@ -38,7 +38,6 @@ typedef pair<int, int> Cha_pos;
 typedef pair<int, int> Pho_pos;
 typedef pair<Cha_pos, Pho_pos> pair_key;
 typedef char (*STATE)[WIDTH_SIZE] ;
-typedef vector<stateNode*>* stateVector ;
 
 enum {CHO_PLAY, HAN_PLAY};
 enum { CHA, PHO, HORSE, SANG, SA, JOL, KING, NONE };

@@ -14,7 +14,7 @@
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
-#define NUMUNIT 17
+#define NUM_OF_TEAM_PIECE 17
 #define ERROR_CODE 8
 #define REST_PIECE '0'
 #define FIRST_PIECE '0'
@@ -28,10 +28,12 @@
 #define CHECKMATER_EVAL 0.005
 #define CHECKMATEE_EVAL -0.005
 #define LEARNING_RATE 0.3
+#define CHO_KEY '0'
+#define HAN_KEY '1'
 
 using namespace std;
 
-typedef multimap<pair_key, stateNode*> hash_4d; // 4���� �ؽ�
+typedef multimap<pair_key, stateNode*> hash_4d; 
 typedef multimap<string, stateNode*> movableHash;
 
 class Adjcency_grpah
@@ -39,7 +41,7 @@ class Adjcency_grpah
 private:
 	stateNode *root;
 	stateNode *leaf;
-	hash_4d* hashstate_list[NUMUNIT][NUMUNIT];
+	hash_4d* hashstate_list[NUM_OF_TEAM_PIECE][NUM_OF_TEAM_PIECE];
 	stack<stateNode *> state_stack;
 	int statenode_num;
 	friend class boost::serialization::access;
@@ -62,7 +64,7 @@ public:
 	void initHashtable();
 	void Insert(vector<stateNode*>*  state);
 	void secondInsert(vector<stateNode*>*  state);
-	void PushList_Hashtable(stateNode* state);
+	void pushToHashtable(stateNode* state);
 	void Set_4Dhashdata(int key[4], stateNode* state);
 	void AddMoveableChild(stateNode *now_state);
 	void AddMoveable() ;
@@ -91,8 +93,8 @@ public:
 	int idxOfPiece(char piece);
 
 	Adjcency_grpah * Getgraph();
-	stateNode* GetPrevState(vector<stateNode*>*  state, int index);
-	stateNode* GetNextState(vector<stateNode*>*  state, int index);
+	stateNode* getPrevState(vector<stateNode*>*  state, int index);
+	stateNode* getNextState(vector<stateNode*>*  state, int index);
 };
 
 
