@@ -31,11 +31,12 @@ Adjcency_grpah LoadGraphData(const char *fileName) {
 	return g;
 }
 
-void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state)
+void Node2StateNode(vector<Play*> *play, vector<stateNode*> *state, int now_state)
 {
-	for (int j = 0; j < play->at(now_state)->game.size(); j++) {
+	int gameSize = play->at(now_state)->game.size() ;
+	for (int j = 0; j < gameSize ; j++) {
 		node * node_t = play->at(now_state)->game.at(j);
-		State_node* now_state = new State_node(node_t->returnState());
+		stateNode* now_state = new stateNode(node_t->returnState());
 		now_state->Set_numUnit(node_t->getNumOfCho(), node_t->getNumOfHan());
 		now_state->SetHorse_position(node_t->getPair());
 		now_state->GetTurn()->SetTurn(node_t->getActor(), node_t->getKilled(), node_t->getCheckMate(), node_t->getHost(), node_t->GetPos());
@@ -44,11 +45,11 @@ void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_
 
 }
 
-void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node*>*>* state) {
+void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<stateNode*>*>* state) {
 	cout << "BF GR PLAY SIZE: " << play->size() << endl;
 	for (int i = 0; i < play->size(); i++) {
-		vector<State_node*>*history = new vector<State_node*>();
-		Play_to_Statenode(play, history, i);
+		vector<stateNode*>*history = new vector<stateNode*>();
+		Node2StateNode(play, history, i);
 		g->Insert(history);
 		state->push_back(history);
 		if(i % 1000 == 0)
@@ -57,10 +58,10 @@ void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node
 	cout << "Graph Generated\n" << endl;
 }
 
-void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*>* state) {
+void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<stateNode*>*>* state) {
 	for (int i = 0; i < play->size(); i++) {
-		g2->Getgraph()->Second_insert(state->at(i));
-		g2->Value_process(state->at(i), play->at(i)->GetWinner());
+		g2->Getgraph()->secondInsert(state->at(i));
+		g2->learnProcess(state->at(i), play->at(i)->GetWinner());
 	}
 	cout << "Graph Generated_2" << endl;
 }
@@ -180,7 +181,7 @@ int host = INITIALIZE;
 					State_node *select_state = new State_node();
 					State_node *now_state = SetState_fromServer(board, 0);
 
-					inthe_graph = graph->Is_In_The_List_State(now_state);
+					inthe_graph = graph->IsHaveStateInHash(now_state);
 					if (inthe_graph == NULL) {
 						MinMax(game_state, now_state, host);
 						next_pos = GetStatePos(game_state, now_state);
@@ -215,7 +216,7 @@ int host = INITIALIZE;
 	}
 }
 
-pair<int, int> GetStatePos(State_node *nextState, State_node *prevState) {
+pair<int, int> GetStatePos(stateNode *nextState, stateNode *prevState) {
 	pair<int, int> pos;
 	
 	int HeightIndex = 0, WidthIndex = 0;

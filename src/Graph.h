@@ -42,9 +42,9 @@
 #define BOARD_IDX 3
 
 void Insert_Gibo(vector<Play*> *play);
-void Play_to_Statenode(vector<Play*> *play, vector<State_node*> *state, int now_state);
-void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<State_node*>*>* state);
-void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<State_node*>*> * state);
+void Node2StateNode(vector<Play*> *play, vector<stateNode*> *state, int now_state);
+void Graph_made(Adjcency_grpah* g, vector<Play*>* play, vector<vector<stateNode*>*>* state);
+void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<stateNode*>*> * state);
 void SaveGraphData(Adjcency_grpah *i, const char *fileName);
 Adjcency_grpah LoadGraphData(const char *fileName);
 void SetSocket(Adjcency_grpah *graph);
