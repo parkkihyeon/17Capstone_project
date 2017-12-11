@@ -57,8 +57,6 @@ Moveable::Moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool h
     int cnt = 0;
     Pos prr[2];
     ispossible = true;
-
-    //if (host == CHO_PLAY);
     
     for (int i = 1; i < HEIGHT_SIZE; i++)
     {
@@ -121,7 +119,7 @@ char Moveable::getPiece()
 bool startMoveable(Moveable obj)
 {
     Moveable *JKPiece;
-    if(!obj.ispossible()) return false;
+    if(!obj.getIsPossible()) return false;
     
     switch (obj.getPiece())
     {

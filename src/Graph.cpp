@@ -1,5 +1,5 @@
 #include "Graph.h"
-#define TEXT_NAME "history-5000.txt"
+#define TEXT_NAME "Final.txt"
 
 //Make Binary file with Graph Serialization
 void SaveGraphData(Adjcency_grpah *i, const char *fileName) {
@@ -176,10 +176,10 @@ int host = INITIALIZE;
 					Get_Board(stream, board);
 
 					pair<int, int> next_pos;
-					State_node *game_state = new State_node();
-					State_node *inthe_graph = new State_node();
-					State_node *select_state = new State_node();
-					State_node *now_state = SetState_fromServer(board, 0);
+					stateNode *game_state = new stateNode();
+					stateNode *inthe_graph = new stateNode();
+					stateNode *select_state = new stateNode();
+					stateNode *now_state = SetState_fromServer(board, 0);
 
 					inthe_graph = graph->IsHaveStateInHash(now_state);
 					if (inthe_graph == NULL) {
