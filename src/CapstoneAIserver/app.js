@@ -12,12 +12,10 @@ var rserver = new RedisServer(6379);
 rserver.open((err) => { if (err) throw err; });
 var redis = Redis.createClient(6379, 'localhost');
 
-var clients = redis.multi();
-var modules = [];
-
 var order_identifier = 'order';
 var board_identifier = 'board';
 
+var modules = [];
 var tmp;
 
 function client_connection(data) {
@@ -34,24 +32,39 @@ function client_disconnection(data) {
 }
 
 function module_connection(data) {
-  redis.rpush('modules', data.name, function(err, res) {
-    if (err) throw err;
-    redis.set(data.name, 0);
+  // redis.rpush('modules', data.name, function(err, res) {
+  //   if (err) throw err;
+  //   redis.set(data.name, 0);
+  // });
+  modules.push({
+    id: data.id,
+    status: 0,
+    value: data
   });
-  modules.push(data);
 }
 
 function module_disconnection(data) {
-  var idx = moudles.indexOf(data.name);
-  modules.splice(idx, 1);
+  // delete modules.data.id;
 
-  redis.lrem('modules', 0, data.name, function(err, res) {
-    if (err) throw err; 
-  });
+  // redis.lrem('modules', 0, data.name, function(err, res) {
+  //   if (err) throw err; 
+  // });
 }
 
-function find_unused_module(data) {
-  return null;
+function find_idle_module() {
+  // redis.lrange('modules', 0, -1, function (error, module_id) {
+  //   if (error) throw error
+  //     var picked = modules.find(o => o.key == module_id);
+  //     console.log(picked);
+  //     if(redis.get(module_id) == 0) {
+  //       redis.set(module_id, 1);
+  //       return picked.value;
+  //     }
+  // });
+  var selected = modules.find(o => o.status == 0);
+  // modules.find(o => o.status == 0).status = 1;
+  // console.log('Find: ' + selected.id)
+  return selected;
 }
 
 function parse_fomula(data) {
@@ -85,19 +98,21 @@ function parse_fomula(data) {
 //-----Connection Between Unity & Graph Module-----
 
 if (cluster.isMaster) {
+  let workers = []
   //create worker as posible as the cpu can manage it
   os.cpus().forEach(function (cpu) {
-        cluster.fork();
-  });
+      const worker = cluster.fork();
+      workers.push(worker);
 
-  cluster.on('online', function (worker) {
+    cluster.on('online', function (worker) {
     // console.log('created worker id : ' + worker.process.pid);
-  });
+    });
 
   //if worker dead
-  cluster.on('exit', function(worker, code, signal) {
-    console.log('worker exit : ' + worker.id);
-    if (code == 200) { cluster.fork(); }
+    cluster.on('exit', function(worker, code, signal) {
+      console.log('worker exit : ' + worker.id);
+      if (code == 200) { cluster.fork(); }
+    });
   });
 
   // before start service, clean all databases
@@ -121,13 +136,6 @@ else {
     // console.log('PID [' + cluster.worker.process.pid + '] ' + 'NET Server');
   })
 
-  redis.on('subscribe', function(channel, data) {
-    console.log("client subscribe channel " + channel );
-  });
-  redis.on("message", function (channel, message) {
-    console.log("client message channel " + channel + ": " + message);
-  });
-
   io.on('connection', function(socket) {
     console.log('worker id : ' + cluster.worker.id + 
       ", worker pid: " + cluster.worker.process.pid + 
@@ -143,19 +151,25 @@ else {
       redis.lrange('users', 0, -1, function (error, clients) {
         if (error) throw error
         clients.forEach(function (client) { 
-          console.log(client);
+          console.log('users : ' + client);
         });
       });
+      modules.forEach(function(module) {
+        console.log('module : ' + module.id.toString());
+      })
     });
 
     socket.on('Order', function(data) {
       // console.log(data);
       var parsed_data = JSON.parse(data);
-      var fomula = order_identifier + ' ' + socket.id + ' ' + parsed_data.order.toString();
-      // net_server.write(fomula);
+      var fomula = order_identifier + ' ' + socket.id + ' ' + parsed_data.toString();
+      console.log('fomula: ' + fomula);
 
       //redis에서 module를 활성화 상태로 표시
-      tmp.write(fomula); // correction needed
+      // var net_socket = find_idle_module();
+      // console.log("module id: " + net_socket.id);
+      // net_socket.write(fomula); // correction needed
+      tmp.write(fomula);
     });
 
     socket.on('Request', function(data) {
@@ -163,9 +177,12 @@ else {
       var parsed_data = JSON.parse(data);
       var fomula = board_identifier + ' ' + socket.id + ' ' +
       parsed_data.Host.toString() + ' ' + parsed_data.Board.toString();
-      // net_server.write(fomula);
+      console.log('fomula: ' + fomula);
 
-      tmp.write(fomula); // correction needed
+      // var net_socket = find_idle_module();
+      // console.log("module id: " + net_socket.id);
+      // net_socket.write(fomula); // correction needed
+      tmp.write(fomula);
     });
 
     socket.on('Disconnect', function() {
@@ -180,10 +197,12 @@ else {
 
     // TCP server connection access
   net_server.on('connection', function(socket) {
-    tmp = socket;
-    console.log('New Module Connected (ID : ' + socket.remoteAddress + ':' + socket.remotePort + ')');
-    socket.name = (Math.random()+1).toString(36).slice(2, 18);
+    console.log('New Module Connected (worker pid: ' + cluster.worker.process.pid + 
+      ' ID : ' + socket.remoteAddress + ':' + socket.remotePort + ')');
+    socket.id = (Math.random()+1).toString(36).slice(2, 18);
     module_connection(socket);
+
+    tmp = socket;
 
     socket.on('data', function(data) {
       console.log("from graph: " + data);
@@ -191,17 +210,18 @@ else {
 
       if (response.identifier == board_identifier) {
         io.to(response.socket_id).emit('Response', response.prev_pos + ' ' + response.next_pos);
+        console.log('From: ' + cluster.worker.process.pid);
       }
 
       else if (response.identifier == order_identifier) {
         io.to(response.socket_id).emit('AI_Order', response.order); 
+        console.log('From: ' + cluster.worker.process.pid);
       }
     });
 
     socket.on('end', function() {
       console.log(socket.remoteAddress + ':' + socket.remotePort + ' Module Disconnect');
       module_disconnection(socket);
-      var index = modules.indexOf(socket);
     });
   });
 
