@@ -324,9 +324,10 @@ void Adjcency_grpah::AddMoveableChild(stateNode *nowState) {
 	pair<movableHash::iterator, movableHash::iterator> it_pair = moveableHash[cho][han]->equal_range(stringKey);
 
 	for (itCur = it_pair.first; itCur != it_pair.second; itCur++) {
-		stateNode *candidate_state = itCur->second;
+	  stateNode *candidate_state = itCur->second;
 
-		if (moveable(nowState->GetState(), candidate_state->GetState(), host)) {
+		Moveable move(now_state->GetState(), candidate_state->GetState(), host);
+		if (startMoveable(move)) {
 			for (int i = 0; i < getNextsize ; i++) {
 				if (!Diff_State(nowState->GetNext()->at(i), candidate_state)) break;
 				else if (i == getNextsize - 1)

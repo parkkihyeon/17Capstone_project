@@ -58,6 +58,7 @@ public:
 
 	void initMovableHash();
 	int convertKeyhash(int key, int key_index);
+
 	string getMovableKey(stateNode* now_state);
 	void insertMovableHash(stateNode* now_state);
 
@@ -68,7 +69,7 @@ public:
 	void Set_4Dhashdata(int key[4], stateNode* state);
 	void AddMoveableChild(stateNode *now_state);
 	void AddMoveable() ;
-    void movableByBFS(int *bfs_check);
+  void movableByBFS(int *bfs_check);
 
 	const bool operator== (Adjcency_grpah *graph) ;
 

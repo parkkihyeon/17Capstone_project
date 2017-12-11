@@ -1,5 +1,5 @@
 #include"SelectAlgorithm.h"
-#include "Minmax.h"
+#include "Minmaxstage.h"
 
 void Swap(char &a, char &b) {
 	char temp = a;
@@ -110,7 +110,7 @@ bool MoveableMinMax(stateNode *game_state, stateNode *now_state, Adjcency_grpah 
 void MinMax(stateNode *game_state, stateNode* now_state, bool host) {
 	cout << "Min Max " << endl ;
 	char t_state[HEIGHT_SIZE][WIDTH_SIZE] ;
-	CJKStage test;
+	Minmaxstage test;
 	test.boardChage(now_state->GetState());
 	test.Infer(host);
 	test.getboard(t_state) ;
