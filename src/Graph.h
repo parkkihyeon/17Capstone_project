@@ -48,7 +48,7 @@ void Second_Graph_made(Second_Graph* g2, vector<Play*>* play, vector<vector<stat
 void SaveGraphData(Adjcency_grpah *i, const char *fileName);
 Adjcency_grpah LoadGraphData(const char *fileName);
 void SetSocket(Adjcency_grpah *graph);
-pair<int, int> GetStatePos(State_node *nextState, State_node *prevState);
+pair<int, int> GetStatePos(stateNode *nextState, stateNode *prevState);
 bool isOrder(std::vector<std::string> stream);
 int order_selection(std::vector<std::string> stream);
 void Get_Board(std::vector<std::string> stream, char(&board)[HEIGHT_SIZE][WIDTH_SIZE]);
