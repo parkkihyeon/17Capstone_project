@@ -1,64 +1,42 @@
 #include"SelectAlgorithm.h"
 #include "Minmaxstage.h"
 
-//const static int THRESHOLD = 10000;
-//const static int CHILD_NUM = 3;
-
 void Swap(char &a, char &b) {
 	char temp = a;
 	a = b;
 	b = temp;
 }
 
+// Just Test Code
 void PlaceSelect(char state[HEIGHT_SIZE][WIDTH_SIZE]) {
 	cout << "0 : HXHX, 1 : HXXH, 2 : XHXH, 3 : XHHX" << endl;
 	int cho, han;
 	cin >> cho >> han;
 	switch (cho)
 	{
-	case 0:
-		break;
-	case 1:
-		Swap(state[10][7], state[10][8]);
-		break;
-	case 2:
-		Swap(state[10][7], state[10][8]);
-		Swap(state[10][2], state[10][3]);
-		break;
-	case 3:
-		Swap(state[10][2], state[10][3]);
-		break;
-	default:
-		cout << "���Է� : " << endl;
-		cin >> cho;
+	case 0:		break;
+	case 1:		Swap(state[10][7], state[10][8]);		break;
+	case 2:		Swap(state[10][7], state[10][8]);		Swap(state[10][2], state[10][3]);		break;
+	case 3:		Swap(state[10][2], state[10][3]);		break;
+	default:		cout << "���Է� : " << endl;		cin >> cho;
 	}
 
 	switch (han)
 	{
-	case 0:
-		break;
-	case 1:
-		Swap(state[1][7], state[1][8]);
-		break;
-	case 2:
-		Swap(state[1][7], state[1][8]);
-		Swap(state[1][2], state[1][3]);
-		break;
-	case 3:
-		Swap(state[1][2], state[1][3]);
-		break;
+	case 0:		break;
+	case 1:		Swap(state[1][7], state[1][8]);		break;
+	case 2:		Swap(state[1][7], state[1][8]);		Swap(state[1][2], state[1][3]);
+	case 3:		Swap(state[1][2], state[1][3]);		break;
 	default:
 		cout << "���Է� : " << endl;
 		cin >> han;
 	}
 }
 
-State_node* SetState_fromServer(char state[HEIGHT_SIZE][WIDTH_SIZE], bool host) {
-	/*
-	 �¼� : state�� host�� ���⿡ �����κ��� �ް� �ڵ� �Ѵ�.
-	*/
+stateNode* SetState_fromServer(char state[HEIGHT_SIZE][WIDTH_SIZE], bool host) {
+
 	int cho = 0, han = 0, cha_y = 0, cha_x = 0, pho_y = 0, pho_x = 0;
-	State_node* answer = new State_node(state);
+	stateNode* answer = new stateNode(state);
 	pair<Cha_pos, Pho_pos> pos;
 	pair<int, int> Pos;
 	Pos.first = NULL;
@@ -90,20 +68,20 @@ State_node* SetState_fromServer(char state[HEIGHT_SIZE][WIDTH_SIZE], bool host) 
 	return answer;
 }
 
-State_node* SelectState(State_node *now_state) {
+stateNode* SelectState(stateNode *now_state) {
 
 	int index = 0;
 	int max ;
-	int next_childnum = now_state->Getnext()->size();
+	int sizeOfChild = now_state->GetNext()->size();
 
-	if (next_childnum == 0)
+	if (!sizeOfChild)
 		return NULL;
-	max = now_state->Getnext()->at(0)->GetScore();
+	
+	max = now_state->GetNext()->at(0)->GetScore();
 
-	// �ƽ��� ã��
-	for (int i = 1; i < next_childnum; i++) {
-		if (now_state->Getnext()->at(i)->GetScore() > max) {
-			max = now_state->Getnext()->at(i)->GetScore();
+	for (int i = 1; i < sizeOfChild; i++) {
+		if (now_state->GetNext()->at(i)->GetScore() > max) {
+			max = now_state->GetNext()->at(i)->GetScore();
 			index = i;
 		}
 	}
@@ -114,23 +92,22 @@ State_node* SelectState(State_node *now_state) {
 	}
 		
 
-	// ��ºκ�
-	for (int i = 0 ; i < next_childnum; i++) {
-		cout << now_state->Getnext()->at(i)->GetScore() << " ";
+	for (int i = 0 ; i < sizeOfChild; i++) {
+		cout << now_state->GetNext()->at(i)->GetScore() << " ";
 	}
-	cout << endl << "SELECT : " << now_state->Getnext()->at(index)->GetScore() << endl;
+	cout << endl << "SELECT : " << now_state->GetNext()->at(index)->GetScore() << endl;
 
-	return now_state->Getnext()->at(index);
+	return now_state->GetNext()->at(index);
 }
 
-bool MoveableMinMax(State_node *game_state, State_node *now_state, Adjcency_grpah *g){
-	State_node *maxVlaueState = new State_node() ;
+bool MoveableMinMax(stateNode *game_state, stateNode *now_state, Adjcency_grpah *g){
+	stateNode *maxVlaueState = new stateNode() ;
 	int maxvalue = 0 ;
 
 	/* movable minmax  */
 }
 
-void MinMax(State_node *game_state, State_node* now_state, bool host) {
+void MinMax(stateNode *game_state, stateNode* now_state, bool host) {
 	cout << "Min Max " << endl ;
 	char t_state[HEIGHT_SIZE][WIDTH_SIZE] ;
 	Minmaxstage test;
@@ -156,9 +133,9 @@ void SelectMove(Adjcency_grpah *g) {
 		{ '-', 'c', 'h', 'x', 's', '-', 's', 'h', 'x', 'c' }
 	};
 
-	State_node *now_state = new State_node();
-	State_node *inthe_graph = new State_node();
-	State_node *select_state = new State_node();
+	stateNode *now_state = new stateNode();
+	stateNode *inthe_graph = new stateNode();
+	stateNode *select_state = new stateNode();
 
 	bool host;
 	bool game_ing = true;
@@ -169,33 +146,30 @@ void SelectMove(Adjcency_grpah *g) {
 	cin >> host;
 	PlaceSelect(state);
 
-	State_node *game_state = new State_node(state);
+	stateNode *game_state = new stateNode(state);
 	game_state->Print_State();
 
 	for (int i = 0; game_ing == true; i++) {
-		if (i % 2 == host) { // -> ���� ��ũ���ͷ� ��ȯ.
+		if (i % 2 == host) { 
 			now_state = SetState_fromServer(game_state->GetState(), !host);
-			inthe_graph = g->Is_In_The_List_State(now_state); // �ؽþȿ� �����ϸ� �ؽþȿ� �ִ� state�� �����ϰԵȴ�.
-
-			// �ؽÿ� �������� ������
+			inthe_graph = g->IsHaveStateInHash(now_state); 
+			
 			if(inthe_graph == NULL ){
 				MinMax(game_state, now_state, host); 
 			}
 			else {
 				select_state = SelectState(inthe_graph);
-				// �ؽÿ� �����ϰ�, �ڽ��� ��ġ�� ����̸�
+
 				if (select_state) {
 					select_state->Print_State();
 					game_state->SetState(select_state->GetState());
 				}
-				// �ؽÿ� �����ϳ�, �ڽ��� ��ġ�� �����̸�.
+
 				else{
 					MinMax(game_state, now_state, host);
 				}
 			}
-			/*
-				�¼� : server -> unity ��ġ ��ȯ.
-			*/
+
 		}
 		else {
 			cin >> pre_y;

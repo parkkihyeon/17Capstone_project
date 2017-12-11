@@ -14,34 +14,40 @@
 
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
-#define NUMUNIT 17
+#define NUM_OF_TEAM_PIECE 17
 #define ERROR_CODE 8
 #define REST_PIECE '0'
 #define FIRST_PIECE '0'
 #define DRAW -1
 #define MOVABLE_KEY 7
 
+#define RESTER_EVAL 0.001
+#define MOVING_EVAL 0.0001
+#define KILLER_EVAL 0.01
+#define KILLEE_EVAL -0.01
+#define CHECKMATER_EVAL 0.005
+#define CHECKMATEE_EVAL -0.005
+#define LEARNING_RATE 0.3
+#define CHO_KEY '0'
+#define HAN_KEY '1'
+
 using namespace std;
 
-typedef pair<Cha_pos, Pho_pos> pair_key;
-typedef multimap<pair_key, State_node*> hash_4d; // 4���� �ؽ�
-typedef multimap<string, State_node*> movableHash;
-
-enum {CHO_PLAY, HAN_PLAY};
+typedef multimap<pair_key, stateNode*> hash_4d; 
+typedef multimap<string, stateNode*> movableHash;
 
 class Adjcency_grpah
 {
 private:
-	State_node *root;
-	State_node *leaf;
-	hash_4d* hashstate_list[NUMUNIT][NUMUNIT];
-	stack<State_node *> state_stack;
+	stateNode *root;
+	stateNode *leaf;
+	hash_4d* hashstate_list[NUM_OF_TEAM_PIECE][NUM_OF_TEAM_PIECE];
+	stack<stateNode *> state_stack;
 	int statenode_num;
 	friend class boost::serialization::access;
 	template <typename Archive>
 	void serialize(Archive &ar, const unsigned int ver) {
 		ar & BOOST_SERIALIZATION_NVP(root);
-//		ar & BOOST_SERIALIZATION_NVP(leaf);
 		ar & BOOST_SERIALIZATION_NVP(statenode_num);
 		ar & BOOST_SERIALIZATION_NVP(hashstate_list);
 	}
@@ -50,35 +56,30 @@ public:
 	Adjcency_grpah(const Adjcency_grpah &graph);
 	Adjcency_grpah(Adjcency_grpah *graph);
 
-	void MovableHashInit();
+	void initMovableHash();
 	int convertKeyhash(int key, int key_index);
-	string getMovableKey(State_node* now_state);
-	void insertMovableHash(State_node* now_state);
 
-	void Init_hashtable();
-	void Insert(vector<State_node*>* state);
-	void Second_insert(vector<State_node*>* state);
-	void PushList_Hashtable(State_node* state);
-	void Set_4Dhashdata(int &cha_y, int &cha_x, int &pho_y, int &pho_x, State_node* state);
-	void Travelgraph_bfs();
-	void AddMoveable();
-	void AddMoveableChild(State_node *now_state);
+	string getMovableKey(stateNode* now_state);
+	void insertMovableHash(stateNode* now_state);
+
+	void initHashtable();
+	void Insert(vector<stateNode*>*  state);
+	void secondInsert(vector<stateNode*>*  state);
+	void pushToHashtable(stateNode* state);
+	void Set_4Dhashdata(int key[4], stateNode* state);
+	void AddMoveableChild(stateNode *now_state);
+	void AddMoveable() ;
+  void movableByBFS(int *bfs_check);
 
 	const bool operator== (Adjcency_grpah *graph) ;
 
-	State_node* getRoot();
-	State_node* getLeaf();
+	stateNode* GetRoot();
+	stateNode* GetLeaf();
 
-	// ���� ��ġ�� ��忡���� �ڽĳ��� �߰��� state�� ������ �ִ���.
-	int Is_Have_childnode(State_node* sub_root, State_node* state);
-	// ���� ��ġ�� ��忡�� � �θ��忡�� �Դ��� ����.
-	int Direction_parentnode(State_node* sub_node);
+	int IsHaveChildnode(stateNode* sub_root, stateNode* state);
 
-	// ���� ��� state�� �׷����� �����ϰ� �ִ���
-	State_node* Is_In_The_List_State(State_node *state);
-
-	// �� state�� ������ �ٸ��� Ȯ���ϴ� �Լ�.
-	bool Diff_State(State_node *stateA, State_node *stateB);
+	stateNode* IsHaveStateInHash(stateNode *state);
+	bool Diff_State(stateNode *stateA, stateNode *stateB);
 };
 
 class Second_Graph {
@@ -86,12 +87,15 @@ private:
 	Adjcency_grpah *original_g;
 public:
 	Second_Graph(Adjcency_grpah *g);
-	void Value_process(vector<State_node*>* state, int winner);
+	void adjustWeight(vector<stateNode*>* state) ;
+	void Evaluating(vector<stateNode*>* state) ;
+	void learnProcess(vector<stateNode*>*  state, int winner);
+	void backPropagation(vector<stateNode*>* state, int winner);
 	int idxOfPiece(char piece);
 
 	Adjcency_grpah * Getgraph();
-	State_node* GetPrev_state(vector<State_node*>* state, int index);
-	State_node* GetNext_state(vector<State_node*>* state, int index);
+	stateNode* getPrevState(vector<stateNode*>*  state, int index);
+	stateNode* getNextState(vector<stateNode*>*  state, int index);
 };
 
 
