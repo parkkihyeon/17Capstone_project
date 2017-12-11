@@ -56,6 +56,7 @@ Moveable::Moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool h
 {
     int cnt = 0;
     Pos prr[2];
+    ispossible = true;
 
     //if (host == CHO_PLAY);
     
@@ -66,8 +67,8 @@ Moveable::Moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool h
             if (board[i][j] == c_board[i][j])
                 continue;
             else
-            { //TODO 예외처리하기
-               // if (cnt == 2) return false;
+            {
+                if (cnt == 2) ispossible = false;;
                 prr[cnt].y = i, prr[cnt].x = j;
                 cnt++;
             }
@@ -93,18 +94,17 @@ Moveable::Moveable(char board[][WIDTH_SIZE], char c_board[][WIDTH_SIZE] , bool h
     
     this->host = host;
     
-    //TODO try catch사용해서 예외 처리하기
-   /* if (host == CHO_PLAY)
+    
+    if (host == CHO_PLAY)
     {
-        if (board[cur.y][cur.x] < 'A' || board[cur.y][cur.x] >'Z')
+        if (board[cur.y][cur.x] < 'A' || board[cur.y][cur.x] >'Z') ispossible = false;
             
     }
     else
     {
-        if (board[cur.y][cur.x] < 'a' || board[cur.y][cur.x] >'z')
-            return false;
+        if (board[cur.y][cur.x] < 'a' || board[cur.y][cur.x] >'z') ispossible =false;
         
-    }*/
+    }
     
 }
 Moveable::Moveable(char board[][WIDTH_SIZE])
@@ -121,6 +121,8 @@ char Moveable::getPiece()
 bool startMoveable(Moveable obj)
 {
     Moveable *JKPiece;
+    if(!obj.ispossible()) return false;
+    
     switch (obj.getPiece())
     {
         case 'j': case 'J':

@@ -8,6 +8,7 @@
 using namespace std;
 #define WIDTH_SIZE 10
 #define HEIGHT_SIZE 11
+enum {CHO_PLAY, HAN_PLAY};
 
 typedef char (*STATE)[WIDTH_SIZE];
 
@@ -51,6 +52,7 @@ class Moveable
     Pos cur;
     Pos dest;
     bool host;
+    bool ispossible;
     
     protected :
     bool isExistTeam(char piece);
@@ -63,6 +65,10 @@ class Moveable
     Moveable(char board[][WIDTH_SIZE]);
     Moveable(){}
     char getPiece();
+    bool getIsPossible()
+    {
+        return ispossible;
+    }
     virtual bool isMoveable();
     
     
